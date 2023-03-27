@@ -31,3 +31,8 @@ vim.opt.colorcolumn = "91"
 
 vim.g.mapleader = " "
 
+vim.diagnostic.config {
+    virtual_text = {
+        source = true
+    }
+}
