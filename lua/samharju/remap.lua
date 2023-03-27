@@ -1,4 +1,5 @@
-vim.keymap.set("n", "<leader>pv", ":NvimTreeToggle<CR>")
+-- buffers
+vim.keymap.set("n", "<leader>bc", ":bdelete<CR>")
 
 -- move block nicely
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
