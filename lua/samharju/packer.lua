@@ -1,39 +1,64 @@
--- This file can be loaded by calling `lua require('plugins')` from your init.vim
+local ensure_packer = function()
+  local fn = vim.fn
+  local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+  if fn.empty(fn.glob(install_path)) > 0 then
+    fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+    vim.cmd [[packadd packer.nvim]]
+    return true
+  end
+  return false
+end
 
--- Only required if you have packer configured as `opt`
-vim.cmd [[packadd packer.nvim]]
+local packer_bootstrap = ensure_packer()
+
 
 return require('packer').startup(function(use)
     -- Packer can manage itself
     use 'wbthomason/packer.nvim'
-    use 'lunarvim/synthwave84.nvim'
+    
+    --theme stuff
     use({ 'rose-pine/neovim', as = 'rose-pine' })
-    use 'nvim-tree/nvim-tree.lua'
-    use 'nvim-tree/nvim-web-devicons'
-    use 'folke/tokyonight.nvim'
+
+    --visuals
+    use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
+    use {
+        'nvim-lualine/lualine.nvim',
+        requires = { 'kyazdani42/nvim-web-devicons', opt = true }
+    }
+
+    --movement
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.1',
         -- or                            , branch = '0.1.x',
         requires = { { 'nvim-lua/plenary.nvim' } }
     }
-    use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
     use('theprimeagen/harpoon')
     use('mbbill/undotree')
+
+    --highlight
+    use 'nvim-tree/nvim-tree.lua'
+    
+    use 'nvim-tree/nvim-web-devicons'
+
+    --git
     use('tpope/vim-fugitive')
     use('airblade/vim-gitgutter')
-    use { 'akinsho/bufferline.nvim', tag = "v3.*", requires = 'nvim-tree/nvim-web-devicons' }
+     
 
-    use "jose-elias-alvarez/null-ls.nvim"
-
+    --lsp
     use "williamboman/mason.nvim"
     use "williamboman/mason-lspconfig.nvim"
     use "neovim/nvim-lspconfig"
 
+    --lsp utils
+    use "jose-elias-alvarez/null-ls.nvim"
+
+    --completion
     use "hrsh7th/cmp-nvim-lsp"
     use "hrsh7th/cmp-nvim-lua"
     use 'hrsh7th/nvim-cmp'
-    use {
-        'nvim-lualine/lualine.nvim',
-        requires = { 'kyazdani42/nvim-web-devicons', opt = true }
-    }
+
+    if packer_bootstrap then
+	    require('packer').sync()
+    end
 end)
