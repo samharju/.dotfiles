@@ -21,14 +21,16 @@ return require('packer').startup(function(use)
   use ('tpope/vim-fugitive')
   use {'akinsho/bufferline.nvim', tag = "v3.*", requires = 'nvim-tree/nvim-web-devicons'}
 
-  use 'hrsh7th/nvim-cmp'
+  use "jose-elias-alvarez/null-ls.nvim"
+
 
   use "williamboman/mason.nvim"
   use "williamboman/mason-lspconfig.nvim"
   use "neovim/nvim-lspconfig"
+
   use "hrsh7th/cmp-nvim-lsp"
   use "hrsh7th/cmp-nvim-lua"
-
+  use 'hrsh7th/nvim-cmp'
 
 end)
 

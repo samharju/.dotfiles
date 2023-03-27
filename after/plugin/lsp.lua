@@ -27,3 +27,13 @@ for _, server_name in ipairs(get_servers()) do
     capabilities = lsp_capabilities,
   })
 end
+
+
+local null_ls = require('null-ls')
+
+null_ls.setup({
+    sources = { null_ls.builtins.formatting.black }
+})
+
+
+
