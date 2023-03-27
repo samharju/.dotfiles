@@ -1,11 +1,29 @@
-local lsp = require('lsp-zero')
+require('mason').setup()
 
-lsp.preset('recommended')
+require('mason-lspconfig').setup({
+  ensure_installed = {
+    -- Replace these with whatever servers you want to install
+  }
+})
 
-lsp.nvim_workspace()
+require'cmp'.setup {
+  sources = {
+    { name = 'nvim_lsp' }
+  }
+}
 
-lsp.on_attach(function(client, bufnr)
-  lsp.buffer_autoformat()
-end)
+local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
+local lsp_attach = function(client, bufnr)
+  -- Create your keybindings here...
+end
 
-lsp.setup()
+local lspconfig = require('lspconfig')
+
+local get_servers = require('mason-lspconfig').get_installed_servers
+
+for _, server_name in ipairs(get_servers()) do
+  lspconfig[server_name].setup({
+    on_attach = lsp_attach,
+    capabilities = lsp_capabilities,
+  })
+end
