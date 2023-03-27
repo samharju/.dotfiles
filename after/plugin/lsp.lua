@@ -25,7 +25,6 @@ local lspconfig = require('lspconfig')
 local get_servers = require('mason-lspconfig').get_installed_servers
 
 for _, server_name in ipairs(get_servers()) do
-    print(server_name)
     if server_name == "lua_ls" then
         lspconfig.lua_ls.setup({
             on_attach = lsp_attach,
@@ -46,6 +45,9 @@ for _, server_name in ipairs(get_servers()) do
                 pylsp = {
                     plugins = {
                         pycodestyle = {
+                            enabled = false
+                        },
+                        pyflakes = {
                             enabled = false
                         }
                     }

@@ -7,6 +7,7 @@ return require('packer').startup(function(use)
     -- Packer can manage itself
     use 'wbthomason/packer.nvim'
     use 'lunarvim/synthwave84.nvim'
+    use({ 'rose-pine/neovim', as = 'rose-pine' })
     use 'nvim-tree/nvim-tree.lua'
     use 'nvim-tree/nvim-web-devicons'
     use 'folke/tokyonight.nvim'
@@ -19,6 +20,7 @@ return require('packer').startup(function(use)
     use('theprimeagen/harpoon')
     use('mbbill/undotree')
     use('tpope/vim-fugitive')
+    use('airblade/vim-gitgutter')
     use { 'akinsho/bufferline.nvim', tag = "v3.*", requires = 'nvim-tree/nvim-web-devicons' }
 
     use "jose-elias-alvarez/null-ls.nvim"
