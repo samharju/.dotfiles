@@ -1,12 +1,12 @@
 local ensure_packer = function()
-  local fn = vim.fn
-  local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-  if fn.empty(fn.glob(install_path)) > 0 then
-    fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
-    vim.cmd [[packadd packer.nvim]]
-    return true
-  end
-  return false
+    local fn = vim.fn
+    local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
+    if fn.empty(fn.glob(install_path)) > 0 then
+        fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
+        vim.cmd [[packadd packer.nvim]]
+        return true
+    end
+    return false
 end
 
 local packer_bootstrap = ensure_packer()
@@ -15,7 +15,7 @@ local packer_bootstrap = ensure_packer()
 return require('packer').startup(function(use)
     -- Packer can manage itself
     use 'wbthomason/packer.nvim'
-    
+
     --theme stuff
     use({ 'rose-pine/neovim', as = 'rose-pine' })
 
@@ -37,13 +37,13 @@ return require('packer').startup(function(use)
 
     --highlight
     use 'nvim-tree/nvim-tree.lua'
-    
+
     use 'nvim-tree/nvim-web-devicons'
 
     --git
     use('tpope/vim-fugitive')
     use('airblade/vim-gitgutter')
-     
+
 
     --lsp
     use "williamboman/mason.nvim"
@@ -59,6 +59,6 @@ return require('packer').startup(function(use)
     use 'hrsh7th/nvim-cmp'
 
     if packer_bootstrap then
-	    require('packer').sync()
+        require('packer').sync()
     end
 end)
