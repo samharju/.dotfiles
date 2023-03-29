@@ -34,6 +34,10 @@ return require('packer').startup(function(use)
     }
     use('theprimeagen/harpoon')
     use('mbbill/undotree')
+    use {
+        "windwp/nvim-autopairs",
+        config = function() require("nvim-autopairs").setup {} end
+    }
 
     --highlight
     use 'nvim-tree/nvim-tree.lua'
@@ -57,6 +61,12 @@ return require('packer').startup(function(use)
     use "hrsh7th/cmp-nvim-lsp"
     use "hrsh7th/cmp-nvim-lua"
     use 'hrsh7th/nvim-cmp'
+
+    use({
+        "L3MON4D3/LuaSnip",
+        -- follow latest release.
+        tag = "v1.*",
+    })
 
     if packer_bootstrap then
         require('packer').sync()

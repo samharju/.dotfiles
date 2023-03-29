@@ -9,9 +9,33 @@ require('mason-lspconfig').setup({
     }
 })
 
-require 'cmp'.setup {
+local cmp = require('cmp')
+
+cmp.setup {
+    snippet = {
+        expand = function(args)
+            require('luasnip').lsp_expand(args.body)
+        end,
+    },
     sources = {
-        { name = 'nvim_lsp' }
+        { name = 'nvim_lsp' },
+        { name = 'luasnip' },
+    },
+    mapping = {
+        ['<Tab>'] = function(fallback)
+            if cmp.visible() then
+                cmp.select_next_item()
+            else
+                fallback()
+            end
+        end,
+        ['<CR>'] = function(fallback)
+            if cmp.visible() then
+                cmp.confirm({ select = true })
+            else
+                fallback() -- If you use vim-endwise, this fallback will behave the same as vim-endwise.
+            end
+        end
     }
 }
 
@@ -37,7 +61,7 @@ local lsp_attach = function(client, bufnr)
 
     vim.api.nvim_create_autocmd("BufWritePre", {
         callback = function()
-            vim.lsp.buf.format { async = true }
+            vim.lsp.buf.format()
         end
     })
 end
