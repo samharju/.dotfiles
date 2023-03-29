@@ -20,6 +20,7 @@ cmp.setup {
     sources = {
         { name = 'nvim_lsp' },
         { name = 'luasnip' },
+        { name = 'nvim_lsp_signature_help' }
     },
     mapping = {
         ['<Tab>'] = function(fallback)
@@ -59,11 +60,13 @@ local lsp_attach = function(client, bufnr)
         vim.lsp.buf.format { async = true }
     end, opts)
 
-    vim.api.nvim_create_autocmd("BufWritePre", {
-        callback = function()
-            vim.lsp.buf.format()
-        end
-    })
+    if client.server_capabilities.documentFormattingProvider then
+        vim.api.nvim_create_autocmd("BufWritePre", {
+            callback = function()
+                vim.lsp.buf.format()
+            end
+        })
+    end
 end
 
 local lspconfig = require('lspconfig')
