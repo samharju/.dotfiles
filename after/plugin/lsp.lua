@@ -6,6 +6,7 @@ require('mason-lspconfig').setup({
         "gopls",
         "lua_ls",
         "pylsp",
+        "bashls",
     }
 })
 
