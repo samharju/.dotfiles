@@ -3,15 +3,15 @@
 
 
 require('rose-pine').setup({
-	--- @usage 'auto'|'main'|'moon'|'dawn'
-	variant = 'auto',
-	--- @usage 'main'|'moon'|'dawn'
-	dark_variant = 'main',
-	bold_vert_split = false,
-	dim_nc_background = false,
-	disable_background = true,
-	disable_float_background = true,
-	disable_italics = true,
+    --- @usage 'auto'|'main'|'moon'|'dawn'
+    variant = 'auto',
+    --- @usage 'main'|'moon'|'dawn'
+    dark_variant = 'main',
+    bold_vert_split = false,
+    dim_nc_background = false,
+    disable_background = false,
+    --disable_float_background = true,
+    disable_italics = true,
 })
 
 vim.cmd.colorscheme('rose-pine')
