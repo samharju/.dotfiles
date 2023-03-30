@@ -36,7 +36,7 @@ local function open_nvim_tree(data)
     end
 
     -- open the tree if empty buffer
-    if data.file == "" and vim.bo[data.buf].buftype == "" then
+    if directory or (data.file == "" and vim.bo[data.buf].buftype == "") then
         api.tree.open({ focus = true, find_file = true })
     end
 end
