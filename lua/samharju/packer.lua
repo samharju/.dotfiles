@@ -18,7 +18,7 @@ return require('packer').startup(function(use)
 
     --theme stuff
     use({ 'rose-pine/neovim', as = 'rose-pine' })
-
+    use "lunarvim/synthwave84.nvim"
     --visuals
     use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
     use {
