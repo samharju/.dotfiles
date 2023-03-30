@@ -12,6 +12,8 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
+-- exit normal mode in terminal emulator
+vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
 
 -- yank to system clipboard
 --vim.keymap.set("n", "<leader>y", "\"+y")
