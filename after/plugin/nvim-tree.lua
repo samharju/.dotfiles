@@ -14,19 +14,23 @@ ntree.setup {
     view = {
         width = {},
         float = {
-            enable = true
+            enable = false
         }
     },
     renderer = {
         icons = {
             git_placement = "after"
         },
-        highlight_git = true
+        highlight_git = true,
+        highlight_opened_files = "icon"
+    },
+    update_focused_file = {
+        enable = true
     }
 }
 
-
-vim.keymap.set("n", "<leader>pv", ":NvimTreeFindFileToggle<CR>")
+vim.keymap.set("n", "<leader>v", ":NvimTreeFindFile<CR>")
+vim.keymap.set("n", "<leader>hv", ":NvimTreeCollapse<CR>")
 
 local function open_nvim_tree(data)
     -- open the tree if directory, change nvim root
