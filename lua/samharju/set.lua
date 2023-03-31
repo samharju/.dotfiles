@@ -1,5 +1,5 @@
 vim.opt.nu = true
-vim.opt.relativenumber = true
+--vim.opt.relativenumber = true
 
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
@@ -32,7 +32,5 @@ vim.opt.colorcolumn = "91"
 vim.g.mapleader = " "
 
 vim.diagnostic.config {
-    virtual_text = {
-        source = true
-    }
+    virtual_text = false
 }
