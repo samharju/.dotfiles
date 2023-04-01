@@ -18,12 +18,13 @@ return require('packer').startup(function(use)
 
     --theme stuff
     use({ 'rose-pine/neovim', as = 'rose-pine' })
-    use "lunarvim/synthwave84.nvim"
+    use 'lunarvim/synthwave84.nvim'
     --visuals
     use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
     use {
         'nvim-lualine/lualine.nvim',
-        requires = { 'kyazdani42/nvim-web-devicons', opt = true }
+        requires = { 'kyazdani42/nvim-web-devicons', opt = true },
+        config = function() require("lualine").setup() end
     }
 
     --movement
@@ -35,8 +36,8 @@ return require('packer').startup(function(use)
     use('theprimeagen/harpoon')
     use('mbbill/undotree')
     use {
-        "windwp/nvim-autopairs",
-        config = function() require("nvim-autopairs").setup {} end
+        'windwp/nvim-autopairs',
+        config = function() require('nvim-autopairs').setup {} end
     }
 
     --highlight
@@ -50,26 +51,35 @@ return require('packer').startup(function(use)
 
 
     --lsp
-    use "williamboman/mason.nvim"
-    use "williamboman/mason-lspconfig.nvim"
-    use "neovim/nvim-lspconfig"
-
-    --lsp utils
-    use "jose-elias-alvarez/null-ls.nvim"
-
+    use {
+      'williamboman/mason.nvim',
+      run = function() pcall(vim.cmd, 'MasonUpdate') end
+    }
+    use 'williamboman/mason-lspconfig.nvim'
+    use 'neovim/nvim-lspconfig'
     --completion
-    use "hrsh7th/cmp-nvim-lsp"
-    use "hrsh7th/cmp-nvim-lua"
+    use 'hrsh7th/cmp-nvim-lsp'
+    use 'hrsh7th/cmp-nvim-lua'
     use 'hrsh7th/nvim-cmp'
-    use "hrsh7th/cmp-nvim-lsp-signature-help"
-    use "windwp/nvim-ts-autotag"
+    use 'hrsh7th/cmp-path'
+    use 'hrsh7th/cmp-buffer'
+    use 'hrsh7th/cmp-cmdline'
+    use 'hrsh7th/cmp-nvim-lsp-signature-help'
+    use 'windwp/nvim-ts-autotag'
 
-    use({
-        "L3MON4D3/LuaSnip",
+
+    use{
+        'L3MON4D3/LuaSnip',
         -- follow latest release.
-        tag = "v1.*",
-    })
+        tag = 'v1.*',
+        after = 'nvim-cmp',
+    }
+    use 'saadparwaiz1/cmp_luasnip' 
+    use 'rafamadriz/friendly-snippets'
 
+    use 'jose-elias-alvarez/null-ls.nvim'
+
+   
     if packer_bootstrap then
         require('packer').sync()
     end

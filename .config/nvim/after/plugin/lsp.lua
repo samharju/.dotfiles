@@ -3,13 +3,14 @@ require('mason').setup()
 require('mason-lspconfig').setup({
     ensure_installed = {
         -- Replace these with whatever servers you want to install
-        "gopls",
-        "lua_ls",
-        "pylsp",
-        "bashls",
+        'gopls',
+        'lua_ls',
+        'pylsp',
+        'bashls',
     }
 })
 
+local luasnip = require('luasnip')
 local cmp = require('cmp')
 
 cmp.setup {
@@ -20,6 +21,8 @@ cmp.setup {
     },
     sources = {
         { name = 'nvim_lsp' },
+        { name = 'buffer' },
+        { name = 'path' },
         { name = 'luasnip' },
         { name = 'nvim_lsp_signature_help' }
     },
@@ -27,6 +30,8 @@ cmp.setup {
         ['<Tab>'] = function(fallback)
             if cmp.visible() then
                 cmp.select_next_item()
+            elseif luasnip.expand_or_jumpable() then
+                luasnip.expand_or_jump()
             else
                 fallback()
             end
@@ -67,19 +72,19 @@ local lspconfig = require('lspconfig')
 local get_servers = require('mason-lspconfig').get_installed_servers
 
 for _, server_name in ipairs(get_servers()) do
-    if server_name == "lua_ls" then
+    if server_name == 'lua_ls' then
         lspconfig.lua_ls.setup({
             on_attach = lsp_attach,
             capabilities = lsp_capabilities,
             settings = {
                 Lua = {
                     diagnostics = {
-                        globals = { "vim" }
+                        globals = { 'vim' }
                     }
                 }
             }
         })
-    elseif server_name == "pylsp" then
+    elseif server_name == 'pylsp' then
         lspconfig.pylsp.setup({
             on_attach = lsp_attach,
             capabilities = lsp_capabilities,
@@ -111,8 +116,11 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
 
-vim.api.nvim_create_autocmd("BufWritePre", {
+vim.api.nvim_create_autocmd('BufWritePre', {
     callback = function()
         vim.lsp.buf.format()
     end
 })
+
+
+require('luasnip.loaders.from_vscode').lazy_load()
