@@ -7,6 +7,11 @@ require('mason-lspconfig').setup({
         'lua_ls',
         'pylsp',
         'bashls',
+        'tsserver',
+        'ansiblels',
+        'cssls',
+        'cssmodules_ls',
+        'yamlls',
     }
 })
 
@@ -116,10 +121,13 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
 
+local grp = vim.api.nvim_create_augroup("Prewrites", {})
+
 vim.api.nvim_create_autocmd('BufWritePre', {
     callback = function()
         vim.lsp.buf.format()
-    end
+    end,
+    group = grp,
 })
 
 

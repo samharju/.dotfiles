@@ -1,2 +1,2 @@
 alias pypath='export PYTHONPATH=$(pwd)'
-alias nvimconfig='nvim ~/nvim-config'
+alias nvimconfig='nvim $HOME/.config/nvim'
