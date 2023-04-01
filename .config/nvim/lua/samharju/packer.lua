@@ -52,8 +52,8 @@ return require('packer').startup(function(use)
 
     --lsp
     use {
-      'williamboman/mason.nvim',
-      run = function() pcall(vim.cmd, 'MasonUpdate') end
+        'williamboman/mason.nvim',
+        run = function() pcall(vim.cmd, 'MasonUpdate') end
     }
     use 'williamboman/mason-lspconfig.nvim'
     use 'neovim/nvim-lspconfig'
@@ -68,18 +68,18 @@ return require('packer').startup(function(use)
     use 'windwp/nvim-ts-autotag'
 
 
-    use{
+    use {
         'L3MON4D3/LuaSnip',
         -- follow latest release.
         tag = 'v1.*',
         after = 'nvim-cmp',
     }
-    use 'saadparwaiz1/cmp_luasnip' 
+    use 'saadparwaiz1/cmp_luasnip'
     use 'rafamadriz/friendly-snippets'
 
     use 'jose-elias-alvarez/null-ls.nvim'
 
-   
+
     if packer_bootstrap then
         require('packer').sync()
     end
