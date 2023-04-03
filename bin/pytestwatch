@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+
+if [ "$1" == "-h" ] || [ -z "$1" ]; then
+    echo "usage:"
+    echo "pytestwatch <file or folder> <pytest flags>"
+    echo ""
+    echo "runs:"
+    echo "inotifywait -m -e close_write \$1"
+    echo "python -m pytest \"\${@:2}\""
+    exit 0
+fi
+
+inotifywait -m -e close_write $1 |
+while read -r; do
+    clear
+    python -m pytest "${@:2}"
+done

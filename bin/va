@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+rt=$(pwd)
+venvpath=""
+
+while [[ -z $venvpath ]]
+do
+    if [[ "$(pwd)" == ~ ]]; then
+            echo "Hit home root, exiting"
+            break
+    fi
+    echo "checking $(pwd)"
+    venvpath=$(find "$(pwd)" -name activate)
+    if [[ -z $venvpath ]];
+    then
+        echo "travel up"
+        cd ..
+    else
+        echo "found $venvpath, activating"
+        . "$venvpath"
+    fi
+done
+
+cd "$rt"

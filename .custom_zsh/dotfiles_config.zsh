@@ -1,4 +1,5 @@
 
-alias cnf='git --git-dir=/home/sami/.dotfiles --work-tree=/home/sami'
+alias cnf='git --git-dir=$HOME/.dotfiles --work-tree=$HOME/'
 
-compdef _git cnf
+alias cnfs='cnf status . -unormal'
+

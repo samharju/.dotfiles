@@ -1,0 +1,20 @@
+#!/bin/bash
+set -e
+if [ -z "$1" ]; then
+  git checkout master
+fi
+
+git pull
+
+# this will exit script if grep has no matches
+purge=$(git branch --merged | grep -Ev "master|development|dev|\*")
+
+cat << "FOO"
+___  _  _ ____ ____ ____    ____ ___ _  _ ____ ____
+|__] |  | |__/ | __ |___    [__   |  |  | |___ |___
+|    |__| |  \ |__] |___    ___]  |  |__| |    |
+
+FOO
+
+echo "$purge" | xargs -r -t -n1 git branch -d
+
