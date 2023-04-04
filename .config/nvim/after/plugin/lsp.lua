@@ -11,7 +11,6 @@ require('mason-lspconfig').setup({
         'ansiblels',
         'cssls',
         'cssmodules_ls',
-        'yamlls',
     }
 })
 
@@ -19,6 +18,22 @@ local luasnip = require('luasnip')
 local cmp = require('cmp')
 
 cmp.setup {
+    formatting = {
+        format = function(entry, vim_item)
+            vim_item.menu = ({
+                buffer = "[Buffer]",
+                nvim_lsp = "[LSP]",
+                luasnip = "[LuaSnip]",
+                nvim_lua = "[Lua]",
+                path = "[Path]",
+            })[entry.source.name]
+            return vim_item
+        end
+    },
+    window = {
+        --completion = cmp.config.window.bordered()
+        --documentation = cmp.config.window.bordered()
+    },
     snippet = {
         expand = function(args)
             require('luasnip').lsp_expand(args.body)
@@ -26,10 +41,10 @@ cmp.setup {
     },
     sources = {
         { name = 'nvim_lsp' },
-        { name = 'buffer' },
-        { name = 'path' },
         { name = 'luasnip' },
-        { name = 'nvim_lsp_signature_help' }
+        { name = 'path' },
+        { name = 'nvim_lsp_signature_help' },
+        { name = 'buffer',                 keyword_length = 5 }
     },
     mapping = {
         ['<Tab>'] = function(fallback)
@@ -42,14 +57,29 @@ cmp.setup {
             end
         end,
         ['<CR>'] = function(fallback)
-            if cmp.visible() then
-                cmp.confirm({ select = true })
+            if cmp.visible() and cmp.get_active_entry() then
+                cmp.confirm({ select = false })
             else
                 fallback() -- If you use vim-endwise, this fallback will behave the same as vim-endwise.
             end
         end
     }
 }
+
+
+cmp.setup.cmdline({ '/', '?' }, {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+        { name = 'buffer' }
+    }
+})
+
+cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+        { name = 'path' }
+    })
+})
 
 local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 local lsp_attach = function(client, bufnr)
@@ -132,3 +162,11 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 
 
 require('luasnip.loaders.from_vscode').lazy_load()
+require("lsp_lines").setup()
+
+vim.keymap.set(
+    "",
+    "<Leader>m",
+    require("lsp_lines").toggle,
+    { desc = "Toggle lsp_lines" }
+)

@@ -26,6 +26,16 @@ return require('packer').startup(function(use)
         requires = { 'kyazdani42/nvim-web-devicons', opt = true },
         config = function() require("lualine").setup() end
     }
+    use {
+        "folke/zen-mode.nvim",
+        config = function()
+            require("zen-mode").setup {
+                -- your configuration comes here
+                -- or leave it empty to use the default settings
+                -- refer to the configuration section below
+            }
+        end
+    }
 
     --movement
     use {
@@ -39,7 +49,6 @@ return require('packer').startup(function(use)
         'windwp/nvim-autopairs',
         config = function() require('nvim-autopairs').setup {} end
     }
-
     --highlight
     use 'nvim-tree/nvim-tree.lua'
 
@@ -57,6 +66,8 @@ return require('packer').startup(function(use)
     }
     use 'williamboman/mason-lspconfig.nvim'
     use 'neovim/nvim-lspconfig'
+    use 'https://git.sr.ht/~whynothugo/lsp_lines.nvim'
+
     --completion
     use 'hrsh7th/cmp-nvim-lsp'
     use 'hrsh7th/cmp-nvim-lua'
@@ -66,8 +77,6 @@ return require('packer').startup(function(use)
     use 'hrsh7th/cmp-cmdline'
     use 'hrsh7th/cmp-nvim-lsp-signature-help'
     use 'windwp/nvim-ts-autotag'
-
-
     use {
         'L3MON4D3/LuaSnip',
         -- follow latest release.

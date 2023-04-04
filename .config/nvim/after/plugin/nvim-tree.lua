@@ -14,7 +14,7 @@ ntree.setup {
     view = {
         width = {},
         float = {
-            enable = false
+            enable = true
         }
     },
     renderer = {
@@ -22,7 +22,7 @@ ntree.setup {
             git_placement = "after"
         },
         highlight_git = true,
-        highlight_opened_files = "icon"
+        highlight_opened_files = "name"
     },
     update_focused_file = {
         enable = true
