@@ -42,9 +42,9 @@ cmp.setup {
     sources = {
         { name = 'nvim_lsp' },
         { name = 'luasnip' },
-        { name = 'path' },
+        { name = 'path',                   keyword_length = 3 },
+        { name = 'buffer',                 keyword_length = 5 },
         { name = 'nvim_lsp_signature_help' },
-        { name = 'buffer',                 keyword_length = 5 }
     },
     mapping = {
         ['<Tab>'] = function(fallback)
@@ -58,7 +58,7 @@ cmp.setup {
         end,
         ['<CR>'] = function(fallback)
             if cmp.visible() and cmp.get_active_entry() then
-                cmp.confirm({ select = false })
+                cmp.confirm({ select = true })
             else
                 fallback() -- If you use vim-endwise, this fallback will behave the same as vim-endwise.
             end
@@ -91,7 +91,7 @@ local lsp_attach = function(client, bufnr)
     local opts = { buffer = bufnr }
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', '<leader>k', vim.lsp.buf.hover, opts)
     vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
     vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
     vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, opts)
@@ -105,62 +105,42 @@ end
 
 local lspconfig = require('lspconfig')
 
+local settings = {
+    lua_ls = {
+        Lua = {
+            diagnostics = {
+                globals = { 'vim' }
+            }
+        }
+    },
+    pylsp = {
+        plugins = {
+            pycodestyle = {
+                enabled = false
+            },
+            pyflakes = {
+                enabled = false
+            }
+        }
+    }
+}
+
+local lsp_settings = function(server)
+    if settings[server] then
+        return settings[server]
+    end
+    return {}
+end
+
 local get_servers = require('mason-lspconfig').get_installed_servers
 
 for _, server_name in ipairs(get_servers()) do
-    if server_name == 'lua_ls' then
-        lspconfig.lua_ls.setup({
-            on_attach = lsp_attach,
-            capabilities = lsp_capabilities,
-            settings = {
-                Lua = {
-                    diagnostics = {
-                        globals = { 'vim' }
-                    }
-                }
-            }
-        })
-    elseif server_name == 'pylsp' then
-        lspconfig.pylsp.setup({
-            on_attach = lsp_attach,
-            capabilities = lsp_capabilities,
-            settings = {
-                pylsp = {
-                    plugins = {
-                        pycodestyle = {
-                            enabled = false
-                        },
-                        pyflakes = {
-                            enabled = false
-                        }
-                    }
-                }
-            }
-        })
-    else
-        lspconfig[server_name].setup({
-            on_attach = lsp_attach,
-            capabilities = lsp_capabilities,
-        })
-    end
+    lspconfig[server_name].setup({
+        on_attach = lsp_attach,
+        capabilities = lsp_capabilities,
+        settings = lsp_settings(server_name),
+    })
 end
-
--- Global mappings.
--- See `:help vim.diagnostic.*` for documentation on any of the below functions
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
-
-local grp = vim.api.nvim_create_augroup("Prewrites", {})
-
-vim.api.nvim_create_autocmd('BufWritePre', {
-    callback = function()
-        vim.lsp.buf.format()
-    end,
-    group = grp,
-})
-
 
 require('luasnip.loaders.from_vscode').lazy_load()
 require("lsp_lines").setup()
