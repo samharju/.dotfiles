@@ -1,4 +1,6 @@
 reviewcheckout() {
+    set -e
+    cd "$(git rev-parse --show-toplevel)"
     git worktree add --track -b "$1" "$1" "$2"
     echo "$1" >> .git/info/exclude
     cd "$1"
@@ -7,6 +9,8 @@ reviewcheckout() {
 }
 
 reviewclean() {
+    set -e
+    cd "$(git rev-parse --show-toplevel)"
     git worktree remove "$1"
     sed -i "/$1/d" .git/info/exclude
     git branch -D "$1"

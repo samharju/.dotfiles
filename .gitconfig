@@ -1,0 +1,12 @@
+[core]
+	excludesfile = /home/sami/.git_global
+	editor = nvim
+[push]
+	autoSetupRemote = true
+	default = current
+[fetch]
+	prune = true
+[pull]
+	rebase = true
+[diff]
+	colorMoved = zebra
