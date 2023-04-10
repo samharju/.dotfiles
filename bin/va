@@ -10,7 +10,7 @@ do
             break
     fi
     echo "checking $(pwd)"
-    venvpath=$(find "$(pwd)" -name activate)
+    venvpath=$(find "$(pwd)" -name activate 2>/dev/null)
     if [[ -z $venvpath ]];
     then
         echo "travel up"
