@@ -45,3 +45,5 @@ export NVM_DIR="$HOME/.nvm"
 
 # make ansible print stuff readable by default
 export ANSIBLE_STDOUT_CALLBACK=debug
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
