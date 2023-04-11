@@ -16,10 +16,11 @@ return require('packer').startup(function(use)
     -- Packer can manage itself
     use 'wbthomason/packer.nvim'
 
-    --theme stuff
-    use({ 'rose-pine/neovim', as = 'rose-pine' })
+    -----------------------------------------
+    -- visual stuff
+
     use 'lunarvim/synthwave84.nvim'
-    --visuals
+
     use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
     use {
         'nvim-lualine/lualine.nvim',
@@ -37,7 +38,9 @@ return require('packer').startup(function(use)
         end
     }
 
-    --movement
+    ------------------------------------------
+    -- movement
+
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.1',
         -- or                            , branch = '0.1.x',
@@ -45,28 +48,28 @@ return require('packer').startup(function(use)
     }
     use('theprimeagen/harpoon')
     use('mbbill/undotree')
-    use {
-        'windwp/nvim-autopairs',
-        config = function() require('nvim-autopairs').setup {} end
-    }
     use { 'akinsho/toggleterm.nvim', tag = '*' }
-    --highlight
     use 'nvim-tree/nvim-tree.lua'
-
     use 'nvim-tree/nvim-web-devicons'
 
-    --git
+    --------------------------------------------
+    -- git
+
     use('tpope/vim-fugitive')
     use('airblade/vim-gitgutter')
 
 
-    --lsp
+    --------------------------------------------
+    -- lsp and cmp
+
     use {
         'williamboman/mason.nvim',
         run = function() pcall(vim.cmd, 'MasonUpdate') end
     }
     use 'williamboman/mason-lspconfig.nvim'
     use 'neovim/nvim-lspconfig'
+
+    -- show fancy diagnostics
     use 'https://git.sr.ht/~whynothugo/lsp_lines.nvim'
 
     --completion
@@ -77,7 +80,8 @@ return require('packer').startup(function(use)
     use 'hrsh7th/cmp-buffer'
     use 'hrsh7th/cmp-cmdline'
     use 'hrsh7th/cmp-nvim-lsp-signature-help'
-    use 'windwp/nvim-ts-autotag'
+
+    -- snippets
     use {
         'L3MON4D3/LuaSnip',
         -- follow latest release.
@@ -87,9 +91,17 @@ return require('packer').startup(function(use)
     use 'saadparwaiz1/cmp_luasnip'
     use 'rafamadriz/friendly-snippets'
 
+    -- other than lsp formatting and diags
     use 'jose-elias-alvarez/null-ls.nvim'
 
+    -- match brackets in insert
+    use {
+        'windwp/nvim-autopairs',
+        config = function() require('nvim-autopairs').setup {} end
+    }
+    use 'windwp/nvim-ts-autotag'
 
+    -- setup packer automatically
     if packer_bootstrap then
         require('packer').sync()
     end
