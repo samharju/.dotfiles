@@ -2,7 +2,6 @@
 set -e
 
 printaction() {
-    set +x
     name=${FUNCNAME[1]}
     if command -v figlet &> /dev/null; then
         printf "\033[0;32m"
@@ -25,7 +24,7 @@ install_zsh() {
 
 install_nvim() {
     printaction
-    wget https://github.com/neovim/neovim/releases/download/stable/nvim.appimage
+    wget https://github.com/neovim/neovim/releases/download/v0.8.3/nvim.appimage
     chmod u+x nvim.appimage
     mv nvim.appimage ~/.local/bin/nvim
     nvim --version
@@ -92,7 +91,6 @@ install_go() {
 
 install_docker() {
     printaction
-    set -x
     sudo apt remove \
         docker \
         docker-engine \
@@ -119,7 +117,6 @@ install_docker() {
         docker-compose-plugin
 
     sudo apt autoremove -y
-    set +x
 }
 # ------------------------------------------------------------
 
@@ -173,4 +170,3 @@ do
     shift
 done
 
-set +x
