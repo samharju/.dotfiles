@@ -1,18 +1,20 @@
 #!/usr/bin/env bash
 set -e
 
-
-printname() {
-    name=${FUNCNAME[1]#install_}
+printaction() {
+    set +x
+    name=${FUNCNAME[1]}
     if command -v figlet &> /dev/null; then
-        echo "$name" | figlet
+        printf "\033[0;32m"
+        echo "${name#install_}" | figlet
+        printf "\033[0m\n"
     else
         echo "$name"
     fi
 }
 
 install_zsh() {
-    printname
+    printaction
     if ! command -v zsh; then
         sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     fi
@@ -22,7 +24,7 @@ install_zsh() {
 # ------------------------------------------------------------
 
 install_nvim() {
-    printname
+    printaction
     wget https://github.com/neovim/neovim/releases/download/stable/nvim.appimage
     chmod u+x nvim.appimage
     mv nvim.appimage ~/.local/bin/nvim
@@ -32,13 +34,13 @@ install_nvim() {
 
 # ------------------------------------------------------------
 install_formatters() {
-    printname
+    printaction
     npm i -g prettier
 }
 
 # ------------------------------------------------------------
-install_utils() {
-    printname
+install_apt_packages() {
+    printaction
     sudo apt update
     sudo apt install \
         zip \
@@ -47,13 +49,17 @@ install_utils() {
         shellcheck \
         tmux \
         figlet
+    sudo apt autoremove -y
+}
 
+install_nvm() {
+    printaction
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 }
 
 # ------------------------------------------------------------
 install_fuck() {
-    printname
+    printaction
     sudo apt install python3-dev python3-pip python3-setuptools
     pip3 install --upgrade pip
     pip3 install thefuck --user
@@ -61,17 +67,18 @@ install_fuck() {
 
 # ------------------------------------------------------------
 install_python() {
-    printname
+    printaction
     sudo apt install software-properties-common 
     sudo add-apt-repository ppa:deadsnakes/ppa 
     sudo apt update
     sudo apt install python3.10 python3.10-venv python3-pip python3.10-dev
+    sudo apt autoremove -y
 }
 
 # ------------------------------------------------------------
 install_go() {
-    printname
-    if [[ $(go version || true) == 'go version go1.20.3 linux/amd64' ]]; then
+    printaction
+    if [[ $(go version || true) == "go version go1.20.3 linux/amd64" ]]; then
         echo up to date
         return
     fi
@@ -83,9 +90,47 @@ install_go() {
 
 # ------------------------------------------------------------
 
+install_docker() {
+    printaction
+    set -x
+    sudo apt remove \
+        docker \
+        docker-engine \
+        docker.io \
+        containerd \
+        runc
+    
+    sudo apt-get update
+    sudo apt install ca-certificates curl gnupg
 
+    sudo mkdir -m 0755 -p /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    echo \
+        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+        $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+        sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+    sudo apt update
+    sudo apt install \
+        docker-ce \
+        docker-ce-cli \
+        containerd.io \
+        docker-buildx-plugin \
+        docker-compose-plugin
+
+    sudo apt autoremove -y
+    set +x
+}
+# ------------------------------------------------------------
+
+install_fzf() {
+    printaction
+    ~/.fzf/install
+}
+
+# ------------------------------------------------------------
 if [[ $# -eq 0 ]]; then
-    echo "zsh nvim py formatters utils fuck go"
+    echo "zsh nvim python formatters apt_packages nvm fuck go docker fzf"
 fi
 
 while test $# -gt 0
@@ -97,20 +142,29 @@ do
         nvim)
             install_nvim
             ;;
-        py)
+        python)
             install_python
             ;;
         formatters)
             install_formatters
             ;;
-        utils)
-            install_utils
+        apt_packages)
+            install_apt_packages
+            ;;
+        nvm)
+            install_nvm
             ;;
         fuck)
             install_fuck
             ;;
         go)
             install_go
+            ;;
+        docker)
+            install_docker
+            ;;
+        fzf)
+            install_fzf
             ;;
         *)
             echo "invalid command: $1"
@@ -119,3 +173,4 @@ do
     shift
 done
 
+set +x
