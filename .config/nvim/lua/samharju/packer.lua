@@ -26,16 +26,7 @@ return require('packer').startup(function(use)
         'nvim-lualine/lualine.nvim',
         requires = { 'kyazdani42/nvim-web-devicons', opt = true },
     }
-    use {
-        "folke/zen-mode.nvim",
-        config = function()
-            require("zen-mode").setup {
-                -- your configuration comes here
-                -- or leave it empty to use the default settings
-                -- refer to the configuration section below
-            }
-        end
-    }
+    use 'folke/zen-mode.nvim'
 
     ------------------------------------------
     -- movement
@@ -45,8 +36,8 @@ return require('packer').startup(function(use)
         -- or                            , branch = '0.1.x',
         requires = { { 'nvim-lua/plenary.nvim' } }
     }
-    use('theprimeagen/harpoon')
-    use('mbbill/undotree')
+    use 'theprimeagen/harpoon'
+    use 'mbbill/undotree'
     use { 'akinsho/toggleterm.nvim', tag = '*' }
     use 'nvim-tree/nvim-tree.lua'
     use 'nvim-tree/nvim-web-devicons'
@@ -54,8 +45,8 @@ return require('packer').startup(function(use)
     --------------------------------------------
     -- git
 
-    use('tpope/vim-fugitive')
-    use('airblade/vim-gitgutter')
+    use 'tpope/vim-fugitive'
+    use 'airblade/vim-gitgutter'
 
 
     --------------------------------------------
