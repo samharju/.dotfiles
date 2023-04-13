@@ -1,6 +1,3 @@
---vim.cmd.colorscheme('tokyonight-moon')
-
-
 require 'synthwave84'.setup({
     glow = {
         error_msg = true,

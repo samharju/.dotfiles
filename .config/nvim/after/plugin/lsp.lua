@@ -57,12 +57,13 @@ cmp.setup {
             end
         end,
         ['<CR>'] = function(fallback)
-            if cmp.visible() and cmp.get_active_entry() then
-                cmp.confirm({ select = true })
+            if cmp.visible() and cmp.get_selected_entry() then
+                cmp.confirm()
             else
                 fallback() -- If you use vim-endwise, this fallback will behave the same as vim-endwise.
             end
-        end
+        end,
+        ['<C-e>'] = cmp.mapping.abort()
     }
 }
 
@@ -98,7 +99,7 @@ local lsp_attach = function(client, bufnr)
     vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
     vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
     vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-    vim.keymap.set('n', '<leader>f', function()
+    vim.keymap.set('n', '<leader>g', function()
         vim.lsp.buf.format { async = true }
     end, opts)
 end
