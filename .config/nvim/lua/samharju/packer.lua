@@ -22,6 +22,7 @@ return require('packer').startup(function(use)
     use 'lunarvim/synthwave84.nvim'
 
     use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
+    use 'lukas-reineke/indent-blankline.nvim'
     use {
         'nvim-lualine/lualine.nvim',
         requires = { 'kyazdani42/nvim-web-devicons', opt = true },
@@ -69,7 +70,8 @@ return require('packer').startup(function(use)
     use 'hrsh7th/cmp-path'
     use 'hrsh7th/cmp-buffer'
     use 'hrsh7th/cmp-cmdline'
-    use 'hrsh7th/cmp-nvim-lsp-signature-help'
+    use 'ray-x/lsp_signature.nvim'
+
 
     -- snippets
     use {

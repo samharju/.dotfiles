@@ -30,7 +30,6 @@ ntree.setup {
 }
 
 vim.keymap.set("n", "<leader>v", ":NvimTreeFindFile<CR>")
-vim.keymap.set("n", "<leader>hv", ":NvimTreeCollapse<CR>")
 
 local function open_nvim_tree(data)
     -- open the tree if directory, change nvim root

@@ -5,12 +5,12 @@ require('mason-lspconfig').setup({
         -- Replace these with whatever servers you want to install
         'gopls',
         'lua_ls',
-        'pylsp',
         'bashls',
         'tsserver',
         'ansiblels',
         'cssls',
         'cssmodules_ls',
+        'jedi_language_server',
     }
 })
 
@@ -42,9 +42,8 @@ cmp.setup {
     sources = {
         { name = 'nvim_lsp' },
         { name = 'luasnip' },
-        { name = 'path',                   keyword_length = 3 },
-        { name = 'buffer',                 keyword_length = 5 },
-        { name = 'nvim_lsp_signature_help' },
+        { name = 'path',    keyword_length = 3 },
+        { name = 'buffer',  keyword_length = 5 },
     },
     mapping = {
         ['<Tab>'] = function(fallback)
@@ -99,14 +98,14 @@ local lsp_attach = function(client, bufnr)
     vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
     vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
     vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-    vim.keymap.set('n', '<leader>g', function()
+    vim.keymap.set('n', '<leader>fo', function()
         vim.lsp.buf.format { async = true }
     end, opts)
 end
 
 local lspconfig = require('lspconfig')
 
-local settings = {
+local lsp_settings = {
     lua_ls = {
         Lua = {
             diagnostics = {
@@ -126,29 +125,39 @@ local settings = {
     }
 }
 
-local lsp_settings = function(server)
-    if settings[server] then
-        return settings[server]
-    end
-    return {}
-end
 
 local get_servers = require('mason-lspconfig').get_installed_servers
 
 for _, server_name in ipairs(get_servers()) do
-    lspconfig[server_name].setup({
+    local s = {
         on_attach = lsp_attach,
         capabilities = lsp_capabilities,
-        settings = lsp_settings(server_name),
-    })
+    }
+    if lsp_settings[server_name] then
+        s.settings = lsp_settings[server_name]
+    end
+    lspconfig[server_name].setup(s)
 end
 
 require('luasnip.loaders.from_vscode').lazy_load()
-require("lsp_lines").setup()
+--require("lsp_lines").setup()
 
-vim.keymap.set(
-    "",
-    "<Leader>m",
-    require("lsp_lines").toggle,
-    { desc = "Toggle lsp_lines" }
-)
+--vim.keymap.set(
+--    "",
+--    "<Leader>m",
+--    require("lsp_lines").toggle,
+--    { desc = "Toggle lsp_lines" }
+--)
+
+
+require('lsp_signature').setup {
+    bind = true,
+    fix_pos = true,
+    hint_enable = false,
+    max_width = 100,
+    padding = ' ',
+    handler_opts = {
+        border = "rounded"
+    }
+
+}
