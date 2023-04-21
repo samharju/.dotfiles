@@ -22,6 +22,7 @@ return require('packer').startup(function(use)
     use 'lunarvim/synthwave84.nvim'
 
     use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
+    use 'nvim-treesitter/nvim-treesitter-context'
     use 'lukas-reineke/indent-blankline.nvim'
     use {
         'nvim-lualine/lualine.nvim',
