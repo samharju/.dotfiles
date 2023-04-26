@@ -19,7 +19,7 @@ return require('packer').startup(function(use)
     -----------------------------------------
     -- visual stuff
 
-    use 'lunarvim/synthwave84.nvim'
+    use 'navarasu/onedark.nvim'
 
     use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
     use 'nvim-treesitter/nvim-treesitter-context'
