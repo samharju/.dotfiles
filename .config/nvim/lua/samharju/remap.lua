@@ -1,5 +1,7 @@
 -- buffers
 vim.keymap.set("n", "<leader>bc", ":bdelete<CR>")
+vim.keymap.set("n", "<leader>bn", ":bn<CR>")
+vim.keymap.set("n", "<leader>bp", ":bp<CR>")
 
 -- move block nicely
 
