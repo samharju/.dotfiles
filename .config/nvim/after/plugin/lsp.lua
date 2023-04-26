@@ -109,16 +109,6 @@ local lsp_settings = {
                 globals = { 'vim' }
             }
         }
-    },
-    pylsp = {
-        plugins = {
-            pycodestyle = {
-                enabled = false
-            },
-            pyflakes = {
-                enabled = false
-            }
-        }
     }
 }
 
