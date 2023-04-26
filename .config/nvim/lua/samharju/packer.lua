@@ -61,9 +61,6 @@ return require('packer').startup(function(use)
     use 'williamboman/mason-lspconfig.nvim'
     use 'neovim/nvim-lspconfig'
 
-    -- show fancy diagnostics
-    use 'https://git.sr.ht/~whynothugo/lsp_lines.nvim'
-
     --completion
     use 'hrsh7th/cmp-nvim-lsp'
     use 'hrsh7th/cmp-nvim-lua'
@@ -72,7 +69,6 @@ return require('packer').startup(function(use)
     use 'hrsh7th/cmp-buffer'
     use 'hrsh7th/cmp-cmdline'
     use 'ray-x/lsp_signature.nvim'
-
 
     -- snippets
     use {
