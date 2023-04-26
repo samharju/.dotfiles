@@ -57,7 +57,7 @@ cmp.setup {
         end,
         ['<CR>'] = function(fallback)
             if cmp.visible() and cmp.get_selected_entry() then
-                cmp.confirm()
+                cmp.confirm({ select = true })
             else
                 fallback() -- If you use vim-endwise, this fallback will behave the same as vim-endwise.
             end
