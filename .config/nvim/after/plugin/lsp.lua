@@ -100,6 +100,11 @@ local lsp_attach = function(client, bufnr)
     vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
 end
 
+require("neodev").setup({
+    -- add any options here, or leave empty to use the default settings
+})
+
+
 local lspconfig = require('lspconfig')
 
 local lsp_settings = {
