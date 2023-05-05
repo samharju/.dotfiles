@@ -5,15 +5,25 @@ require('lualine').setup {
     tabline = {
     },
     winbar = {
-        lualine_y = { { 'filename', path = 1 } }
+        lualine_a = {},
+        lualine_b = { { 'filename', path = 1 } },
+        lualine_c = { 'diagnostics' },
+        lualine_x = {},
+        lualine_y = {},
+        lualine_z = {}
     },
     inactive_winbar = {
-        lualine_y = { { 'filename', path = 1 } }
+        lualine_a = {},
+        lualine_b = { { 'filename', path = 1 } },
+        lualine_c = { 'diagnostics' },
+        lualine_x = {},
+        lualine_y = {},
+        lualine_z = {}
     },
     sections = {
         lualine_a = { 'mode' },
-        lualine_b = { 'branch', 'diff' },
-        lualine_c = { { 'filename', path = 1 }, 'diagnostics' },
+        lualine_b = { 'branch' },
+        lualine_c = { { 'filename', path = 1 }, 'diff', 'diagnostics' },
         lualine_y = { { 'buffers', mode = 2 } },
         lualine_x = { 'progress', 'filetype' },
         lualine_z = { 'location' }
