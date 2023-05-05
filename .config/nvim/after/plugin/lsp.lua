@@ -10,7 +10,7 @@ require('mason-lspconfig').setup({
         'ansiblels',
         'cssls',
         'cssmodules_ls',
-        'jedi_language_server',
+        'pyright',
     }
 })
 
