@@ -32,6 +32,6 @@ vim.g.mapleader = " "
 vim.opt.cursorline = true
 
 vim.diagnostic.config {
-    virtual_text = true,
-    virtual_lines = false
+    virtual_text = false,
+    virtual_lines = true
 }

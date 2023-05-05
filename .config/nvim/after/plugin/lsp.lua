@@ -133,6 +133,14 @@ end
 
 require('luasnip.loaders.from_vscode').lazy_load()
 
+require("lsp_lines").setup()
+
+vim.keymap.set(
+    "",
+    "<Leader>m",
+    require("lsp_lines").toggle,
+    { desc = "Toggle lsp_lines" }
+)
 
 require('lsp_signature').setup {
     bind = true,
