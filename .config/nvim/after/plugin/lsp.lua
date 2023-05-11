@@ -144,9 +144,9 @@ vim.keymap.set(
 
 require('lsp_signature').setup {
     bind = true,
-    fix_pos = true,
+    fix_pos = false,
     hint_enable = false,
-    max_width = 100,
+    max_width = 120,
     padding = ' ',
     handler_opts = {
         border = "rounded"
