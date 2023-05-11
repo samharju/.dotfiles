@@ -28,15 +28,17 @@ vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
-vim.keymap.set('n', '<leader>fo', function()
+vim.keymap.set('n', '<leader><leader>', function()
     vim.lsp.buf.format { async = true }
 end)
 
-local grp = vim.api.nvim_create_augroup("Prewrites", {})
+-- local grp = vim.api.nvim_create_augroup("Prewrites", { clear = true })
 
-vim.api.nvim_create_autocmd('BufWritePre', {
-    callback = function()
-        vim.lsp.buf.format()
-    end,
-    group = grp,
-})
+--vim.api.nvim_create_autocmd('BufWritePre', {
+--    callback = function()
+--        vim.lsp.buf.format()
+--    end,
+--    group = grp,
+--})
+
+
