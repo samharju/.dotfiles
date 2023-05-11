@@ -18,13 +18,16 @@ ntree.setup {
         }
     },
     renderer = {
-        icons = {
-            git_placement = "after"
-        },
+        --        icons = {
+        --            git_placement = "after"
+        --        },
         highlight_git = true,
-        highlight_opened_files = "name"
+        highlight_opened_files = "icon"
     },
     update_focused_file = {
+        enable = true
+    },
+    diagnostics = {
         enable = true
     }
 }
