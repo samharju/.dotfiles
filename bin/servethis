@@ -6,5 +6,5 @@ if [ -z "$port" ]; then
     port=3000
 fi
 
-python3 -m http.server "$port" --bind 127.0.0.1 --directory .
+python3 -m http.server "$port" --bind 0.0.0.0 --directory .
 
