@@ -15,15 +15,16 @@ require('mason-lspconfig').setup({
 })
 
 local luasnip = require('luasnip')
+
 local cmp = require('cmp')
 
 cmp.setup {
     formatting = {
         format = function(entry, vim_item)
             vim_item.menu = ({
-                buffer = "[Buffer]",
                 nvim_lsp = "[LSP]",
                 luasnip = "[LuaSnip]",
+                buffer = "[Buffer]",
                 nvim_lua = "[Lua]",
                 path = "[Path]",
             })[entry.source.name]
@@ -42,27 +43,38 @@ cmp.setup {
     sources = {
         { name = 'nvim_lsp' },
         { name = 'luasnip' },
-        { name = 'path',    keyword_length = 3 },
+        { name = 'path' },
         { name = 'buffer',  keyword_length = 5 },
     },
     mapping = {
-        ['<Tab>'] = function(fallback)
+        ['<Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_next_item()
-            elseif luasnip.expand_or_jumpable() then
+            elseif luasnip.expand_or_locally_jumpable() then
                 luasnip.expand_or_jump()
             else
                 fallback()
             end
-        end,
-        ['<CR>'] = function(fallback)
+        end, { "i", "s" }),
+        ['<S-Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then
+                luasnip.jump(-1)
+            else
+                fallback()
+            end
+        end, { "i", "s" }),
+        ['<CR>'] = cmp.mapping(function(fallback)
             if cmp.visible() and cmp.get_selected_entry() then
                 cmp.confirm({ select = true })
             else
                 fallback() -- If you use vim-endwise, this fallback will behave the same as vim-endwise.
             end
-        end,
-        ['<C-e>'] = cmp.mapping.abort()
+        end, { "i", "s" }),
+        ['<C-e>'] = cmp.mapping(
+            cmp.mapping.abort(),
+            { "i", "s" })
     }
 }
 
