@@ -84,6 +84,7 @@ return require('packer').startup(function(use)
 
     -- other than lsp formatting and diags
     use 'jose-elias-alvarez/null-ls.nvim'
+    use 'terrortylor/nvim-comment'
 
     -- match brackets in insert
     use {
