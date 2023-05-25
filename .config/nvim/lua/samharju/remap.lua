@@ -42,3 +42,5 @@ end)
 --})
 
 
+-- cmon not an editor command: W
+vim.cmd('command W w')
