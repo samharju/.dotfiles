@@ -18,9 +18,9 @@ ntree.setup {
         }
     },
     renderer = {
-        --        icons = {
-        --            git_placement = "after"
-        --        },
+        icons = {
+            git_placement = "after"
+        },
         highlight_git = true,
         highlight_opened_files = "icon"
     },
