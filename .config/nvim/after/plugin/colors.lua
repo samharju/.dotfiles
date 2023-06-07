@@ -5,3 +5,7 @@ require("onedark").setup({
     toggle_style_list = { 'dark', 'darker', 'cool', 'deep' },
 })
 require('onedark').load()
+
+
+
+require('colorizer').setup()
