@@ -70,7 +70,6 @@ return require('packer').startup(function(use)
     use 'hrsh7th/cmp-buffer'
     use 'hrsh7th/cmp-cmdline'
     use 'ray-x/lsp_signature.nvim'
-    use 'ErichDonGubler/lsp_lines.nvim'
 
     -- snippets
     use {
