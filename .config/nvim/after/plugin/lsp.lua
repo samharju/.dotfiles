@@ -14,7 +14,14 @@ require('mason-lspconfig').setup({
     }
 })
 
-local luasnip = require('luasnip')
+local ls = require('luasnip')
+
+vim.keymap.set("i", "<C-u>", function()
+    if ls.choice_active() then
+        ls.change_choice(1)
+    end
+end)
+
 
 local cmp = require('cmp')
 
@@ -44,14 +51,14 @@ cmp.setup {
         { name = 'nvim_lsp' },
         { name = 'luasnip' },
         { name = 'path' },
-        { name = 'buffer',  keyword_length = 5 },
+        { name = 'buffer',  keyword_length = 3 },
     },
     mapping = {
         ['<Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_next_item()
-            elseif luasnip.expand_or_locally_jumpable() then
-                luasnip.expand_or_jump()
+            elseif ls.expand_or_locally_jumpable() then
+                ls.expand_or_jump()
             else
                 fallback()
             end
@@ -59,8 +66,8 @@ cmp.setup {
         ['<S-Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then
-                luasnip.jump(-1)
+            elseif ls.jumpable(-1) then
+                ls.jump(-1)
             else
                 fallback()
             end
