@@ -1,2 +1,2 @@
 
-vim.keymap.set('n', '<leader>go', ':!python %<CR>')
+vim.keymap.set('n', '<leader>go', ':!python3 %<CR>')
