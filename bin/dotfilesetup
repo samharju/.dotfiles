@@ -126,8 +126,18 @@ install_fzf() {
 }
 
 # ------------------------------------------------------------
+
+install_bat() {
+    printaction
+    filename=bat-musl_0.23.0_amd64.deb
+    wget "https://github.com/sharkdp/bat/releases/download/v0.23.0/$filename"
+    sudo dpkg -i "$filename"
+}
+
+# ------------------------------------------------------------
+
 if [[ $# -eq 0 ]]; then
-    echo "zsh nvim python formatters apt_packages nvm fuck go docker fzf"
+    echo "zsh nvim python formatters apt_packages nvm fuck go docker fzf bat"
 fi
 
 while test $# -gt 0
@@ -162,6 +172,9 @@ do
             ;;
         fzf)
             install_fzf
+            ;;
+        bat)
+            install_bat
             ;;
         *)
             echo "invalid command: $1"
