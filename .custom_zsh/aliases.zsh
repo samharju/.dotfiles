@@ -1,6 +1,7 @@
 alias pypath='export PYTHONPATH=$(pwd)'
 
 alias nvimconfig='GIT_DIR=$HOME/.dotfiles GIT_WORK_TREE=$HOME nvim $HOME/.config/nvim'
+alias withconfig='export GIT_DIR=$HOME/.dotfiles GIT_WORK_TREE=$HOME'
 
 eval $(thefuck --alias)
 
