@@ -1,16 +1,19 @@
-sami-*
-wk-*
+# ignore worktrees
+wt-*
+
+# prefix garbage with underscores for visual and git separation
+___*
+
+# dull default profile outputdir
 profile
-
-
-# text stuff usually not needed
-*.json
-*.txt
 
 
 # editor default locations
 .vscode
 .idea
+
+
+
 
 # ------------------------------- https://github.com/github/gitignore/blob/main/Global/Archives.gitignore
 # It's better to unpack these files and commit the raw source because

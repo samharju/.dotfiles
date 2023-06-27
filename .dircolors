@@ -70,7 +70,10 @@ EXEC 01;32
 .go 00;96
 
 .json 00;33
+
+# textual
 .log 00;40;97
+.md 01;95
 
 # If you use DOS-style suffixes, you may want to uncomment the following:
 #.cmd 01;32 # executables (bright green)
