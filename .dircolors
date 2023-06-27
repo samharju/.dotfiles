@@ -1,10 +1,10 @@
 DIR 00;36
 
-.py 01;33
-.go 01;36
+.py 00;93
+.go 00;96
 .json 00;33
-.log 01;40;37
-.md 01;35
+.log 00;40;97
+.md 00;35
 
 # Configuration file for dircolors, a utility to help you set the
 # LS_COLORS environment variable used by GNU ls with the --color option.
