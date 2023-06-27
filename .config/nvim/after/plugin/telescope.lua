@@ -21,8 +21,8 @@ require('telescope').setup {
 
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>ff', builtin.current_buffer_fuzzy_find, {})
-vim.keymap.set('n', '<leader>fa', builtin.find_files, {})
-vim.keymap.set('n', '<leader>fz', function() builtin.find_files({ no_ignore = true }) end, {})
+vim.keymap.set('n', '<leader>fa', function() builtin.find_files({ hidden = true }) end, {})
+vim.keymap.set('n', '<leader>fz', function() builtin.find_files({ no_ignore = true, hidden = true }) end, {})
 vim.keymap.set('n', '<leader>fe', function() builtin.buffers({ previewer = false }) end, {})
 vim.keymap.set('n', '<leader>fd', builtin.diagnostics, {})
 vim.keymap.set('n', '<leader>fg', builtin.git_files, {})
