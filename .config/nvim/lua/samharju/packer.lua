@@ -43,6 +43,7 @@ return require('packer').startup(function(use)
     use { 'akinsho/toggleterm.nvim', tag = '*' }
     use 'nvim-tree/nvim-tree.lua'
     use 'nvim-tree/nvim-web-devicons'
+    use 'folke/flash.nvim'
 
     --------------------------------------------
     -- git
