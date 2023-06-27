@@ -30,3 +30,25 @@ vim.keymap.set("n", "\\", function()
     require("harpoon.term").sendCommand(1, "clear")
     require("harpoon.term").sendCommand(1, 1)
 end, { desc = "harpoon run first command" })
+
+
+local grp = vim.api.nvim_create_augroup("samharju", { clear = true })
+
+local function detach()
+    vim.api.nvim_clear_autocmds({ group = grp })
+    print("samharju cleared")
+end
+
+local function attach()
+    vim.api.nvim_create_autocmd("BufWritePost", {
+        group = vim.api.nvim_create_augroup("samharju", { clear = true }),
+        callback = function()
+            require("harpoon.term").sendCommand(1, "clear")
+            require("harpoon.term").sendCommand(1, 1)
+        end
+    })
+    vim.api.nvim_exec_autocmds("BufWritePost", { group = grp })
+end
+
+vim.keymap.set("n", "<leader>l", attach, { desc = "harpoon run first command on save" })
+vim.keymap.set("n", "<leader>o", detach, { desc = "harpoon clear command on save" })
