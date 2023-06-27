@@ -1,7 +1,7 @@
--- buffers
-vim.keymap.set("n", "<leader>bc", ":bdelete<CR>")
-vim.keymap.set("n", "<leader>bn", ":bn<CR>")
-vim.keymap.set("n", "<leader>bp", ":bp<CR>")
+-- iterate stuff via tab
+vim.keymap.set("n", "<TAB>w", ":wincmd w<CR>")
+vim.keymap.set("n", "<TAB>b", ":bnext<CR>")
+vim.keymap.set("n", "<TAB>c", ":bd<CR>")
 
 -- move block nicely
 
