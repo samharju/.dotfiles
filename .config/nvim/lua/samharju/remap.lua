@@ -24,14 +24,15 @@ vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
 
 
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
-vim.keymap.set('n', '<BS>e', vim.diagnostic.open_float)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-vim.keymap.set('n', '<BS>d', vim.diagnostic.goto_next)
-vim.keymap.set('n', '<BS>q', vim.diagnostic.setloclist)
+vim.keymap.set('n', '<leader>w', vim.diagnostic.open_float)
+vim.keymap.set('n', '<leader>j', vim.diagnostic.goto_prev)
+vim.keymap.set('n', '<leader>m', vim.diagnostic.goto_next)
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
 vim.keymap.set('n', '<leader><leader>', function()
     vim.lsp.buf.format { async = true }
-end)
+end, { desc = "format buffer" })
 
+vim.keymap.set("n", '<leader>p', ":b#<CR>")
 -- local grp = vim.api.nvim_create_augroup("Prewrites", { clear = true })
 
 --vim.api.nvim_create_autocmd('BufWritePre', {

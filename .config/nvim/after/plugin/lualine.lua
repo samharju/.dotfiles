@@ -10,7 +10,7 @@ require('lualine').setup {
     winbar = {
         lualine_a = {},
         lualine_b = {},
-        lualine_c = { { 'filename', path= 1 }, 'diagnostics' },
+        lualine_c = { { 'filename', path = 1 }, 'diagnostics' },
         lualine_x = {},
         lualine_y = {},
         lualine_z = {}
@@ -41,9 +41,9 @@ require('lualine').setup {
     },
 }
 
-vim.keymap.set("n", "<leader>j", function()
-    if vim.v.count == 0 then
-        return ":b#<CR>"
-    end
-    return "<cmd>LualineBuffersJump " .. vim.v.count .. "<CR>"
-end, { expr = true })
+-- vim.keymap.set("n", "<leader>j", function()
+--     if vim.v.count == 0 then
+--         return ":b#<CR>"
+--     end
+--     return "<cmd>LualineBuffersJump " .. vim.v.count .. "<CR>"
+-- end, { expr = true, desc = "lualine jump buffers" })
