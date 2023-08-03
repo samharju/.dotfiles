@@ -26,11 +26,20 @@ vim.cmd('highlight! TabLineFill guibg=NONE guifg=white')
 
 
 vim.keymap.set("n", "<leader><BS>", require("harpoon.cmd-ui").toggle_quick_menu)
-vim.keymap.set("n", "\\", function()
+vim.keymap.set("n", "\\\\", function()
     require("harpoon.term").sendCommand(1, "clear")
     require("harpoon.term").sendCommand(1, 1)
 end, { desc = "harpoon run first command" })
 
+vim.keymap.set("n", "\\2", function()
+    require("harpoon.term").sendCommand(1, "clear")
+    require("harpoon.term").sendCommand(1, 2)
+end, { desc = "harpoon run second command" })
+
+vim.keymap.set("n", "\\3", function()
+    require("harpoon.term").sendCommand(1, "clear")
+    require("harpoon.term").sendCommand(1, 3)
+end, { desc = "harpoon run third command" })
 
 local grp = vim.api.nvim_create_augroup("samharju", { clear = true })
 
