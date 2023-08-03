@@ -86,11 +86,6 @@ return require('packer').startup(function(use)
     use 'jose-elias-alvarez/null-ls.nvim'
     use 'terrortylor/nvim-comment'
 
-    -- match brackets in insert
-    use {
-        'windwp/nvim-autopairs',
-        config = function() require('nvim-autopairs').setup {} end
-    }
     use 'windwp/nvim-ts-autotag'
 
     -- setup packer automatically
