@@ -123,6 +123,7 @@ install_docker() {
 install_fzf() {
     printaction
     ~/.fzf/install
+    sudo apt install fd-find
 }
 
 # ------------------------------------------------------------

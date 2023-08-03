@@ -30,6 +30,9 @@ export NVM_DIR="$HOME/.nvm"
 export ANSIBLE_STDOUT_CALLBACK=debug
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_COMMAND='fd --type f'
+export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
+export FZF_ALT_C_COMMAND='fd --type d'
 
 # tokens and stuff from this guy
 [ -f ~/.secrets ] && source ~/.secrets

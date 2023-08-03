@@ -13,3 +13,4 @@ alias lsa='ls -lah --group-directories-first'
 alias tm='tmux'
 
 alias rgf="rg --files | rg"
+alias dea="deactivate"
