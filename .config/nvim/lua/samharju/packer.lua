@@ -88,6 +88,9 @@ return require('packer').startup(function(use)
 
     use 'windwp/nvim-ts-autotag'
 
+    --goofy stuff
+    use 'eandrju/cellular-automaton.nvim'
+
     -- setup packer automatically
     if packer_bootstrap then
         require('packer').sync()
