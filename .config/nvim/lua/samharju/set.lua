@@ -30,6 +30,11 @@ vim.g.mapleader = " "
 
 vim.opt.cursorline = true
 
+vim.opt.list = true
+vim.opt.listchars:append "eol:↴"
+-- vim.opt.listchars:append "space:⋅"
+vim.opt.listchars:append "trail:-"
+
 vim.diagnostic.config {
     virtual_text = { source = 'if_many' },
     severity_sort = true,
