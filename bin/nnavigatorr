@@ -8,9 +8,9 @@ if [ -z "$project" ]; then
     exit 0
 fi
 
-sessari="$(basename $project)"
-if ! tmux has-session -t=$sessari 2> /dev/null; then
-    tmux new-session -ds $sessari -c $project
+sessari="$(basename "$project")"
+if ! tmux has-session -t="$sessari" 2> /dev/null; then
+    tmux new-session -ds "$sessari" -c "$HOME/$project"
 fi
 
-tmux switch-client -t $sessari
+tmux switch-client -t "$sessari"
