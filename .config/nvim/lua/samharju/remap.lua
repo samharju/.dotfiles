@@ -18,9 +18,10 @@ vim.keymap.set("n", "N", "Nzzzv")
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
 
 -- yank to system clipboard
---vim.keymap.set("n", "<leader>y", "\"+y")
---vim.keymap.set("v", "<leader>y", "\"+y")
---vim.keymap.set("n", "<leader>Y", "\"+Y")
+vim.keymap.set({ "n", "v" }, "<leader>y", "\"+y")
+vim.keymap.set({ "n", "v" }, "<leader>p", "\"+p")
+vim.keymap.set("n", "<leader>Y", "\"+Y")
+vim.keymap.set("n", "<leader>P", "\"+P")
 
 
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
@@ -32,7 +33,7 @@ vim.keymap.set('n', '<leader><leader>', function()
     vim.lsp.buf.format { async = true }
 end, { desc = "format buffer" })
 
-vim.keymap.set("n", '<leader>p', ":b#<CR>")
+vim.keymap.set("n", '<leader>;', ":b#<CR>")
 -- local grp = vim.api.nvim_create_augroup("Prewrites", { clear = true })
 
 --vim.api.nvim_create_autocmd('BufWritePre', {
