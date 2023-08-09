@@ -1,24 +1,32 @@
 #!/usr/bin/env bash
 
+gray="\033[0;90m"
+green="\033[0;32m"
+nocolor="\033[0;0m"
+
 rt=$(pwd)
 venvpath=""
+
+printgray () {
+    echo "${gray}$1${nocolor}"
+}
 
 while [[ -z $venvpath ]]
 do
     if [[ "$(pwd)" == ~ ]]; then
-            echo "Hit home root, exiting"
+            printgray "Hit home root, abort"
             break
     fi
-    echo "checking $(pwd)"
-    venvpath=$(find "$(pwd)" -name activate 2>/dev/null)
+    printgray "fd -t f -I \"activate\$\" $(pwd)"
+    venvpath=$(fd -t f -I "activate$")
     if [[ -z $venvpath ]];
     then
-        echo "travel up"
         cd ..
     else
-        echo "found $venvpath, activating"
+        printgray "found $venvpath"
         . "$venvpath"
+        echo "${green}OK: ${nocolor}VIRTUAL_ENV=$VIRTUAL_ENV"
     fi
 done
 
-cd "$rt"
+cd "$rt" || return

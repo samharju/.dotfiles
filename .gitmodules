@@ -4,6 +4,3 @@
 [submodule ".fzf"]
 	path = .fzf
 	url = https://github.com/junegunn/fzf.git
-[submodule ".onedark-tmux-theme"]
-	path = .onedark-tmux-theme
-	url = https://github.com/odedlaz/tmux-onedark-theme

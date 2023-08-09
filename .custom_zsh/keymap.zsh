@@ -1,12 +1,16 @@
 
 pj() {
-    projects=$(fd -H -t d "\.git$" "$HOME/git" | sed -e "s/\/\.git$//" )
+    project=$(fd --ignore-file="$HOME/.fdprojectignore" -H -t d "\.git$" "$HOME" | \
+        sed -e 's|/.git$||' -e "s|$HOME/||" | \
+        fzf)
 
-    selected=$(echo "$projects" | fzf)
-    if [ -n "$selected" ]; then
-        cd "$selected" || echo "failed to cd" 
-        zle reset-prompt
+    if [ -z "$project" ]; then
+        return
     fi
+
+    cd "$HOME/$project" || echo "failed to cd" 
+    echo
+    zle reset-prompt
 }
 
 zle -N pj
