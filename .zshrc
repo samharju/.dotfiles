@@ -2,6 +2,7 @@
 
 export PATH=$HOME/bin\
 :$HOME/.local/bin\
+:$HOME/.local/scripts\
 :$HOME/go/bin\
 :/usr/local/bin\
 :/usr/local/go/bin\

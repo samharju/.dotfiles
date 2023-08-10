@@ -124,6 +124,7 @@ install_fzf() {
     printaction
     ~/.fzf/install
     sudo apt install fd-find
+    ln -s "$(command -v fdfind)" ~/.local/bin/fd
 }
 
 # ------------------------------------------------------------
