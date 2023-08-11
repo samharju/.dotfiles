@@ -1,8 +1,6 @@
 # everything
 /*
 
-# except itself
-.dotfiles
 
 # except scripts
 !/.local
@@ -17,8 +15,7 @@
 
 # except zsh setup
 !/.custom_zsh
-.custom_zsh/plugins
 
-# ignore secrets anyway in case of ignorefile going potato
+# ignore these anyways so they stay ignored even if fiddling with above patterns
 .secrets
-
+.dotfiles
