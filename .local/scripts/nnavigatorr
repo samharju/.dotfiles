@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-project=$(fd --ignore-file="$HOME/.fdprojectignore" -H -t d "\.git$" "$HOME" | \
-    sed -e 's|/.git$||' -e "s|$HOME/||" | \
-    fzf)
+project=$(gitprojectfind)
 
 if [ -z "$project" ]; then
     exit 0
@@ -10,7 +8,7 @@ fi
 
 sessari="$(basename "$project")"
 if ! tmux has-session -t="$sessari" 2> /dev/null; then
-    tmux new-session -ds "$sessari" -c "$HOME/$project"
+    tmux new-session -ds "$sessari" -c "$project"
 fi
 
 tmux switch-client -t "$sessari"

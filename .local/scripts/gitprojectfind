@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+project=$(fd --ignore-file="$HOME/.fdprojectignore" -H -t d "\.git$" "$HOME" | \
+    sed -e 's|/.git$||' -e "s|$HOME/||" | \
+    fzf )
+
+echo "$HOME/$project"
+
