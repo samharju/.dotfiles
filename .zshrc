@@ -1,13 +1,16 @@
+#!/usr/bin/zsh
 # check .oh-my-zsh/templates/zshrc.zsh-template for removed stuff
 
-export PATH=$HOME/bin\
+binpaths=$HOME/bin\
 :$HOME/.local/bin\
 :$HOME/.local/scripts\
 :$HOME/go/bin\
 :/usr/local/bin\
-:/usr/local/go/bin\
-:$PATH
+:/usr/local/go/bin
 
+if ! [[ "$PATH" =~ "$binpaths" ]]; then
+    export PATH=$binpaths:$PATH
+fi
 
 # ZSH
 export ZSH="$HOME/.oh-my-zsh"
