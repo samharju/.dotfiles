@@ -1,7 +1,7 @@
 -- iterate stuff via tab
 vim.keymap.set("n", "<TAB>w", ":wincmd w<CR>")
 vim.keymap.set("n", "<TAB>b", ":bnext<CR>")
-vim.keymap.set("n", "<TAB>c", ":bd<CR>")
+vim.keymap.set("n", "<TAB>c", ":bp<CR>:bd#<CR>")
 
 -- move block nicely
 
