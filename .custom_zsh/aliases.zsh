@@ -12,3 +12,6 @@ alias tmn='tmux new -s'
 
 alias rgf="fd -t f | rg"
 alias dea="deactivate"
+
+alias tss='tmux switch-client -t $(tmux list-sessions -F "#{session_name}" | fzf --height=~5 --layout=reverse-list)'
+
