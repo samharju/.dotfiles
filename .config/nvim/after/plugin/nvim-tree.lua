@@ -11,19 +11,20 @@ local ntree = require("nvim-tree")
 
 ntree.setup {
     view = {
-        width = {},
-        float = {
-            enable = true,
-            quit_on_focus_loss = false,
-            open_win_config = {
-                relative = "cursor",
-                border = "rounded",
-                width = 30,
-                height = 30,
-                row = 1,
-                col = 1,
-            },
-        }
+        side = "right",
+        width = 50,
+        -- float = {
+        --     enable = true,
+        --     quit_on_focus_loss = false,
+        --     open_win_config = {
+        --         relative = "cursor",
+        --         border = "rounded",
+        --         width = 30,
+        --         height = 30,
+        --         row = 1,
+        --         col = 1,
+        --     },
+        -- }
     },
     filters = {
         dotfiles = false,
@@ -55,4 +56,4 @@ ntree.setup {
     }
 }
 
-vim.keymap.set("n", "<leader>v", ":NvimTreeFindFile<CR>")
+vim.keymap.set("n", "<leader>v", ":NvimTreeFindFileToggle<CR>")

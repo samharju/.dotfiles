@@ -8,7 +8,7 @@ require('telescope').setup {
     },
     pickers = {
         find_files = {
-            theme = "ivy",
+            theme = "dropdown",
             results_title = false,
             previewer = false,
             hidden = true,
@@ -28,8 +28,10 @@ require('telescope').setup {
 
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>ff', builtin.current_buffer_fuzzy_find, { desc = "tele current_buffer_fuzzy_find" })
-vim.keymap.set('n', '<leader>fa', builtin.find_files, { desc = "tele find_files" })
-vim.keymap.set('n', '<leader>fz', function() builtin.find_files({ no_ignore = true }) end,
+vim.keymap.set('n', '<leader>fa', function() builtin.find_files({ prompt_title = "Files" }) end,
+    { desc = "tele find_files" })
+vim.keymap.set('n', '<leader>fz',
+    function() builtin.find_files({ no_ignore = true, prompt_title = "All files, no ignore" }) end,
     { desc = "tele find_files no ignore" })
 vim.keymap.set('n', '<leader>fe', builtin.buffers, { desc = "tele buffers" })
 vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = "tele diagnostics" })
