@@ -88,6 +88,7 @@ return require('packer').startup(function(use)
 
     use 'windwp/nvim-ts-autotag'
 
+    use 'mzlogin/vim-markdown-toc'
     --goofy stuff
     use 'eandrju/cellular-automaton.nvim'
 
