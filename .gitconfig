@@ -1,6 +1,7 @@
 [core]
 	excludesfile = /home/sami/.git_global
 	editor = nvim
+	pager = 
 [push]
 	autoSetupRemote = true
 	default = current
