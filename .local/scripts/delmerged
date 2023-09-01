@@ -1,13 +1,15 @@
 #!/bin/bash
 set -e
 if [ -z "$1" ]; then
-  git checkout master
+    echo "usage: delmerged <branch>"
+    exit 1
 fi
 
-git pull
+git checkout "$1"
+git pull --ff-only
 
 # this will exit script if grep has no matches
-purge=$(git branch --merged | grep -Ev "master|development|dev|\*")
+purge=$(git branch --merged | grep -Ev "trunk|master|main|development|dev|\*")
 
 cat << "FOO"
 ___  _  _ ____ ____ ____    ____ ___ _  _ ____ ____
