@@ -24,11 +24,11 @@ install_zsh() {
 
 install_nvim() {
     printaction
-    wget https://github.com/neovim/neovim/releases/download/v0.8.3/nvim.appimage
+    wget https://github.com/neovim/neovim/releases/download/v0.9.1/nvim.appimage
     chmod u+x nvim.appimage
     mv nvim.appimage ~/.local/bin/nvim
     nvim --version
-    nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+    nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerInstall'
 }
 
 # ------------------------------------------------------------
