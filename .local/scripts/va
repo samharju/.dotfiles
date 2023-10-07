@@ -18,7 +18,7 @@ do
             break
     fi
     printgray "fd -t f -I \"activate\$\" $(pwd)"
-    venvpath=$(fd -t f -I "activate$")
+    venvpath=$(fd -t f -I "activate$" | head -1)
     if [[ -z $venvpath ]];
     then
         cd ..

@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+fd --ignore-file ~/.git_global --type d . ~ | fzf --header='all folders' --header-first

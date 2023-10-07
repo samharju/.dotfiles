@@ -1,5 +1,5 @@
 
-pj() {
+gitprojects() {
     project=$(gitprojectfind)
 
     if [ -z "$project" ]; then
@@ -11,6 +11,24 @@ pj() {
     zle reset-prompt
 }
 
-zle -N pj
+zle -N gitprojects
 
-bindkey "^[m" pj
+
+folders() {
+    ff=$(folderfind)
+
+    if [ -z "$ff" ]; then
+        return
+    fi
+
+    cd "$ff" || echo "failed to cd"
+    echo
+    zle reset-prompt
+}
+
+zle -N folders
+
+
+bindkey "^[m" gitprojects
+bindkey "^[n" folders
+

@@ -1,10 +1,4 @@
 #!/usr/bin/env bash
 
-project=$(fd --ignore-file="$HOME/.fdprojectignore" -I -H -t d "\.git$" "$HOME" | \
-    sed -e 's|/.git$||' -e "s|$HOME/||" | \
-    fzf --preview "tree -C -L 1 --dirsfirst $HOME/{}" )
-
-if [ -n "$project" ];then
-    echo "$HOME/$project"
-fi
+fd --ignore-file="$HOME/.fdprojectignore" -I -H -t d "\.git$" "$HOME" | sed -e 's|/.git$||' | fzf --header='git projects' --header-first --preview "tree -C -L 1 --dirsfirst {}"
 
