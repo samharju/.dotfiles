@@ -24,7 +24,7 @@ end)
 
 
 local cmp = require('cmp')
-
+local compare = require('cmp.config.compare')
 cmp.setup {
     formatting = {
         format = function(entry, vim_item)
@@ -42,16 +42,39 @@ cmp.setup {
         --completion = cmp.config.window.bordered()
         --documentation = cmp.config.window.bordered()
     },
+    sorting = {
+        priority_weight = 2,
+        comparators = {
+            -- compare.offset,
+            compare.exact,
+            compare.scopes,
+            compare.score,
+            compare.recently_used,
+            compare.locality,
+            compare.kind,
+            -- compare.sort_text,
+            compare.length,
+            compare.order,
+        },
+    },
     snippet = {
         expand = function(args)
             require('luasnip').lsp_expand(args.body)
         end,
     },
     sources = {
-        { name = 'nvim_lsp' },
+        {
+            name = 'nvim_lsp',
+            entry_filter = function(entry, ctx)
+                if ctx.filetype == "python" then
+                    return string.sub(entry:get_word(), 1, 2) ~= "__"
+                end
+                return true
+            end
+        },
         { name = 'luasnip' },
         { name = 'path' },
-        { name = 'buffer',  keyword_length = 3 },
+        { name = 'buffer', keyword_length = 3 },
     },
     mapping = {
         ['<Tab>'] = cmp.mapping(function(fallback)
@@ -160,5 +183,4 @@ require('lsp_signature').setup {
     -- handler_opts = {
     --     border = "rounded"
     -- }
-
 }
