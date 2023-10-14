@@ -11,39 +11,24 @@ local ntree = require("nvim-tree")
 
 ntree.setup {
     view = {
-        side = "right",
-        width = 50,
-        -- float = {
-        --     enable = true,
-        --     quit_on_focus_loss = false,
-        --     open_win_config = {
-        --         relative = "cursor",
-        --         border = "rounded",
-        --         width = 30,
-        --         height = 30,
-        --         row = 1,
-        --         col = 1,
-        --     },
-        -- }
+        float = {
+            enable = true,
+            quit_on_focus_loss = true,
+        }
     },
     filters = {
-        dotfiles = false,
+        git_ignored = false
     },
     renderer = {
         icons = {
             git_placement = "after",
-            modified_placement = "after"
         },
         highlight_git = true,
-        highlight_opened_files = "icon",
     },
     update_focused_file = {
         enable = true
     },
     diagnostics = {
-        enable = true
-    },
-    modified = {
         enable = true
     },
     actions = {

@@ -5,3 +5,4 @@ vim.keymap.set("n", "<leader>gs", function()
 end, { desc = "git fugitive" })
 
 vim.keymap.set("n", "<leader>gg", ":GitGutterLineHighlightsToggle<CR>")
+vim.keymap.set("n", "<leader>gv", ":Gvdiffsplit ")
