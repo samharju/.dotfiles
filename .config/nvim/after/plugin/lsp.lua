@@ -156,6 +156,19 @@ local lsp_settings = {
                 globals = { 'vim' }
             }
         }
+    },
+    pyright = {
+        python = {
+            analysis = {
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+                diagnosticMode = "openFilesOnly",
+                diagnosticSeverityOverrides = {
+                    reportOptionalMemberAccess = "information",
+                    reportGeneralTypeIssues = "information"
+                }
+            }
+        }
     }
 }
 
