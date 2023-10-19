@@ -39,3 +39,4 @@ vim.keymap.set('n', '<leader>fl', builtin.live_grep, { desc = "tele live_grep" }
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = "tele help_tags" })
 vim.keymap.set('n', '<leader>fs', builtin.grep_string, { desc = "tele grep_string" })
 vim.keymap.set('n', '<leader>fk', builtin.keymaps, { desc = "tele keymaps" })
+vim.keymap.set('n', '<leader>fv', builtin.git_status, { desc = "tele git status" })
