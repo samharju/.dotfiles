@@ -18,12 +18,18 @@ do
             printgray "Hit home root, abort"
             break
     fi
-    printgray "fd -t f -I \"activate\$\" $(pwd)"
+
+    if [[ "$(pwd)" == / ]]; then
+            printgray "Hit root, abort"
+            break
+    fi
     venvpath=$(fd -t f -I "activate$" | head -1)
     if [[ -z $venvpath ]];
     then
+        printgray "fd -t f -I \"activate\$\" $(pwd) -> nah"
         cd ..
     else
+        printgray "fd -t f -I \"activate\$\" $(pwd) -> oh"
         printgray "found $venvpath"
         . "$venvpath"
         echo "${green}OK: ${nocolor}VIRTUAL_ENV=$VIRTUAL_ENV"
