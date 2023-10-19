@@ -14,6 +14,9 @@ ntree.setup {
         float = {
             enable = true,
             quit_on_focus_loss = true,
+            open_win_config = {
+                width = 35,
+            }
         }
     },
     filters = {
