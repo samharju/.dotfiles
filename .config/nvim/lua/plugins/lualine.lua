@@ -1,6 +1,22 @@
+local function active_lsps()
+    local out = ""
+    for _, value in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
+        if string.len(out) == 0 then
+            out = value.name
+        else
+            out = out .. ", " .. value.name
+        end
+    end
+    return out
+end
+
 return {
     'nvim-lualine/lualine.nvim',
+    dependencies = {
+        'arkav/lualine-lsp-progress'
+    },
     opts = {
+        extensions = { 'fugitive', 'nvim-tree', 'lazy', 'quickfix', 'mason' },
         options = {
             globalstatus = true,
             refresh = {
@@ -29,8 +45,8 @@ return {
             lualine_a = { 'mode' },
             lualine_b = { 'branch', { 'filename', path = 1 } },
             lualine_c = { 'diff' },
-            lualine_x = { 'progress', 'filetype' },
-            lualine_y = {},
+            lualine_x = { 'lsp_progress', },
+            lualine_y = { active_lsps, 'filetype' },
             lualine_z = { 'location' }
         },
         inactive_sections = {
