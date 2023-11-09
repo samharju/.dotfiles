@@ -27,15 +27,15 @@ vim.keymap.set("n", "<leader>P", "\"+P")
 
 
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
-vim.keymap.set('n', '<leader>w', vim.diagnostic.open_float)
-vim.keymap.set('n', '<leader>j', vim.diagnostic.goto_prev)
-vim.keymap.set('n', '<leader>m', vim.diagnostic.goto_next)
+vim.keymap.set('n', '<leader>w', vim.diagnostic.open_float, { desc = "Open diagnostic" })
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = "Next diagnostic" })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
 vim.keymap.set('n', '<leader><leader>', function()
     vim.lsp.buf.format { async = true }
 end, { desc = "format buffer" })
 
-vim.keymap.set("n", '<leader>;', ":b#<CR>")
+vim.keymap.set("n", '<leader>;', ":b#<CR>", { desc = "Previous buffer" })
 -- local grp = vim.api.nvim_create_augroup("Prewrites", { clear = true })
 
 --vim.api.nvim_create_autocmd('BufWritePre', {
