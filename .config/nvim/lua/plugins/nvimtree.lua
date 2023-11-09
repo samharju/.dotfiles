@@ -5,14 +5,14 @@ return {
         'nvim-tree/nvim-web-devicons',
     },
     keys = {
-        { '<leader>v', ':NvimTreeFindFileToggle<CR>', desc = 'nvimtree toggle' }
+        { '<leader>v', ':NvimTreeFindFileToggle<CR>', desc = 'nvimtree toggle', silent = true }
     },
     opts = {
         hijack_cursor = true,
         view = {
             float = {
                 enable = true,
-                quit_on_focus_loss = true,
+                quit_on_focus_loss = false,
             },
             signcolumn = "yes",
             width = {} -- empty table means adaptive

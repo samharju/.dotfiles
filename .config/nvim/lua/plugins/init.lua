@@ -1,6 +1,7 @@
 return {
     'nvim-telescope/telescope.nvim',
     'hrsh7th/nvim-cmp',
+    'stevearc/dressing.nvim',
 
     {
         'hrsh7th/cmp-cmdline',
@@ -27,7 +28,9 @@ return {
         'lukas-reineke/indent-blankline.nvim',
         main = 'ibl',
         opts = {
-            scope = { show_start = false, show_end = false } }
+            scope = { show_start = false, show_end = false },
+            indent = { tab_char = "▎" }
+        }
     },
     {
         'folke/zen-mode.nvim',
@@ -51,6 +54,7 @@ return {
     },
     {
         'tpope/vim-fugitive',
+        lazy = false,
         keys = {
             { '<leader>gs', function() vim.cmd('vert Git') end, desc = 'git fugitive' },
             { '<leader>gv', ':Gvdiffsplit ',                    desc = 'git diff split' }
@@ -59,7 +63,7 @@ return {
     {
         'airblade/vim-gitgutter',
         lazy = false,
-        keys = { { '<leader>gg', ':GitGutterLineHighlightsToggle<CR>', desc = 'toggle gutter' } }
+        keys = { { '<leader>gg', ':GitGutterLineHighlightsToggle<CR>', desc = 'toggle gutter', silent = true } }
     },
     {
         'terrortylor/nvim-comment',

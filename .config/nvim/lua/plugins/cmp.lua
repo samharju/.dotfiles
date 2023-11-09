@@ -25,13 +25,13 @@ return {
             end
         },
         window = {
-            --completion =require('cmp').config.window.bordered()
-            --documentation =require('cmp').config.window.bordered()
+            -- completion =require('cmp').config.window.bordered(),
+            documentation = require('cmp').config.window.bordered()
         },
         sorting = {
             priority_weight = 2,
             comparators = {
-                -- require('cmp.config.compare').offset,
+                require('cmp.config.compare').offset,
                 require('cmp.config.compare').exact,
                 require('cmp.config.compare').scopes,
                 require('cmp.config.compare').score,
