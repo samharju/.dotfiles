@@ -1,6 +1,6 @@
 [core]
-	excludesfile = /home/sami/.git_global
 	editor = nvim
+	excludesfile = /home/sami/.gitignore.global
 [push]
 	autoSetupRemote = true
 	default = current

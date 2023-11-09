@@ -11,11 +11,17 @@
 !/.config
 .config/*
 !.config/nvim
-.config/nvim/plugin/
 
 # except zsh setup
 !/.custom_zsh
 
+# stuff with underscores to be forgotten
+___*
+
 # ignore these anyways so they stay ignored even if fiddling with above patterns
+
+# work stuff, tokens etc
 .secrets
+
+# git folder
 .dotfiles
