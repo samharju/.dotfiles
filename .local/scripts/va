@@ -1,40 +1,80 @@
 #!/usr/bin/env bash
 
+if [[ "$1" == "-h" ]]; then
+    cat << "EOF"
+__     ___      _               _
+\ \   / (_)_ __| |_ _   _  __ _| | ___ _ ____   __
+ \ \ / /| | '__| __| | | |/ _` | |/ _ \ '_ \ \ / /
+  \ V / | | |  | |_| |_| | (_| | |  __/ | | \ V /
+   \_/  |_|_|   \__|\__,_|\__,_|_|\___|_| |_|\_/
+
+    _        _   _            _
+   / \   ___| |_(_)_   ____ _| |_ ___  _ __
+  / _ \ / __| __| \ \ / / _` | __/ _ \| '__|
+ / ___ \ (__| |_| |\ V / (_| | || (_) | |
+/_/   \_\___|\__|_| \_/ \__,_|\__\___/|_|
+
+
+Script searches for nearest venv/bin/activate and sources it.
+Usage:
+   . va
+   source va
+EOF
+    exit 0
+fi
+
+if ! command -v fd &> /dev/null; then
+    cprint "$yellow" "Install fd (fdfind) first"
+fi
+
+
 gray="\033[0;90m"
 green="\033[0;32m"
 yellow="\033[0;33m"
 nocolor="\033[0;0m"
 
+
 rt=$(pwd)
 venvpath=""
+nok=0
 
-printgray () {
-    echo "${gray}$1${nocolor}"
+
+cprint () {
+    echo "$1$2$nocolor"
 }
+
 
 while [[ -z $venvpath ]]
 do
     if [[ "$(pwd)" == ~ ]]; then
-            printgray "Hit home root, abort"
+            cprint "$gray" "Hit home root, abort"
+            break
+    elif [[ "$(pwd)" == / ]]; then
+            cprint "$gray" "Hit root, abort"
             break
     fi
 
-    if [[ "$(pwd)" == / ]]; then
-            printgray "Hit root, abort"
-            break
-    fi
-    venvpath=$(fd -t f -I "activate$" | head -1)
+    venvpath=$(fd -t f -I -H "activate$")
     if [[ -z $venvpath ]];
     then
-        printgray "fd -t f -I \"activate\$\" $(pwd) -> nah"
+        cprint "$gray" "fd -t f -I -H \"activate\$\" $(pwd) -> nah"
         cd ..
     else
-        printgray "fd -t f -I \"activate\$\" $(pwd) -> oh"
-        printgray "found $venvpath"
+        cprint "$gray" "fd -t f -I -H \"activate\$\" $(pwd) -> oh"
+        if [[ $(echo "$venvpath" | wc -l) -gt 1  ]]; then
+            cprint "$yellow" "found multiple possible venvs, wont source anything:"
+            cprint "$gray" "$venvpath"
+            nok=1
+            break
+        fi
+        cprint "$gray" "found $venvpath"
         . "$venvpath"
         echo "${green}OK: ${nocolor}VIRTUAL_ENV=$VIRTUAL_ENV"
-        echo "${yellow}$(python -V)${nocolor}"
+        cprint "$yellow" "$(python -V)"
+        alias dea='[ -n "$VIRTUAL_ENV" ] && deactivate && unalias dea'
+        cprint "$gray" "Run 'dea' to deactivate"
     fi
 done
 
-cd "$rt" || return
+cd "$rt" || return 1
+return $nok
