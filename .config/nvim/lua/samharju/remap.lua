@@ -42,7 +42,3 @@ vim.keymap.set("n", '<leader>;', ":b#<CR>")
 --    end,
 --    group = grp,
 --})
-
-
--- cmon not an editor command: W
-vim.cmd('command W w')
