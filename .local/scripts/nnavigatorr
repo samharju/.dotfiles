@@ -7,6 +7,7 @@ if [ -z "$project" ]; then
 fi
 
 sessari="$(basename "$project")"
+sessari="${sessari//./-}"
 if ! tmux has-session -t="$sessari" 2> /dev/null; then
     tmux new-session -ds "$sessari" -c "$project"
 fi
