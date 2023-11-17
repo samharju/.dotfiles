@@ -21,7 +21,9 @@ return {
             globalstatus = true,
             refresh = {
                 statusline = 200,
-            }
+            },
+            component_separators = { left = '', right = '' },
+            section_separators = { left = '', right = '' },
         },
         tabline = {
         },
