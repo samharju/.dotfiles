@@ -65,5 +65,7 @@ return {
 
         vim.keymap.set('n', '<leader>l', attach, { desc = 'harpoon run first command on save' })
         vim.keymap.set('n', '<leader>o', detach, { desc = 'harpoon clear command on save' })
+
+        require("telescope").load_extension('harpoon')
     end
 }
