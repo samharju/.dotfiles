@@ -34,15 +34,15 @@ return {
     },
     {
         'folke/zen-mode.nvim',
-        config = function()
-            vim.keymap.set('n', '<leader>z', require('zen-mode').toggle, { desc = 'zen mode' })
-        end,
+        keys = {
+            { '<leader>z', function() require('zen-mode').toggle() end, desc = 'zen mode' }
+        }
     },
     {
         'folke/flash.nvim',
-        config = function()
-            vim.keymap.set('n', 's', require('flash').jump, { desc = 'init flash' })
-        end,
+        keys = {
+            { 's', function() require('flash').jump() end, desc = 'flash search' }
+        }
     },
     {
         'NvChad/nvim-colorizer.lua',

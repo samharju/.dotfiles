@@ -25,6 +25,12 @@ vim.keymap.set({ "n", "v" }, "<leader>p", "\"+p")
 vim.keymap.set("n", "<leader>Y", "\"+Y")
 vim.keymap.set("n", "<leader>P", "\"+P")
 
+-- iterate quick- and loclist
+vim.keymap.set("n", "[q", ":cprev<CR>")
+vim.keymap.set("n", "]q", ":cnext<CR>")
+vim.keymap.set("n", "[l", ":lprev<CR>")
+vim.keymap.set("n", "]l", ":lnext<CR>")
+
 
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 vim.keymap.set('n', '<leader>w', vim.diagnostic.open_float, { desc = "Open diagnostic" })
@@ -36,11 +42,3 @@ vim.keymap.set('n', '<leader><leader>', function()
 end, { desc = "format buffer" })
 
 vim.keymap.set("n", '<leader>;', ":b#<CR>", { desc = "Previous buffer" })
--- local grp = vim.api.nvim_create_augroup("Prewrites", { clear = true })
-
---vim.api.nvim_create_autocmd('BufWritePre', {
---    callback = function()
---        vim.lsp.buf.format()
---    end,
---    group = grp,
---})
