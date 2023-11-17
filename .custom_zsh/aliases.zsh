@@ -40,4 +40,7 @@ alias nodotfiles='unset GIT_DIR GIT_WORK_TREE'
 alias cnf='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
 alias cnfs='cnf status -unormal'
 
+# heavy duty flaking for code review
+alias flakereview="~/.local/bin/flake8 --max-line-length=88 --extend-ignore=E501,E203,U101  --extend-select=B9 --enable-extensions=G --unused-arguments-ignore-variadic-names --unused-arguments-ignore-dunder"
+
 
