@@ -29,6 +29,9 @@ folders() {
 zle -N folders
 
 
+# alt-m for fuzzy finding git projects
 bindkey "^[m" gitprojects
+
+# alt-n for fuzzy finding all folders
 bindkey "^[n" folders
 
