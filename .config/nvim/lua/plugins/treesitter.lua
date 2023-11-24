@@ -3,14 +3,12 @@ return {
     dependencies = {
         'nvim-treesitter/nvim-treesitter-context',
         'windwp/nvim-ts-autotag',
+        'nvim-treesitter/nvim-treesitter-textobjects',
     },
     build = ':TSUpdate',
     config = function()
-        local configs = require('nvim-treesitter.configs')
-
-        configs.setup({
+        require('nvim-treesitter.configs').setup({
             auto_install = true,
-
             highlight = {
                 enable = true,
                 additional_vim_regex_highlighting = false,
@@ -26,6 +24,18 @@ return {
                     node_decremental = '<S-TAB>',
                 },
             },
+            textobjects = {
+                move = {
+                    enable = true,
+                    set_jumps = false,
+                    goto_next_start = {
+                        ["]p"] = "@parameter.inner",
+                    },
+                    goto_previous_start = {
+                        ["[p"] = "@parameter.inner",
+                    }
+                }
+            }
         })
     end
 }
