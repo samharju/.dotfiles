@@ -12,13 +12,11 @@ return {
         require('mason-lspconfig').setup({
             ensure_installed = {
                 -- Replace these with whatever servers you want to install
+                'bashls',
+                'docker_compose_language_service',
+                'dockerls',
                 'gopls',
                 'lua_ls',
-                'bashls',
-                'tsserver',
-                'ansiblels',
-                'cssls',
-                'cssmodules_ls',
                 'pyright',
             }
         })
@@ -55,13 +53,10 @@ return {
             pyright = {
                 python = {
                     analysis = {
+                        typeCheckingMode = 'basic',
                         autoSearchPaths = true,
-                        useLibraryCodeForTypes = true,
-                        diagnosticMode = 'openFilesOnly',
-                        diagnosticSeverityOverrides = {
-                            reportOptionalMemberAccess = 'information',
-                            reportGeneralTypeIssues = 'information'
-                        }
+                        diagnosticMode = 'workspace',
+                        useLibraryCodeForTypes = false
                     }
                 }
             }
@@ -87,6 +82,9 @@ return {
             fix_pos = false,
             hint_enable = false,
             max_width = 120,
+            handler_opts = {
+                border = 'rounded'
+            }
         }
     end
 

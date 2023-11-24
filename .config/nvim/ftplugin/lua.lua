@@ -1,2 +1,2 @@
 
-vim.keymap.set('n', '<leader>go', ':so<CR>')
+vim.keymap.set('n', '<leader>go', ':luafile %<CR>')

@@ -11,22 +11,20 @@ return {
         hijack_cursor = true,
         view = {
             float = {
-                enable = true,
+                enable = false,
                 quit_on_focus_loss = false,
             },
             signcolumn = "yes",
             width = {} -- empty table means adaptive
         },
-        filters = {
-            git_ignored = false
-        },
         renderer = {
             icons = {
-                git_placement = 'signcolumn',
+                git_placement = 'after',
                 glyphs = {
                     git = { ignored = "" }
                 }
             },
+            highlight_diagnostics = true,
             highlight_git = true,
         },
         update_focused_file = {
@@ -34,7 +32,7 @@ return {
         },
         diagnostics = {
             enable = true,
-            show_on_open_dirs = false
+            show_on_open_dirs = true
         },
         actions = {
             open_file = {
