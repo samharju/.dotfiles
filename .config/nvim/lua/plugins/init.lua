@@ -1,8 +1,12 @@
 return {
     'nvim-telescope/telescope.nvim',
     'hrsh7th/nvim-cmp',
-    'stevearc/dressing.nvim',
-
+    {
+        'stevearc/dressing.nvim',
+        opts = {
+            select = { enabled = false }
+        }
+    },
     {
         'hrsh7th/cmp-cmdline',
         event = 'CmdlineEnter',
