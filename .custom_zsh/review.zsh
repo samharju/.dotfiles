@@ -10,8 +10,8 @@ review ()
     new_wt="$HOME/wt-dump/$project/$commitish"
     git worktree add "$new_wt" "$commitish"
 
-    echo "go check:"
-    echo "cd $new_wt"
+    echo "$new_wt"
+    cd "$new_wt"
 }
 
 compdef _git review=git-checkout

@@ -15,7 +15,7 @@ alias lsa='ls -lah --group-directories-first'
 # tmux shortcuts
 alias tm='tmux a'
 alias tmn='tmux new -s'
-alias tmhere='tmux new -s "$(basename $(pwd))"'
+alias tmhere='name="$(basename $(pwd))" && tmux new -s "${name//./-}"'
 alias tss='tmux switch-client -t $(tmux list-sessions -F "#{session_name}" | fzf --height=~5 --layout=reverse-list)'
 
 # rg file names
@@ -44,3 +44,8 @@ alias cnfs='cnf status -unormal'
 alias flakereview="~/.local/bin/flake8 --max-line-length=88 --extend-ignore=E501,E203,U101  --extend-select=B9 --enable-extensions=G --unused-arguments-ignore-variadic-names --unused-arguments-ignore-dunder"
 
 
+# env
+alias envf='env | fzf'
+
+# ssh
+alias ssh='TERM=xterm-256color ssh'
