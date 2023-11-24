@@ -7,3 +7,9 @@
 [submodule ".tmux/plugins/tpm"]
 	path = .tmux/plugins/tpm
 	url = https://github.com/tmux-plugins/tpm
+[submodule "plugins/samharju/synthweave.nvim"]
+	path = plugins/samharju/synthweave.nvim
+	url = git@github.com:samharju/synthweave.nvim.git
+[submodule "plugins/samharju/tmux-synthweave-theme"]
+	path = plugins/samharju/tmux-synthweave-theme
+	url = git@github.com:samharju/tmux-synthweave-theme.git
