@@ -47,6 +47,12 @@ return {
                 Lua = {
                     diagnostics = {
                         globals = { 'vim' }
+                    },
+                    format = {
+                        enable = true,
+                        defaultConfig = {
+                            quote_style = 'single'
+                        }
                     }
                 }
             },
