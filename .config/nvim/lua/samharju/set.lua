@@ -13,7 +13,7 @@ vim.opt.listchars:append "trail:⋅"
 vim.opt.list = true
 vim.opt.nu = true
 vim.opt.relativenumber = true
-vim.opt.scrolloff = 12
+vim.opt.scrolloff = 4
 vim.opt.shiftwidth = 4
 vim.opt.signcolumn = "yes"
 vim.opt.smartindent = true

@@ -12,3 +12,5 @@
 	colorMoved = zebra
 [commit]
 	template = /home/sami/.gitmessage
+[init]
+	defaultBranch = master
