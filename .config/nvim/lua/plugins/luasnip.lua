@@ -1,31 +1,20 @@
 return {
     'L3MON4D3/LuaSnip',
     version = 'v2.*',
-    build = "make install_jsregexp",
-    dependencies = {
-        'rafamadriz/friendly-snippets',
-    },
-    init = function()
+    build = 'make install_jsregexp',
+    config = function()
         local ls = require('luasnip')
+        ls.setup({})
 
-        local isots = function()
-            return { os.date('!%Y-%m-%dT%H:%M:%S.000Z') }
-        end
+        require('luasnip.loaders.from_lua').load({ paths = { '~/.config/nvim/lua/snippets' } })
 
-        ls.add_snippets(nil, {
-            all = {
-                ls.snippet({
-                        trig = 'isots',
-                        namr = 'Iso date',
-                        dscr = 'Date in iso8601 format',
-                    },
-                    {
-                        ls.function_node(isots, {})
-                    })
-            }
-        })
-
-        require('luasnip.loaders.from_vscode').lazy_load()
+        vim.keymap.set('i', '<C-n>', function()
+            if ls.expandable() then
+                ls.expand()
+            elseif ls.choice_active() then
+                ls.change_choice(1)
+            end
+        end)
     end
 
 
