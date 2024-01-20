@@ -1,33 +1,12 @@
 return {
     'nvim-telescope/telescope.nvim',
-    'hrsh7th/nvim-cmp',
     {
         'stevearc/dressing.nvim',
         opts = {
             select = { enabled = false }
         }
     },
-    {
-        'hrsh7th/cmp-cmdline',
-        event = 'CmdlineEnter',
-        config = function()
-            local cmp = require('cmp')
-            cmp.setup.cmdline({ '/', '?' }, {
-                mapping = cmp.mapping.preset.cmdline(),
-                sources = {
-                    { name = 'buffer' }
-                }
-            })
 
-            cmp.setup.cmdline(':', {
-                mapping = cmp.mapping.preset.cmdline(),
-                sources = cmp.config.sources({
-                    { name = 'path' },
-                    { name = 'cmdline' }
-                })
-            })
-        end
-    },
     {
         'lukas-reineke/indent-blankline.nvim',
         main = 'ibl',
