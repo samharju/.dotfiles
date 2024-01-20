@@ -41,4 +41,22 @@ vim.keymap.set('n', '<leader><leader>', function()
     vim.lsp.buf.format { async = true }
 end, { desc = 'format buffer' })
 
+local grp = vim.api.nvim_create_augroup('sami_remap', { clear = true })
+
+vim.api.nvim_create_autocmd('LspAttach', {
+    group = grp,
+    callback = function(e)
+        local opts = { buffer = e.buf }
+        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+        vim.keymap.set('n', '<leader>k', vim.lsp.buf.hover, opts)
+        vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+        vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+        vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, opts)
+        vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+        vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
+        vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    end,
+})
+
 vim.keymap.set('n', '<leader>;', ':b#<CR>', { desc = 'Previous buffer' })
