@@ -80,11 +80,11 @@ install_fuck() {
 # ------------------------------------------------------------
 install_python() {
     printaction
-    sudo apt install software-properties-common 
-    sudo add-apt-repository ppa:deadsnakes/ppa 
     sudo apt update
-    sudo apt install python3.10 python3.10-venv python3-pip python3.10-dev
-    sudo apt autoremove -y
+    sudo apt install build-essential libssl-dev zlib1g-dev \
+        libbz2-dev libreadline-dev libsqlite3-dev curl \
+        libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+    pyenv install 3.10.13
 }
 
 # ------------------------------------------------------------

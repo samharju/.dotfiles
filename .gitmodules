@@ -13,3 +13,6 @@
 [submodule "plugins/samharju/tmux-synthweave-theme"]
 	path = plugins/samharju/tmux-synthweave-theme
 	url = git@github.com:samharju/tmux-synthweave-theme.git
+[submodule ".pyenv"]
+	path = .pyenv
+	url = https://github.com/pyenv/pyenv.git
