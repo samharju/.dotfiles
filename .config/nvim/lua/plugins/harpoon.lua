@@ -1,5 +1,6 @@
 return {
     'theprimeagen/harpoon',
+    branch = 'master',
     dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()
         require('harpoon').setup({
@@ -9,6 +10,14 @@ return {
             tabline_suffix = '',
         })
 
+
+        local function checkcmds()
+            if require('harpoon.term').get_length() == 0 then
+                print("no command to run...")
+                return false
+            end
+            return true
+        end
 
         local mark = require('harpoon.mark')
         local ui = require('harpoon.ui')
@@ -22,25 +31,32 @@ return {
         vim.keymap.set('n', '<leader>4', function() ui.nav_file(4) end, { desc = 'harpoonfile 4' })
         vim.keymap.set('n', '<leader>n', ui.nav_next, { desc = 'harpoon next' })
 
-        vim.cmd('highlight! HarpoonInactive guibg=NONE guifg=#63698c')
-        vim.cmd('highlight! HarpoonActive guibg=NONE guifg=white')
-        vim.cmd('highlight! HarpoonNumberActive guibg=NONE guifg=#7aa2f7')
-        vim.cmd('highlight! HarpoonNumberInactive guibg=NONE guifg=#63698c')
-        vim.cmd('highlight! TabLineFill guibg=NONE guifg=white')
-
+        vim.api.nvim_set_hl(0, 'HarpoonActive', { link = 'Identifier' })
+        vim.api.nvim_set_hl(0, 'HarpoonNumberActive', { link = 'Special' })
+        vim.api.nvim_set_hl(0, 'HarpoonInactive', { link = 'Comment' })
+        vim.api.nvim_set_hl(0, 'HarpoonNumberInactive', { link = 'Comment' })
 
         vim.keymap.set('n', '<leader><BS>', require('harpoon.cmd-ui').toggle_quick_menu)
         vim.keymap.set('n', '\\\\', function()
+            if not checkcmds() then
+                return
+            end
             require('harpoon.term').sendCommand(1, 'clear')
             require('harpoon.term').sendCommand(1, 1)
         end, { desc = 'harpoon run first command' })
 
         vim.keymap.set('n', '\\2', function()
+            if not checkcmds() then
+                return
+            end
             require('harpoon.term').sendCommand(1, 'clear')
             require('harpoon.term').sendCommand(1, 2)
         end, { desc = 'harpoon run second command' })
 
         vim.keymap.set('n', '\\3', function()
+            if not checkcmds() then
+                return
+            end
             require('harpoon.term').sendCommand(1, 'clear')
             require('harpoon.term').sendCommand(1, 3)
         end, { desc = 'harpoon run third command' })
@@ -53,9 +69,15 @@ return {
         end
 
         local function attach()
+            if not checkcmds() then
+                return
+            end
             vim.api.nvim_create_autocmd('BufWritePost', {
                 group = vim.api.nvim_create_augroup('samharju', { clear = true }),
                 callback = function()
+                    if not checkcmds() then
+                        return
+                    end
                     require('harpoon.term').sendCommand(1, 'clear')
                     require('harpoon.term').sendCommand(1, 1)
                 end
