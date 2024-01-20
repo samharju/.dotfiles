@@ -1,3 +1,7 @@
 #!/usr/bin/env bash
 
-fd --hidden --ignore-file ~/.gitignore.global --type d . ~ | fzf --header='all folders' --header-first
+fd --hidden --ignore-file ~/.gitignore.global --type directory . ~ \
+    | fzf \
+        --header='all folders' \
+        --header-first \
+        --info=hidden

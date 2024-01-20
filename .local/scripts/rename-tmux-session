@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+if [ -z "$1" ]; then
+    neww=$(basename "$(pwd)")
+else
+    neww="$1"
+fi
+tmux rename-session "${neww//./-}"

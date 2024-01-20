@@ -41,3 +41,7 @@ export FZF_COMPLETION_TRIGGER=ff
 
 # tokens and stuff from this guy
 [ -f ~/.secrets ] && source ~/.secrets
+
+autoload -Uz compinit
+zstyle ':completion:*' menu select
+fpath+=~/.zfunc

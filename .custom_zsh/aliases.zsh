@@ -49,3 +49,5 @@ alias envf='env | fzf'
 
 # ssh
 alias ssh='TERM=xterm-256color ssh'
+
+alias groot='grootdir=$(git rev-parse --show-toplevel) && cd $grootdir && pwd'

@@ -5,7 +5,7 @@ printaction() {
     name=${FUNCNAME[1]}
     if command -v figlet &> /dev/null; then
         printf "\033[0;32m"
-        echo "${name#install_}" | figlet
+        echo "${name#install_} $1" | figlet
         printf "\033[0m\n"
     else
         echo "$name"
@@ -23,18 +23,31 @@ install_zsh() {
 # ------------------------------------------------------------
 
 install_nvim() {
-    printaction
-    wget https://github.com/neovim/neovim/releases/download/v0.9.1/nvim.appimage
+    local version=v0.9.5
+    printaction "$version"
+
+    current=$(nvim -v | head -1 | cut -d ' ' -f2)
+    if [ "$current" == "$version" ]; then
+        echo up to date
+        return
+    fi
+
+    wget https://github.com/neovim/neovim/releases/download/$version/nvim.appimage
+    wget https://github.com/neovim/neovim/releases/download/$version/nvim.appimage.sha256sum
+
+    sha256sum -c nvim.appimage.sha256sum
+    rm nvim.appimage.sha256sum
+
     chmod u+x nvim.appimage
     mv nvim.appimage ~/.local/bin/nvim
     nvim --version
-    nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerInstall'
 }
 
 # ------------------------------------------------------------
 install_formatters() {
     printaction
     npm i -g prettier
+    npm i -g @fsouza/prettierd
 }
 
 # ------------------------------------------------------------
@@ -76,14 +89,20 @@ install_python() {
 
 # ------------------------------------------------------------
 install_go() {
-    printaction
-    if [[ $(go version || true) == "go version go1.20.3 linux/amd64" ]]; then
+    local version=1.21.6
+    local shasum=3f934f40ac360b9c01f616a9aa1796d227d8b0328bf64cb045c7b8c4ee9caea4
+
+    printaction $version
+
+    if [[ $(go version || true) == "go version go$version linux/amd64" ]]; then
         echo up to date
         return
     fi
-    wget https://go.dev/dl/go1.20.3.linux-amd64.tar.gz
+    local pkg=go$version.linux-amd64.tar.gz
+    wget https://go.dev/dl/$pkg
+    sha256sum -c <<< "$shasum $pkg"
     sudo rm -rf /usr/local/go
-    sudo tar -C /usr/local -xzf go1.20.3.linux-amd64.tar.gz
+    sudo tar -C /usr/local -xzf $pkg
     go version
 }
 

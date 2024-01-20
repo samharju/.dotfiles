@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 project=$(gitprojectfind)
 
 if [ -z "$project" ]; then
@@ -12,4 +14,8 @@ if ! tmux has-session -t="$sessari" 2> /dev/null; then
     tmux new-session -ds "$sessari" -c "$project"
 fi
 
-tmux switch-client -t "$sessari"
+if [ -z "$TMUX" ]; then
+    tmux attach -t "$sessari"
+else
+    tmux switch-client -t "$sessari"
+fi
