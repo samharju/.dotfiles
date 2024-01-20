@@ -1,6 +1,6 @@
 return {
     'nvimtools/none-ls.nvim',
-    init = function()
+    config = function()
         local null_ls = require('null-ls')
 
         -- only attach sources that are available
@@ -14,7 +14,8 @@ return {
             { source = null_ls.builtins.formatting.goimports,      bin = 'goimports' },
             { source = null_ls.builtins.formatting.golines,        bin = 'golines' },
             { source = null_ls.builtins.formatting.isort,          bin = 'isort' },
-            { source = null_ls.builtins.formatting.prettier,       bin = 'prettier' },
+            { source = null_ls.builtins.formatting.prettierd,      bin = 'prettierd' },
+            { source = null_ls.builtins.diagnostics.golangci_lint, bin = 'golangci-lint' },
         }
 
         local sources = {}
@@ -26,6 +27,7 @@ return {
 
         null_ls.setup({
             sources = sources,
+            root_dir = require('null-ls.utils').root_pattern('.null-ls-root', 'Makefile', '.git', 'go.mod'),
         })
     end,
 }
