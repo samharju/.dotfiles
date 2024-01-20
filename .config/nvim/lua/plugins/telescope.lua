@@ -2,7 +2,7 @@ return {
     'nvim-telescope/telescope.nvim',
     tag = '0.1.4',
     dependencies = { 'nvim-lua/plenary.nvim' },
-    init = function()
+    config = function()
         require('telescope').setup(
             {
                 defaults = {
@@ -63,14 +63,14 @@ return {
             end,
             desc = 'tele find_files no ignore'
         },
-        { '<leader>fd', require('telescope.builtin').diagnostics,               desc = 'tele diagnostics' },
-        { '<leader>fe', require('telescope.builtin').buffers,                   desc = 'tele buffers' },
-        { '<leader>fg', require('telescope.builtin').git_files,                 desc = 'tele git_files' },
-        { '<leader>fh', require('telescope.builtin').help_tags,                 desc = 'tele help_tags' },
-        { '<leader>fk', require('telescope.builtin').keymaps,                   desc = 'tele keymaps' },
-        { '<leader>fl', require('telescope.builtin').live_grep,                 desc = 'tele live_grep' },
-        { '<leader>fs', require('telescope.builtin').grep_string,               desc = 'tele grep_string' },
-        { '<leader>fz', require('telescope.builtin').current_buffer_fuzzy_find, desc = 'tele current_buffer_fuzzy_find' },
-        { '<leader>fi', require('telescope.builtin').highlights,                desc = 'tele highlights' },
+        { '<leader>fd', function() require('telescope.builtin').diagnostics()               end, desc = 'tele diagnostics' },
+        { '<leader>fe', function() require('telescope.builtin').buffers()                   end, desc = 'tele buffers' },
+        { '<leader>fg', function() require('telescope.builtin').git_files()                 end, desc = 'tele git_files' },
+        { '<leader>fh', function() require('telescope.builtin').help_tags()                 end, desc = 'tele help_tags' },
+        { '<leader>fk', function() require('telescope.builtin').keymaps()                   end, desc = 'tele keymaps' },
+        { '<leader>fl', function() require('telescope.builtin').live_grep()                 end, desc = 'tele live_grep' },
+        { '<leader>fs', function() require('telescope.builtin').grep_string()               end, desc = 'tele grep_string' },
+        { '<leader>fz', function() require('telescope.builtin').current_buffer_fuzzy_find() end, desc = 'tele current_buffer_fuzzy_find' },
+        { '<leader>fi', function() require('telescope.builtin').highlights()                end, desc = 'tele highlights' },
     }
 }
