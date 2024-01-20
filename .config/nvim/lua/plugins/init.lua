@@ -1,10 +1,6 @@
 return {
-    {
-        'stevearc/dressing.nvim',
-        opts = {
-            select = { enabled = false }
-        }
-    },
+    'j-hui/fidget.nvim',
+    'stevearc/dressing.nvim',
 
     {
         'lukas-reineke/indent-blankline.nvim',
