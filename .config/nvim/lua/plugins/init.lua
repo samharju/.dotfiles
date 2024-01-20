@@ -7,7 +7,7 @@ return {
         main = 'ibl',
         opts = {
             scope = { show_start = false, show_end = false },
-            indent = { tab_char = "▎" }
+            indent = { tab_char = '▎' }
         }
     },
     {
@@ -39,11 +39,15 @@ return {
         'tpope/vim-fugitive',
         lazy = false,
         keys = {
-            { '<leader>gs', function()
-                vim.cmd('vert Git')
-                vim.cmd('vert res 88')
-            end,                                                                        desc = 'git fugitive' },
-            { '<leader>gv', ':Gvdiffsplit ',                                            desc = 'git diff split' }
+            {
+                '<leader>gs',
+                function()
+                    vim.cmd('vert Git')
+                    vim.cmd('vert res 88')
+                end,
+                desc = 'git fugitive'
+            },
+            { '<leader>gv', ':Gvdiffsplit ', desc = 'git diff split' }
         }
     },
     {

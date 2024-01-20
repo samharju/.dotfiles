@@ -19,9 +19,9 @@ return {
             incremental_selection = {
                 enable = true,
                 keymaps = {
-                    init_selection = '<CR>',
-                    node_incremental = '<CR>',
-                    node_decremental = '<S-TAB>',
+                    init_selection = '<BS>',
+                    node_incremental = '<BS>',
+                    node_decremental = '<TAB>',
                 },
             },
             textobjects = {

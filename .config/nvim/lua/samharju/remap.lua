@@ -60,3 +60,10 @@ vim.api.nvim_create_autocmd('LspAttach', {
 })
 
 vim.keymap.set('n', '<leader>;', ':b#<CR>', { desc = 'Previous buffer' })
+vim.keymap.set({ 'n', 'v' }, '<leader>x', ':w !cat<CR>', { desc = 'print selection' })
+
+vim.keymap.set('n', '<leader>s', '<C-w>H:vert res 84<CR>')
+
+vim.keymap.set('n', '<leader>i', ':Inspect<CR>')
+vim.keymap.set('n', '<leader>ck', ':colorscheme synthweave<CR>')
+vim.keymap.set('n', '<leader>cj', ':colorscheme synthweave-transparent<CR>')
