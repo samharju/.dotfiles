@@ -51,11 +51,6 @@ return {
         }
     },
     {
-        'airblade/vim-gitgutter',
-        lazy = false,
-        keys = { { '<leader>gg', ':GitGutterLineHighlightsToggle<CR>', desc = 'toggle gutter', silent = true } }
-    },
-    {
         'terrortylor/nvim-comment',
         config = function() require('nvim_comment').setup() end
     },
