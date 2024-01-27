@@ -63,14 +63,14 @@ return {
             end,
             desc = 'tele find_files no ignore'
         },
-        { '<leader>fd', function() require('telescope.builtin').diagnostics()               end, desc = 'tele diagnostics' },
-        { '<leader>fe', function() require('telescope.builtin').buffers()                   end, desc = 'tele buffers' },
-        { '<leader>fg', function() require('telescope.builtin').git_files()                 end, desc = 'tele git_files' },
-        { '<leader>fh', function() require('telescope.builtin').help_tags()                 end, desc = 'tele help_tags' },
-        { '<leader>fk', function() require('telescope.builtin').keymaps()                   end, desc = 'tele keymaps' },
-        { '<leader>fl', function() require('telescope.builtin').live_grep()                 end, desc = 'tele live_grep' },
-        { '<leader>fs', function() require('telescope.builtin').grep_string()               end, desc = 'tele grep_string' },
-        { '<leader>fz', function() require('telescope.builtin').current_buffer_fuzzy_find() end, desc = 'tele current_buffer_fuzzy_find' },
-        { '<leader>fi', function() require('telescope.builtin').highlights()                end, desc = 'tele highlights' },
+        { '<leader>fd', function() require('telescope.builtin').diagnostics() end,                desc = 'tele diagnostics' },
+        { '<leader>fe', function() require('telescope.builtin').buffers() end,                    desc = 'tele buffers' },
+        { '<leader>fg', function() require('telescope.builtin').git_status() end,                 desc = 'tele git_status' },
+        { '<leader>fh', function() require('telescope.builtin').help_tags() end,                  desc = 'tele help_tags' },
+        { '<leader>fk', function() require('telescope.builtin').keymaps() end,                    desc = 'tele keymaps' },
+        { '<leader>fl', function() require('telescope.builtin').live_grep() end,                  desc = 'tele live_grep' },
+        { '<leader>fs', function() require('telescope.builtin').grep_string() end,                desc = 'tele grep_string' },
+        { '<leader>fz', function() require('telescope.builtin').current_buffer_fuzzy_find() end,  desc = 'tele current_buffer_fuzzy_find' },
+        { '<leader>fi', function() require('telescope.builtin').highlights() end,                 desc = 'tele highlights' },
     }
 }
