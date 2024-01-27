@@ -2,7 +2,7 @@
 
 set -e
 
-project=$(gitprojectfind)
+project=$(gitprojectfind "$1")
 
 if [ -z "$project" ]; then
     exit 0

@@ -79,7 +79,18 @@ install_fuck() {
 
 # ------------------------------------------------------------
 install_python() {
-    printaction
+    local version=3.10.13
+    printaction "$version"
+
+    if [[ ! -d "$HOME/.pyenv" ]]; then
+        git submodule update --init --remote ~/.pyenv
+    fi
+
+    [[ -z "$PYENV_ROOT" ]] && echo "refresh env with . ~/.zshrc" && return 1
+
+    pyenv versions | grep -q "$version" && echo "up to date" && return 0
+
+    # https://github.com/pyenv/pyenv/wiki#suggested-build-environment
     sudo apt update
     sudo apt install build-essential libssl-dev zlib1g-dev \
         libbz2-dev libreadline-dev libsqlite3-dev curl \
@@ -116,7 +127,7 @@ install_docker() {
         docker.io \
         containerd \
         runc
-    
+
     sudo apt-get update
     sudo apt install ca-certificates curl gnupg
 
@@ -162,8 +173,8 @@ if [[ $# -eq 0 ]]; then
 fi
 
 while test $# -gt 0
-do 
-    case "$1" in 
+do
+    case "$1" in
         zsh)
             install_zsh
             ;;

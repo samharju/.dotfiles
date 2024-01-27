@@ -2,6 +2,7 @@
 
 fd --hidden --ignore-file ~/.gitignore.global --type directory . ~ \
     | fzf \
+        --query "$1" \
         --header='all folders' \
         --header-first \
         --info=hidden
