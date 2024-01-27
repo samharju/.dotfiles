@@ -1,7 +1,10 @@
 return {
-    'j-hui/fidget.nvim',
     'stevearc/dressing.nvim',
-
+    {
+        'j-hui/fidget.nvim',
+        tag = 'v1.2.0',
+        opts = {}
+    },
     {
         'lukas-reineke/indent-blankline.nvim',
         main = 'ibl',

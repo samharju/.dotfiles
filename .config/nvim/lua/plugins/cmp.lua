@@ -60,17 +60,9 @@ return {
                 sources = {
                     { name = 'luasnip' },
                     { name = 'nvim_lsp_signature_help' },
-                    {
-                        name = 'nvim_lsp',
-                        -- entry_filter = function(entry, ctx)
-                        --     if ctx.filetype == 'python' then
-                        --         return string.sub(entry:get_word(), 1, 2) ~= '__'
-                        --     end
-                        --     return true
-                        -- end
-                    },
+                    { name = 'nvim_lsp' },
                     { name = 'path' },
-                    { name = 'buffer', keyword_length = 3 },
+                    { name = 'buffer',                 keyword_length = 3 },
                 },
                 mapping = {
                     ['<Tab>'] = cmp.mapping(function(fallback)

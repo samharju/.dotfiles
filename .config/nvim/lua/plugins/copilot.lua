@@ -32,7 +32,7 @@ return {
                 keymap = {
                     accept = '<M-\\>',
                     accept_word = "<M-'>",
-                    accept_line = false,
+                    accept_line = '<M-;>',
                     next = '<M-]>',
                     prev = '<M-[>',
                     dismiss = '<C-]>',

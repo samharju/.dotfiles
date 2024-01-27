@@ -42,7 +42,7 @@ return {
                         typeCheckingMode = 'basic',
                         autoSearchPaths = true,
                         diagnosticMode = 'workspace',
-                        useLibraryCodeForTypes = false,
+                        useLibraryCodeForTypes = true,
                         exclude = { 'venv' },
                     }
                 }

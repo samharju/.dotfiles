@@ -4,7 +4,7 @@ return {
     build = 'make install_jsregexp',
     config = function()
         local ls = require('luasnip')
-        ls.setup({})
+        ls.setup({ enable_autosnippets = true })
 
         require('luasnip.loaders.from_lua').load({ paths = { '~/.config/nvim/lua/snippets' } })
 
