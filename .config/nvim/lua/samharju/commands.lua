@@ -31,3 +31,24 @@ cmd('FlipVirtualText', function(_)
         virtual_text = true
     end
 end, { desc = 'Toggle virtual text diagnostics' })
+
+
+local grp = vim.api.nvim_create_augroup('sharju_commands', { clear = true })
+
+vim.api.nvim_create_autocmd('TextYankPost', {
+    group = grp,
+    pattern = '*',
+    callback = function()
+        vim.highlight.on_yank({
+            higroup = 'Search',
+            timeout = 50,
+        })
+    end
+})
+
+
+vim.api.nvim_create_autocmd('BufWritePre', {
+    group = grp,
+    pattern = '*',
+    command = [[%s/\s\+$//e]]
+})
