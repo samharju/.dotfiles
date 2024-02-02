@@ -3,11 +3,13 @@ return {
     {
         'j-hui/fidget.nvim',
         tag = 'v1.2.0',
+        event = 'VeryLazy',
         opts = {}
     },
     {
         'lukas-reineke/indent-blankline.nvim',
         main = 'ibl',
+        event = 'VeryLazy',
         opts = {
             scope = { show_start = false, show_end = false },
             indent = { tab_char = '▎' }
@@ -27,6 +29,7 @@ return {
     },
     {
         'NvChad/nvim-colorizer.lua',
+        event = 'VeryLazy',
         opts = {
             filetypes = { '*' },
             user_default_options = { names = false },
@@ -40,7 +43,7 @@ return {
     },
     {
         'tpope/vim-fugitive',
-        lazy = false,
+        event = 'VeryLazy',
         keys = {
             {
                 '<leader>gs',
@@ -55,6 +58,7 @@ return {
     },
     {
         'terrortylor/nvim-comment',
+        event = 'VeryLazy',
         config = function() require('nvim_comment').setup() end
     },
     {

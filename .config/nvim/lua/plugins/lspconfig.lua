@@ -6,7 +6,8 @@ return {
         'hrsh7th/cmp-nvim-lsp',
         'folke/neodev.nvim',
     },
-    init = function()
+    event = 'VeryLazy',
+    config = function()
         require('mason').setup()
         require('mason-lspconfig').setup({
             ensure_installed = {
