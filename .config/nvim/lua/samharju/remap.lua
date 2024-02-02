@@ -1,3 +1,5 @@
+vim.keymap.set('i', 'jk', '<ESC>')
+
 -- iterate stuff via tab
 vim.keymap.set('n', '<TAB>w', ':wincmd w<CR>')
 vim.keymap.set('n', '<TAB>b', ':bnext<CR>')
