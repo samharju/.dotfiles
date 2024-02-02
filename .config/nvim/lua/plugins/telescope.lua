@@ -1,7 +1,10 @@
 return {
     'nvim-telescope/telescope.nvim',
     tag = '0.1.4',
-    dependencies = { 'nvim-lua/plenary.nvim' },
+    dependencies = {
+        'nvim-lua/plenary.nvim',
+        { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+    },
     config = function()
         require('telescope').setup(
             {
@@ -31,6 +34,8 @@ return {
                     }
                 }
             })
+
+        require('telescope').load_extension('fzf')
 
         -- open telescope on enter if no args given
         vim.api.nvim_create_autocmd('VimEnter', {
