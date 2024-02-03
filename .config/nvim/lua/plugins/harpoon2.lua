@@ -3,10 +3,16 @@ return {
     branch = 'harpoon2',
     dependencies = {
         'nvim-lua/plenary.nvim',
+        'samharju/shoot.nvim',
     },
     config = function()
         local harpoon = require('harpoon')
         harpoon:setup({
+            shoot = {
+                select = function(list_item, _, _)
+                    require('shoot').execute(list_item.value)
+                end
+            }
         })
 
 
@@ -18,6 +24,11 @@ return {
         vim.keymap.set('n', '<leader>3', function() harpoon:list():select(3) end, { desc = 'harpoonfile 3' })
         vim.keymap.set('n', '<leader>4', function() harpoon:list():select(4) end, { desc = 'harpoonfile 4' })
         vim.keymap.set('n', '<leader>n', function() harpoon:list():next() end, { desc = 'harpoon next' })
+
+        vim.keymap.set('n', '<leader><BS>', function() harpoon.ui:toggle_quick_menu(harpoon:list('shoot')) end)
+        vim.keymap.set('n', '\\\\', function() harpoon:list('shoot'):select(1) end)
+        vim.keymap.set('n', '\\2', function() harpoon:list('shoot'):select(2) end)
+        vim.keymap.set('n', '\\3', function() harpoon:list('shoot'):select(3) end)
     end
 
 }
