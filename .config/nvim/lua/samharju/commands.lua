@@ -52,3 +52,20 @@ vim.api.nvim_create_autocmd('BufWritePre', {
     pattern = '*',
     command = [[%s/\s\+$//e]]
 })
+
+
+-- open telescope on enter if no args given
+vim.api.nvim_create_autocmd('VimEnter', {
+    callback = function()
+        local arg = vim.api.nvim_eval('argv(0)')
+        if arg and arg == '' then
+            require('telescope.builtin').find_files({
+                layout_strategy = 'center',
+                layout_config = {},
+                previewer = false,
+                prompt_title = vim.fn.getcwd(),
+                hidden = true
+            })
+        end
+    end
+})
