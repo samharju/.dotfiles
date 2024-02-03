@@ -22,45 +22,49 @@ return {
         })
         require('neodev').setup({})
 
-
-        local lsp_settings = {
-            lua_ls = {
-                Lua = {
-                    diagnostics = {
-                        globals = { 'vim' }
-                    },
-                    format = {
-                        enable = true,
-                        defaultConfig = {
-                            quote_style = 'single'
+        require('mason-lspconfig').setup_handlers {
+            -- The first entry (without a key) will be the default handler
+            -- and will be called for each installed server that doesn't have
+            -- a dedicated handler.
+            function(server_name) -- default handler (optional)
+                require('lspconfig')[server_name].setup {
+                }
+            end,
+            -- Next, you can provide a dedicated handler for specific servers.
+            -- For example, a handler override for the `rust_analyzer`:
+            ['pyright'] = function()
+                require('lspconfig').pyright.setup {
+                    settings = {
+                        python = {
+                            analysis = {
+                                typeCheckingMode = 'basic',
+                                autoSearchPaths = true,
+                                diagnosticMode = 'workspace',
+                                useLibraryCodeForTypes = true,
+                                exclude = { 'venv' },
+                            }
                         }
                     }
                 }
-            },
-            pyright = {
-                python = {
-                    analysis = {
-                        typeCheckingMode = 'basic',
-                        autoSearchPaths = true,
-                        diagnosticMode = 'workspace',
-                        useLibraryCodeForTypes = true,
-                        exclude = { 'venv' },
+            end,
+            ['lua_ls'] = function()
+                require('lspconfig').lua_ls.setup {
+                    settings = {
+                        Lua = {
+                            diagnostics = {
+                                globals = { 'vim' }
+                            },
+                            format = {
+                                enable = true,
+                                defaultConfig = {
+                                    quote_style = 'single'
+                                }
+                            }
+                        }
                     }
                 }
-            }
+            end,
         }
-
-
-        for _, server_name in ipairs(require('mason-lspconfig').get_installed_servers()) do
-            local s = {
-                capabilities = require('cmp_nvim_lsp').default_capabilities(),
-            }
-            if lsp_settings[server_name] then
-                s.settings = lsp_settings[server_name]
-            end
-            require('lspconfig')[server_name].setup(s)
-        end
-
     end
 
 }
