@@ -75,16 +75,24 @@ EXEC 01;32
 #.csh 01;32
 
 # my custom
-#DIR 01;34 # directory
-DIR     00;36
+# DIR 00;34 # directory
+DIR     01;34
+.py     00;33
 
-.py     00;93
-.go     00;96
+# go files
+.go     00;36
+.mod    00;36
+.sum    00;36
+
+# plaintext useful to spot
 .json   00;40;33
 .log    00;40;97
+.txt    00;97
 .md     00;40;95
+.yml    00;40;95
+.yaml   00;40;95
 
- # archives or compressed 
+ # archives or compressed
 .tar 00;31
 .tgz 00;31
 .arc 00;31
