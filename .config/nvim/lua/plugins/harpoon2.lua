@@ -10,7 +10,6 @@ return {
         harpoon:setup({
             shoot = {
                 select = function(list_item, _, _)
-                    require('shoot').execute('clear')
                     require('shoot').execute(list_item.value)
                 end
             }
