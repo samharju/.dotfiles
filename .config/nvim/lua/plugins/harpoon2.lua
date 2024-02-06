@@ -3,14 +3,14 @@ return {
     branch = 'harpoon2',
     dependencies = {
         'nvim-lua/plenary.nvim',
-        'samharju/shoot.nvim',
+        'samharju/yeet.nvim',
     },
     config = function()
         local harpoon = require('harpoon')
         harpoon:setup({
             shoot = {
                 select = function(list_item, _, _)
-                    require('shoot').execute(list_item.value)
+                    require('yeet').execute(list_item.value)
                 end
             }
         })

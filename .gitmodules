@@ -16,6 +16,6 @@
 [submodule ".pyenv"]
 	path = .pyenv
 	url = https://github.com/pyenv/pyenv.git
-[submodule "plugins/samharju/shoot.nvim"]
-	path = plugins/samharju/shoot.nvim
-	url = git@github.com:samharju/shoot.nvim.git
+[submodule "plugins/samharju/yeet.nvim"]
+	path = plugins/samharju/yeet.nvim
+	url = git@github.com:samharju/yeet.nvim.git
