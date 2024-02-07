@@ -1,7 +1,7 @@
 return {
-    'nvimtools/none-ls.nvim',
+    "nvimtools/none-ls.nvim",
     config = function()
-        local null_ls = require('null-ls')
+        local null_ls = require("null-ls")
 
         local sources = {
             null_ls.builtins.code_actions.gomodifytags,
@@ -14,9 +14,11 @@ return {
             null_ls.builtins.formatting.golines,
             null_ls.builtins.formatting.isort,
             null_ls.builtins.formatting.prettierd,
-            null_ls.builtins.diagnostics.golangci_lint.with({
-                args = { 'run', '--fast', '--fix=false', '--out-format=json' },
-            })
+            null_ls.builtins.formatting.stylua,
+            null_ls.builtins.diagnostics.golangci_lint,
+            -- .with({
+            --     args = { 'run', '--fast', '--fix=false', '--out-format=json' },
+            -- })
         }
 
         null_ls.setup({

@@ -1,28 +1,28 @@
 return {
     {
-        'gptlang/CopilotChat.nvim',
+        "gptlang/CopilotChat.nvim",
         after = {
-            'zbirenbaum/copilot.lua',
-        }
+            "zbirenbaum/copilot.lua",
+        },
     },
     {
-        'zbirenbaum/copilot.lua',
-        event = 'InsertEnter',
-        cmd = 'Copilot',
+        "zbirenbaum/copilot.lua",
+        event = "InsertEnter",
+        cmd = "Copilot",
         opts = {
             panel = {
                 enabled = false,
                 auto_refresh = false,
                 keymap = {
-                    jump_prev = '<M-[>',
-                    jump_next = '<M-]>',
-                    accept = '<M-\\>',
-                    refresh = '<M-=>',
-                    open = '<M-BS>'
+                    jump_prev = "<M-[>",
+                    jump_next = "<M-]>",
+                    accept = "<M-\\>",
+                    refresh = "<M-=>",
+                    open = "<M-BS>",
                 },
                 layout = {
-                    position = 'right', -- | top | left | right
-                    ratio = 0.4
+                    position = "right", -- | top | left | right
+                    ratio = 0.4,
                 },
             },
             suggestion = {
@@ -30,14 +30,13 @@ return {
                 auto_trigger = true,
                 debounce = 75,
                 keymap = {
-                    accept = '<M-\\>',
+                    accept = "<M-\\>",
                     accept_word = "<M-'>",
-                    accept_line = '<M-;>',
-                    next = '<M-]>',
-                    prev = '<M-[>',
-                    dismiss = '<C-]>',
+                    accept_line = "<M-;>",
+                    next = "<M-]>",
+                    prev = "<M-[>",
+                    dismiss = "<C-]>",
                 },
-
             },
             filetypes = {
                 yaml = false,
@@ -49,20 +48,20 @@ return {
                 svn = false,
                 cvs = false,
                 sh = function()
-                    if string.match(vim.fs.basename(vim.api.nvim_buf_get_name(0)), '^%.env.*') then
+                    if string.match(vim.fs.basename(vim.api.nvim_buf_get_name(0)), "^%.env.*") then
                         -- disable for .env files
                         return false
                     end
                     return true
                 end,
-                ['.'] = false,
+                ["."] = false,
             },
-            copilot_node_command = 'node', -- Node.js version must be > 18.x
+            copilot_node_command = "node", -- Node.js version must be > 18.x
             server_opts_overrides = {
                 settings = {
-                    advanced = { inlineSuggestCount = 3 }
-                }
+                    advanced = { inlineSuggestCount = 3 },
+                },
             },
-        }
+        },
     },
 }

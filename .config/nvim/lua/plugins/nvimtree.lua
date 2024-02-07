@@ -1,11 +1,11 @@
 return {
-    'nvim-tree/nvim-tree.lua',
+    "nvim-tree/nvim-tree.lua",
     lazy = false,
     dependencies = {
-        'nvim-tree/nvim-web-devicons',
+        "nvim-tree/nvim-web-devicons",
     },
     keys = {
-        { '<leader>v', ':NvimTreeFindFileToggle<CR>', desc = 'nvimtree toggle', silent = true }
+        { "<leader>v", ":NvimTreeFindFileToggle<CR>", desc = "nvimtree toggle", silent = true },
     },
     opts = {
         hijack_cursor = true,
@@ -15,32 +15,32 @@ return {
                 quit_on_focus_loss = false,
             },
             signcolumn = "yes",
-            width = {} -- empty table means adaptive
+            width = {}, -- empty table means adaptive
         },
         renderer = {
             icons = {
-                git_placement = 'after',
+                git_placement = "after",
                 glyphs = {
-                    git = { ignored = "" }
-                }
+                    git = { ignored = "" },
+                },
             },
             highlight_diagnostics = true,
             highlight_git = true,
         },
         update_focused_file = {
-            enable = true
+            enable = true,
         },
         diagnostics = {
             enable = true,
-            show_on_open_dirs = true
+            show_on_open_dirs = true,
         },
         actions = {
             open_file = {
                 quit_on_open = true,
                 window_picker = {
-                    chars = 'AJKLSDF',
-                }
-            }
-        }
-    }
+                    chars = "AJKLSDF",
+                },
+            },
+        },
+    },
 }

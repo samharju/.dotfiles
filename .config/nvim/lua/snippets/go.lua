@@ -2,8 +2,9 @@
 return {
 
     s(
-        { trig = 'ie', name = 'error handling' },
-        fmt([[
+        { trig = "ie", name = "error handling" },
+        fmt(
+            [[
             if err != nil {{
                 {}
             }}
@@ -11,40 +12,48 @@ return {
             {
                 c(1, {
                     fmt('return fmt.Errorf("{}: %w", err)', { i(1) }),
-                    fmt([[
+                    fmt(
+                        [[
                         log.Printf("{}: %s", err)
                         return err
                         ]],
-                        { i(1) }),
-                    t('log.Fatal(err)'),
-                    t('return err'),
-                })
+                        { i(1) }
+                    ),
+                    t("log.Fatal(err)"),
+                    t("return err"),
+                }),
             }
         )
     ),
 
     s(
-        { trig = 'hf', name = 'http handlerfunc' },
-        fmt([[
+        { trig = "hf", name = "http handlerfunc" },
+        fmt(
+            [[
             func {}({} http.ResponseWriter, {} *http.Request) {{
                 {}
             }}
             ]],
-            { i(1), i(2, 'w'), i(3, 'r'), i(0) })
+            { i(1), i(2, "w"), i(3, "r"), i(0) }
+        )
     ),
 
-    s({ trig = 'jenc', name = 'json to reponsewriter' },
-        fmt([[
+    s(
+        { trig = "jenc", name = "json to reponsewriter" },
+        fmt(
+            [[
             {w}.Header().Set("Content-Type", "application/json")
             err := json.NewEncoder({w}).Encode({})
             ]],
-            { w = i(1, 'w'), i(0) },
+            { w = i(1, "w"), i(0) },
             { repeat_duplicates = true }
         )
     ),
 
-    s({ trig = 'httpreq', name = 'http request' },
-        fmta([[
+    s(
+        { trig = "httpreq", name = "http request" },
+        fmta(
+            [[
             req, err := http.NewRequestWithContext(
                 context.Background(),
                 <method>,
@@ -67,27 +76,26 @@ return {
             ]],
             {
                 method = c(1, {
-                    t('http.MethodGet'),
-                    t('http.MethodPost'),
-                    t('http.MethodPut'),
-                    t('http.MethodDelete'),
+                    t("http.MethodGet"),
+                    t("http.MethodPost"),
+                    t("http.MethodPut"),
+                    t("http.MethodDelete"),
                 }),
-                url = i(2, 'url'),
+                url = i(2, "url"),
                 body = c(3, {
-                    t('nil'),
-                    t('body')
+                    t("nil"),
+                    t("body"),
                 }),
                 client = c(4, {
-                    t('client'),
-                    t('DefaultClient')
+                    t("client"),
+                    t("DefaultClient"),
                 }),
                 errhandle = c(5, {
-                    t('log.Fatal(err)'),
-                    t('return err'),
-                })
+                    t("log.Fatal(err)"),
+                    t("return err"),
+                }),
             },
             { repeat_duplicates = true }
         )
-    )
-
+    ),
 }
