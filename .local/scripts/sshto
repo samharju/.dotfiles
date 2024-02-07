@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -e
+
+sshconfigs=$(rg 'host ([\w+\-_\.]+)$' -or "\$1" ~/.ssh/config)
+etchosts=$(rg '^[\d\.]+\s+(\S+)' -or "\$1" /etc/hosts)
+
+hosts=$(echo -e "$sshconfigs\n$etchosts" | sort -u)
+
+target="$(echo "$hosts" | fzf)"
+if [[ -z "$target" ]]; then
+    exit 0
+fi
+
+ts="${target//_/-}"
+
+if tmux has-session -t "$ts" 2> /dev/null; then
+    tmux display "Attached to existing session"
+    tmux switch-client -t "$ts"
+else
+    tmux rename-session "$ts"
+    ssh "$target"
+fi
+
