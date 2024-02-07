@@ -4,6 +4,7 @@
 [submodule ".fzf"]
 	path = .fzf
 	url = https://github.com/junegunn/fzf.git
+	branch = 0.46.1
 [submodule ".tmux/plugins/tpm"]
 	path = .tmux/plugins/tpm
 	url = https://github.com/tmux-plugins/tpm
@@ -16,6 +17,7 @@
 [submodule ".pyenv"]
 	path = .pyenv
 	url = https://github.com/pyenv/pyenv.git
+	branch = v2.3.35
 [submodule "plugins/samharju/yeet.nvim"]
 	path = plugins/samharju/yeet.nvim
 	url = git@github.com:samharju/yeet.nvim.git
