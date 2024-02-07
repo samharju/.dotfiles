@@ -4,6 +4,7 @@ return {
         'nvim-treesitter/nvim-treesitter-context',
         'windwp/nvim-ts-autotag',
         'nvim-treesitter/nvim-treesitter-textobjects',
+        'nvim-treesitter/playground'
     },
     build = ':TSUpdate',
     config = function()
