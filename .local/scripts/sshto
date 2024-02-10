@@ -19,6 +19,6 @@ if tmux has-session -t "$ts" 2> /dev/null; then
     tmux switch-client -t "$ts"
 else
     tmux rename-session "$ts"
-    ssh "$target"
+    TERM=xterm-256color ssh "$target"
 fi
 

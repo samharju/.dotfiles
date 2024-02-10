@@ -25,9 +25,6 @@ alias rgf="fd -t f | rg"
 alias dea='[ -n "$VIRTUAL_ENV" ] && deactivate'
 
 alias vim="nvim"
-#
-# open neovim config folder as a project
-alias nvimconfig='GIT_DIR=$HOME/.dotfiles GIT_WORK_TREE=$HOME nvim --cmd "cd $HOME/.config/nvim"'
 
 # use for single command, withdotfiles <cmd>
 alias withdotfiles='GIT_DIR=$HOME/.dotfiles GIT_WORK_TREE=$HOME'
@@ -50,4 +47,4 @@ alias envf='env | fzf'
 # ssh
 alias ssh='TERM=xterm-256color ssh'
 
-alias groot='grootdir=$(git rev-parse --show-toplevel) && cd $grootdir && pwd'
+alias cdr='grootdir=$(git rev-parse --show-toplevel) && cd $grootdir && pwd'
