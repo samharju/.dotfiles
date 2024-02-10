@@ -1,10 +1,21 @@
 return {
-    "stevearc/dressing.nvim",
+    {
+        "stevearc/dressing.nvim",
+        opts = {
+            input = {
+                relative = "editor",
+            },
+        }
+    },
     {
         "j-hui/fidget.nvim",
         tag = "v1.2.0",
         event = "VeryLazy",
-        opts = {},
+        opts = {
+            notification = {
+                override_vim_notify = true, -- Automatically override vim.notify() with Fidget
+            },
+        },
     },
     {
         "lukas-reineke/indent-blankline.nvim",

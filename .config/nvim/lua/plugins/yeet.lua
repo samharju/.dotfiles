@@ -3,15 +3,15 @@ return {
     opts = {},
     keys = {
         {
-            "<leader>ot",
+            "<leader>yo",
             function() require("yeet").select_target() end,
         },
         {
-            "<leader>oc",
+            "<leader>yc",
             function() require("yeet").set_cmd() end,
         },
         {
-            "<leader>oo",
+            "\\\\",
             function() require("yeet").execute() end,
         },
     },
