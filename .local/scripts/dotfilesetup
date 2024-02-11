@@ -15,6 +15,7 @@ printaction() {
 install_zsh() {
     printaction
     if ! command -v zsh; then
+        sudo apt install zsh
         sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     fi
     echo "zsh ok"
@@ -62,6 +63,7 @@ install_formatters() {
 # ------------------------------------------------------------
 install_apt_packages() {
     printaction
+    sudo add-apt-repository universe
     sudo apt update
     sudo apt install \
         zip \
@@ -69,13 +71,17 @@ install_apt_packages() {
         ripgrep \
         shellcheck \
         tmux \
-        figlet
+        figlet \
+        libfuse2 \
+        zsh
     sudo apt autoremove -y
 }
 
 install_nvm() {
     printaction
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+    source ~/.zshrc
+    nvm install stable
 }
 
 # ------------------------------------------------------------
@@ -89,7 +95,7 @@ install_python() {
     local version=3.10.13
     printaction "$version"
 
-    if [[ ! -d "$HOME/.pyenv" ]]; then
+    if ! command -v pyenv; then
         git submodule update --init --remote ~/.pyenv
     fi
 
@@ -128,12 +134,7 @@ install_go() {
 
 install_docker() {
     printaction
-    sudo apt remove \
-        docker \
-        docker-engine \
-        docker.io \
-        containerd \
-        runc
+    sudo apt remove docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc
 
     sudo apt-get update
     sudo apt install ca-certificates curl gnupg
@@ -183,7 +184,7 @@ install_lazygit() {
 # ------------------------------------------------------------
 
 if [[ $# -eq 0 ]]; then
-    echo "zsh nvim python formatters apt_packages nvm fuck go docker fzf bat lazygit"
+    echo "apt_packages nvm zsh nvim python formatters fuck go docker fzf bat lazygit"
 fi
 
 while test $# -gt 0
