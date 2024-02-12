@@ -21,8 +21,12 @@ return {
             -- })
         }
 
+        if vim.fn.isdirectory("/tmp/null-ls") == 0 then
+            vim.fn.mkdir("/tmp/null-ls", "p")
+        end
         null_ls.setup({
             sources = sources,
+            temp_dir = "/tmp/null-ls",
         })
     end,
 }
