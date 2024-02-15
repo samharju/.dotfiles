@@ -8,7 +8,10 @@ go_pkg = go$(go_version).linux-amd64.tar.gz
 
 bat_pkg = bat-musl_0.23.0_amd64.deb
 
-all: apt go nvim .oh-my-zsh .nvm python3.10 thefuck formatters fzf bat docker
+all: apt go nvim ohmyzsh nvm python3.10 thefuck formatters fzf bat docker
+
+.PHONY: nvim
+nvim: .local/bin/nvim
 
 .local/bin/nvim:
 	@figlet nvim $(nvim_version)
@@ -17,27 +20,45 @@ all: apt go nvim .oh-my-zsh .nvm python3.10 thefuck formatters fzf bat docker
 	sha256sum -c nvim.appimage.sha256sum
 	rm nvim.appimage.sha256sum
 	chmod u+x nvim.appimage
+	mkdir -p ~/.local/bin
 	mv nvim.appimage ~/.local/bin/nvim
 	nvim --version
 	nvim --headless "+Lazy! sync" +qa
-
-.PHONY: nvim
-nvim: .local/bin/nvim
 
 .PHONY: nvim-update
 nvim-update:
 	rm .local/bin/nvim
 	$(MAKE) nvim
 
-.oh-my-zsh: apt
+
+.PHONY: ohmyzsh
+ohmyzsh: .oh-my-zsh/oh-my-zsh.sh
+
+.oh-my-zsh/oh-my-zsh.sh: apt
 	@figlet oh my zsh
 	sh -c $$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)
 
-.nvm:
+
+.PHONY:
+nvm: .nvm/nvm.sh
+
+.nvm/nvm.sh:
 	@figlet node version manager
 	curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-	nvm install stable
 
+
+.pyenv/bin/pyenv:
+	@figlet pyenv
+	# https://github.com/pyenv/pyenv/wiki#suggested-build-environment
+	sudo apt update
+	sudo apt install -y build-essential libssl-dev zlib1g-dev \
+		libbz2-dev libreadline-dev libsqlite3-dev curl \
+		libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+	sudo apt autoremove -y
+
+.pyenv/shims/python3.10: .pyenv/bin/pyenv
+	pyenv install 3.10.13
+	pyenv global 3.10.13
 
 .PHONY: python3.10
 python3.10: .pyenv/shims/python3.10
@@ -47,11 +68,6 @@ thefuck: .local/bin/thefuck
 
 .local/bin/thefuck: python3.10
 	pip3 install thefuck --user
-
-.pyenv/shims/python3.10:
-	pyenv install 3.10.13
-
-
 
 
 .PHONY: go
@@ -80,8 +96,10 @@ prettier:
 	npm i -g prettier
 	npm i -g @fsouza/prettierd
 
+
 .PHONY: formatters
 formatters: gotools prettier
+
 
 .PHONY: gotools
 gotools: go
@@ -102,15 +120,8 @@ apt:
 	sudo apt autoremove -y
 
 
-.PHONY: pyenv
-pyenv:
-	@figlet pyenv
-	# https://github.com/pyenv/pyenv/wiki#suggested-build-environment
-	sudo apt update
-	sudo apt install -y build-essential libssl-dev zlib1g-dev \
-		libbz2-dev libreadline-dev libsqlite3-dev curl \
-		libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
-	sudo apt autoremove -y
+.PHONY: fzf
+fzf: .local/bin/fd
 
 .local/bin/fd:
 	@figlet fzf
@@ -118,17 +129,13 @@ pyenv:
 	sudo apt install fd-find
 	ln -s $$(command -v fdfind) ~/.local/bin/fd
 
-.PHONY: fzf
-fzf: .local/bin/fd
-
+.PHONY: bat
+bat: /usr/bin/bat
 
 /usr/bin/bat:
 	@figlet bat
 	wget "https://github.com/sharkdp/bat/releases/download/v0.23.0/$(bat_pkg)"
 	sudo dpkg -i "$(bat_pkg)"
-
-.PHONY: bat
-bat: /usr/bin/bat
 
 
 .PHONY: docker
@@ -161,3 +168,7 @@ docker:
 	    docker-compose-plugin
 
 	sudo apt autoremove
+
+	sudo usermod -aG docker sami
+	sudo systemctl enable docker
+	sudo systemctl start docker
