@@ -5,7 +5,7 @@ return {
             input = {
                 relative = "editor",
             },
-        }
+        },
     },
     {
         "j-hui/fidget.nvim",

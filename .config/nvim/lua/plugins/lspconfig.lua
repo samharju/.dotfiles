@@ -53,6 +53,9 @@ return {
                             diagnostics = {
                                 globals = { "vim" },
                             },
+                            format = {
+                                enable = false,
+                            },
                         },
                     },
                 })
