@@ -1,5 +1,5 @@
 return {
-    dir = "~/plugins/samharju/yeet.nvim",
+    "samharju/yeet.nvim",
     opts = {},
     keys = {
         {
@@ -13,6 +13,10 @@ return {
         {
             "\\\\",
             function() require("yeet").execute() end,
+        },
+        {
+            "<leader>ya",
+            function() require("yeet").toggle_post_write() end,
         },
     },
     cmd = "Yeet",
