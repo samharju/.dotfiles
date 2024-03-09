@@ -48,3 +48,5 @@ alias envf='env | fzf'
 alias ssh='TERM=xterm-256color ssh'
 
 alias cdr='grootdir=$(git rev-parse --show-toplevel) && cd $grootdir && pwd'
+
+alias gitfixup='git -c sequence.editor=true rebase -i --autosquash'
