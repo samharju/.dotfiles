@@ -1,6 +1,7 @@
 return {
     {
         "gptlang/CopilotChat.nvim",
+        enabled = os.getenv("USE_COPILOT") == "true",
         after = {
             "zbirenbaum/copilot.lua",
         },
@@ -8,6 +9,7 @@ return {
     {
         "zbirenbaum/copilot.lua",
         event = "InsertEnter",
+        enabled = os.getenv("USE_COPILOT") == "true",
         cmd = "Copilot",
         opts = {
             panel = {
