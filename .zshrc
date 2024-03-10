@@ -50,3 +50,9 @@ fpath+=~/.zfunc
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
+
+
+export TZ='Europe/Helsinki'
+
+GPG_TTY=$(tty)
+export GPG_TTY
