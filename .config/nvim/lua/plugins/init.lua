@@ -61,21 +61,6 @@ return {
         keys = { { "<leader>u", vim.cmd.UndotreeToggle, desc = "UndotreeToggle" } },
     },
     {
-        "tpope/vim-fugitive",
-        event = "VeryLazy",
-        keys = {
-            {
-                "<leader>gs",
-                function()
-                    vim.cmd("vert Git")
-                    vim.cmd("vert res 88")
-                end,
-                desc = "git fugitive",
-            },
-            { "<leader>gv", ":Gvdiffsplit ", desc = "git diff split" },
-        },
-    },
-    {
         "terrortylor/nvim-comment",
         event = "VeryLazy",
         config = function() require("nvim_comment").setup() end,
