@@ -1,6 +1,5 @@
 return {
     "nvim-telescope/telescope.nvim",
-    tag = "0.1.4",
     dependencies = {
         "nvim-lua/plenary.nvim",
         { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
@@ -10,7 +9,7 @@ return {
             pattern = "TelescopeResults",
             callback = function(ctx)
                 vim.api.nvim_buf_call(ctx.buf, function()
-                    vim.fn.matchadd("TelescopeParent", "\t\t.*$")
+                    vim.fn.matchadd("TelescopeParent", " > .*$")
                     vim.api.nvim_set_hl(0, "TelescopeParent", { link = "Comment" })
                 end)
             end,
@@ -20,7 +19,7 @@ return {
             local tail = vim.fs.basename(path)
             local parent = vim.fs.dirname(path)
             if parent == "." then return tail end
-            return string.format("%s\t\t%s", tail, parent)
+            return string.format("%s > %s", tail, parent)
         end
 
         require("telescope").setup({
@@ -115,11 +114,6 @@ return {
             "<leader>fi",
             function() require("telescope.builtin").highlights() end,
             desc = "tele highlights",
-        },
-        {
-            "<leader>fw",
-            function() require("telescope.builtin").lsp_document_symbols() end,
-            desc = "tele lsp_document_symbols",
         },
     },
 }
