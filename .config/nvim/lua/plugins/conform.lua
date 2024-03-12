@@ -6,7 +6,6 @@ return {
             -- Customize or remove this keymap to your liking
             "<leader><leader>",
             function() require("conform").format({ async = true, lsp_fallback = true }) end,
-            mode = "",
             desc = "Format buffer",
         },
     },
@@ -14,10 +13,20 @@ return {
     opts = {
         -- Define your formatters
         formatters_by_ft = {
+            javascript = { "prettierd" },
+            typescript = { "prettierd" },
+            javascriptreact = { "prettierd" },
+            typescriptreact = { "prettierd" },
+            svelte = { "prettierd" },
+            css = { "prettierd" },
+            html = { "prettierd" },
+            json = { "prettierd" },
+            yaml = { "prettierd" },
+            markdown = { "prettierd" },
+            graphql = { "prettierd" },
             lua = { "stylua" },
             python = { "isort", "black" },
             go = { "goimports", "gofmt", "golines" },
-            ["_"] = { { "prettierd", "prettier" } },
         },
     },
 }
