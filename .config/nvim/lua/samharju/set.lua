@@ -15,6 +15,7 @@ vim.opt.list = true
 vim.opt.nu = true
 vim.opt.relativenumber = true
 vim.opt.scrolloff = 8
+vim.opt.sidescrolloff = 8
 vim.opt.shiftwidth = 4
 vim.opt.signcolumn = "yes"
 vim.opt.smartindent = true

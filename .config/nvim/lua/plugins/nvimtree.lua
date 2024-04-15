@@ -11,8 +11,8 @@ return {
         hijack_cursor = true,
         view = {
             float = {
-                enable = false,
-                quit_on_focus_loss = false,
+                enable = true,
+                quit_on_focus_loss = true,
             },
             signcolumn = "yes",
             width = {}, -- empty table means adaptive
