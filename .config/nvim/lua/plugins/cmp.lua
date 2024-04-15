@@ -70,6 +70,20 @@ return {
                     { name = "buffer", keyword_length = 3 },
                 },
                 mapping = {
+                    ["<C-j>"] = cmp.mapping(function(fallback)
+                        if ls.jumpable(1) then
+                            ls.jump(1)
+                        else
+                            fallback()
+                        end
+                    end, { "i" }),
+                    ["<C-k>"] = cmp.mapping(function(fallback)
+                        if ls.jumpable(-1) then
+                            ls.jump(-1)
+                        else
+                            fallback()
+                        end
+                    end, { "i" }),
                     ["<Tab>"] = cmp.mapping(function(fallback)
                         if cmp.visible() then
                             if #cmp.get_entries() == 1 then
@@ -77,8 +91,6 @@ return {
                             else
                                 cmp.select_next_item()
                             end
-                        elseif ls.expand_or_locally_jumpable() then
-                            ls.expand_or_jump()
                         else
                             fallback()
                         end
@@ -86,8 +98,6 @@ return {
                     ["<S-Tab>"] = cmp.mapping(function(fallback)
                         if cmp.visible() then
                             cmp.select_prev_item()
-                        elseif ls.jumpable(-1) then
-                            ls.jump(-1)
                         else
                             fallback()
                         end
