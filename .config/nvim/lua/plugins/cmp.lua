@@ -71,19 +71,19 @@ return {
                 },
                 mapping = {
                     ["<C-j>"] = cmp.mapping(function(fallback)
-                        if ls.jumpable(1) then
+                        if ls.locally_jumpable(1) then
                             ls.jump(1)
                         else
                             fallback()
                         end
-                    end, { "i" }),
+                    end, { "i", "s" }),
                     ["<C-k>"] = cmp.mapping(function(fallback)
-                        if ls.jumpable(-1) then
+                        if ls.locally_jumpable(-1) then
                             ls.jump(-1)
                         else
                             fallback()
                         end
-                    end, { "i" }),
+                    end, { "i", "s" }),
                     ["<Tab>"] = cmp.mapping(function(fallback)
                         if cmp.visible() then
                             if #cmp.get_entries() == 1 then
