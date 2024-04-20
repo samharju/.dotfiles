@@ -1,8 +1,14 @@
 # ignore worktrees
 wt-*
 
+# yeet file
+.yeet
+
 # prefix garbage with underscores for visual and git separation
 ___*
+
+# project local bug reproducing stuff
+bugs/
 
 # dull default profile outputdir
 profile
@@ -62,6 +68,9 @@ TODO.txt
 
 
 # ------------------------------- https://github.com/github/gitignore/blob/main/Go.gitignore
+
+# profile guided optimization source
+!default.pgo
 
 # If you prefer the allow list template instead of the deny list, see community template:
 # https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
