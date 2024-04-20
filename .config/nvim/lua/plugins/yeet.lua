@@ -1,9 +1,10 @@
 return {
     "samharju/yeet.nvim",
+    dev = true,
     opts = {},
     keys = {
         {
-            "<leader>yo",
+            "<leader>yt",
             function() require("yeet").select_target() end,
         },
         {
@@ -15,8 +16,16 @@ return {
             function() require("yeet").execute() end,
         },
         {
+            "<leader>\\",
+            function() require("yeet").execute(nil, { clear_before_yeet = false }) end,
+        },
+        {
             "<leader>ya",
             function() require("yeet").toggle_post_write() end,
+        },
+        {
+            "<leader>yl",
+            function() require("yeet").open_commands() end,
         },
     },
     cmd = "Yeet",
