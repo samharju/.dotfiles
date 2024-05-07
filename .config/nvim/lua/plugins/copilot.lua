@@ -1,6 +1,7 @@
 return {
     {
-        "gptlang/CopilotChat.nvim",
+        "CopilotC-Nvim/CopilotChat.nvim",
+        branch = "canary",
         enabled = os.getenv("USE_COPILOT") == "true",
         dependecies = {
             "zbirenbaum/copilot.lua",
