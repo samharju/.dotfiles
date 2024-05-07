@@ -28,15 +28,6 @@ return {
         },
     },
     {
-        "lukas-reineke/indent-blankline.nvim",
-        main = "ibl",
-        event = "VeryLazy",
-        opts = {
-            scope = { show_start = false, show_end = false },
-            indent = { tab_char = "▎" },
-        },
-    },
-    {
         "folke/zen-mode.nvim",
         keys = {
             {

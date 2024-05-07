@@ -9,8 +9,7 @@ vim.opt.guicursor = "n-c-sm:block,v:hor20,i-ci-ve:ver25,r-cr-o:hor20-blinkon175-
 vim.opt.hlsearch = true
 vim.opt.incsearch = true
 vim.opt.isfname:append("@-@")
-vim.opt.listchars:append("eol:↴")
-vim.opt.listchars:append("trail:⋅")
+vim.opt.listchars = { eol = "↴", trail = "!", nbsp = "+", tab = "▏ ", leadmultispace = "▏   " }
 vim.opt.list = true
 vim.opt.nu = true
 vim.opt.relativenumber = true
@@ -28,8 +27,7 @@ vim.opt.undofile = true
 vim.opt.updatetime = 50
 vim.opt.wrap = false
 vim.opt.clipboard = "unnamedplus"
-vim.opt.foldmethod = "expr"
-vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+vim.opt.foldmethod = "manual"
 vim.opt.foldenable = false
 
 vim.diagnostic.config({
@@ -39,9 +37,3 @@ vim.diagnostic.config({
         source = "always",
     },
 })
-
--- vim.keymap.set({ "n", "v" }, "<leader>hh", function()
---     local _, _, start, _ = vim.fn.getpos("'<")
---     local _, _, stop, _ = vim.fn.getpos("'>")
---     print(start .. stop)
--- end)
