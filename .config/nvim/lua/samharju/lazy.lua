@@ -14,4 +14,5 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup("plugins", {
     defaults = { version = "*" },
     dev = { path = "~/plugins/samharju/" },
+    change_detection = { enabled = false },
 })
