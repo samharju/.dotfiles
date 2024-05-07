@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if tmux show -g | grep -q "status on"; then
+    tmux set -g status off
+else
+    tmux set -g status on
+fi

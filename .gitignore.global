@@ -22,8 +22,6 @@ profile
 # random log files
 *.log
 
-# random json
-*.json
 
 # personal modd config
 modd*.conf
