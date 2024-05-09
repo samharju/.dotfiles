@@ -27,6 +27,14 @@ cmd("FlipVirtualText", function(_)
     end
 end, { desc = "Toggle virtual text diagnostics" })
 
+
+cmd("ColorMyPencils", function()
+    vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+    vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+    vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
+    vim.api.nvim_set_hl(0, "TablineFill", { bg = "none" })
+end, {})
+
 local grp = vim.api.nvim_create_augroup("sharju_commands", { clear = true })
 
 local function show_diff()
