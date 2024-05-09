@@ -7,11 +7,7 @@ return {
     },
     config = function()
         local harpoon = require("harpoon")
-        harpoon:setup({
-            yeet = {
-                select = function(list_item, _, _) require("yeet").execute(list_item.value) end,
-            },
-        })
+        harpoon:setup()
 
         vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
         vim.keymap.set("n", "<leader>e", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
@@ -22,7 +18,5 @@ return {
         vim.keymap.set("n", "<leader>4", function() harpoon:list():select(4) end, { desc = "harpoonfile 4" })
         vim.keymap.set("n", "<leader>j", function() harpoon:list():prev() end, { desc = "harpoon prev" })
         vim.keymap.set("n", "<leader>l", function() harpoon:list():next() end, { desc = "harpoon next" })
-
-        vim.keymap.set("n", "<leader><BS>", function() harpoon.ui:toggle_quick_menu(harpoon:list("yeet")) end)
     end,
 }

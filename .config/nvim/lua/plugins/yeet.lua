@@ -24,7 +24,7 @@ return {
             function() require("yeet").toggle_post_write() end,
         },
         {
-            "<leader>yl",
+            "<leader><BS>",
             function() require("yeet").open_commands() end,
         },
     },
