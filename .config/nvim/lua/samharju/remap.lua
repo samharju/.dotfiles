@@ -52,7 +52,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
         vim.keymap.set(
             "n",
             "<leader>fw",
-            tele.lsp_document_symbols,
+            function() tele.lsp_document_symbols({ symbol_width = 35 }) end,
             { buffer = e.buf, desc = "tele lsp_document_symbols" }
         )
 
@@ -71,5 +71,3 @@ vim.keymap.set({ "n", "v" }, "<leader>x", ":w !cat<CR>", { desc = "print selecti
 vim.keymap.set("n", "<leader>s", "<C-w>H:vert res 84<CR>")
 
 vim.keymap.set("n", "<leader>i", ":Inspect<CR>")
-vim.keymap.set("n", "<leader>ck", ":colorscheme synthweave<CR>")
-vim.keymap.set("n", "<leader>cj", ":colorscheme synthweave-transparent<CR>")

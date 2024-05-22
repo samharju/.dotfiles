@@ -7,11 +7,7 @@ local function get_root(files)
 
     if f then return vim.fs.dirname(f) end
 
-    f = vim.fs.find(files, {
-        path = vim.fs.dirname(vim.api.nvim_buf_get_name(0)),
-    })[1]
-
-    if f then return vim.fs.dirname(f) end
+    return vim.loop.cwd()
 end
 
 local black = {

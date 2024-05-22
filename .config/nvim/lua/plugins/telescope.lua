@@ -2,9 +2,15 @@ return {
     "nvim-telescope/telescope.nvim",
     dependencies = {
         "nvim-lua/plenary.nvim",
-        { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
     },
     config = function()
+        local function custom_path(_, path)
+            local fname = vim.fs.basename(path)
+            local parent = vim.fs.dirname(path)
+            if parent == "." then return fname end
+            return string.format("%s > %s", fname, parent)
+        end
+
         vim.api.nvim_create_autocmd("FileType", {
             pattern = "TelescopeResults",
             callback = function(ctx)
@@ -15,33 +21,27 @@ return {
             end,
         })
 
-        local function filenameFirst(_, path)
-            local tail = vim.fs.basename(path)
-            local parent = vim.fs.dirname(path)
-            if parent == "." then return tail end
-            return string.format("%s > %s", tail, parent)
-        end
-
         require("telescope").setup({
             defaults = {
                 file_ignore_patterns = { "%.git/" },
-                mappings = {
-                    n = {
-                        ["x"] = require("telescope.actions").delete_buffer,
-                    },
-                },
+                path_display = { "smart" },
             },
             pickers = {
                 find_files = {
                     theme = "dropdown",
                     results_title = false,
                     previewer = false,
-                    path_display = filenameFirst,
+                    path_display = custom_path,
                 },
                 buffers = {
                     theme = "dropdown",
                     previewer = false,
                     results_title = false,
+                    mappings = {
+                        n = {
+                            ["x"] = require("telescope.actions").delete_buffer,
+                        },
+                    },
                 },
                 current_buffer_fuzzy_find = {
                     theme = "ivy",
@@ -50,8 +50,6 @@ return {
                 },
             },
         })
-
-        require("telescope").load_extension("fzf")
     end,
     keys = {
         {

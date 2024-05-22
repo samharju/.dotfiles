@@ -27,7 +27,6 @@ cmd("FlipVirtualText", function(_)
     end
 end, { desc = "Toggle virtual text diagnostics" })
 
-
 cmd("ColorMyPencils", function()
     vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
     vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })

@@ -38,9 +38,10 @@ return {
                             analysis = {
                                 typeCheckingMode = "basic",
                                 autoSearchPaths = true,
-                                diagnosticMode = "workspace",
+                                diagnosticMode = "openFilesOnly",
                                 useLibraryCodeForTypes = true,
                                 exclude = { "venv" },
+                                ignore = { "venv" },
                             },
                         },
                     },
