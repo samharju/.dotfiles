@@ -1,6 +1,7 @@
 [core]
 	editor = nvim
 	excludesfile = /home/sami/.gitignore.global
+	pager = less -F
 [push]
 	autoSetupRemote = true
 	default = current
@@ -14,3 +15,15 @@
 	template = /home/sami/.gitmessage
 [init]
 	defaultBranch = master
+[rebase]
+	autosquash = true
+[merge]
+    tool = diffview
+[mergetool]
+    prompt = false
+    keepBackup = false
+[mergetool "diffview"]
+    cmd = nvim -n -c "DiffviewOpen" "$MERGE"
+[alias]
+	wip = "!git add -A; git rm $(git ls-files --deleted) 2> /dev/null; git commit --no-verify --no-gpg-sign --message \"--wip--\""
+	unwip = "!git rev-list --max-count=1 --format=\"%s\" HEAD | grep -q \"\\--wip--\" && git reset HEAD~1"

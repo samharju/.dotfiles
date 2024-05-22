@@ -1,5 +1,5 @@
 # quickly set cwd to pythonpath
-alias pypath='export PYTHONPATH=$(pwd)'
+alias pypath='[[ -n $PYTHONPATH ]] && export PYTHONPATH="$PYTHONPATH:$(pwd)" || export PYTHONPATH="$(pwd)"'
 
 # typo fixing
 eval $(thefuck --alias)

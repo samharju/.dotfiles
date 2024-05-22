@@ -85,12 +85,12 @@ DIR     01;34
 .sum    00;36
 
 # plaintext useful to spot
-.json   00;40;33
-.log    00;40;97
+.json   00;33
+.log    00;97
 .txt    00;97
-.md     00;40;95
-.yml    00;40;95
-.yaml   00;40;95
+.md     00;95
+.yml    00;95
+.yaml   00;95
 
  # archives or compressed
 .tar 00;31
