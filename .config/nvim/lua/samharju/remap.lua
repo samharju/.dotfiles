@@ -1,12 +1,6 @@
 vim.keymap.set("i", "jk", "<ESC>")
 
--- iterate stuff via tab
-vim.keymap.set("n", "<TAB>w", ":wincmd w<CR>")
-vim.keymap.set("n", "<TAB>b", ":bnext<CR>")
-vim.keymap.set("n", "<TAB>c", ":bp<CR>:bd#<CR>")
-
 -- move block nicely
-
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 vim.keymap.set("v", "<", "<gv")
@@ -37,10 +31,26 @@ vim.keymap.set("n", "]l", ":lnext<CR>")
 vim.keymap.set("n", "<leader>w", vim.diagnostic.open_float, { desc = "Open diagnostic" })
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist)
+vim.keymap.set("n", "<leader>q", vim.diagnostic.setqflist, { desc = "Diagnostic qf" })
 
 local grp = vim.api.nvim_create_augroup("sami_remap", { clear = true })
 
+--- Define commands to run for specific filetypes with "go"
+local run = {
+    python = ":!python3 %<CR>",
+    sh = ":!bash %<CR>",
+    lua = ":luafile %<CR>",
+}
+
+vim.api.nvim_create_autocmd("FileType", {
+    group = grp,
+    callback = function()
+        local c = run[vim.api.nvim_buf_get_option(0, "filetype")]
+        if c ~= nil then vim.keymap.set("n", "<leader>go", c, { buffer = true }) end
+    end,
+})
+
+--- Define lsp keymaps only on attach
 vim.api.nvim_create_autocmd("LspAttach", {
     group = grp,
     callback = function(e)

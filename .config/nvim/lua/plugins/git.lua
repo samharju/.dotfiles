@@ -45,7 +45,7 @@ return {
                 { desc = "git blame line" },
             },
             {
-                "<leader>hl",
+                "<leader>hh",
                 function() require("gitsigns").toggle_current_line_blame() end,
                 { desc = "git toggle current line blame" },
             },
@@ -63,6 +63,11 @@ return {
                 "[c",
                 function() require("gitsigns").prev_hunk() end,
                 { desc = "git prev hunk" },
+            },
+            {
+                "<leader>hl",
+                function() require("gitsigns").setqflist() end,
+                { desc = "git hunk qf" },
             },
         },
     },
