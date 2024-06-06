@@ -29,6 +29,7 @@ vim.opt.wrap = false
 vim.opt.clipboard = "unnamedplus"
 vim.opt.foldmethod = "manual"
 vim.opt.foldenable = false
+vim.opt.textwidth = 0
 
 vim.diagnostic.config({
     virtual_text = { source = "if_many" },

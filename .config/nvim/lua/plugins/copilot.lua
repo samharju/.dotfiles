@@ -17,10 +17,8 @@ return {
             -- proxy = "socks5://127.0.0.1:3000", -- Proxies requests via https or socks.
             -- temperature = 0.1,
             prompts = {
-                Explain = "Explain this code to me very briefly.",
-                Review = "Review the following code and provide brief suggestions.",
-                Tests = "Generate unit tests for this code.",
-                Refactor = "Refactor the code to improve clarity and readability.",
+                Buffer = "@buffer",
+                Buffers = "@buffers",
             },
         },
     },
@@ -47,7 +45,7 @@ return {
             },
             suggestion = {
                 enabled = true,
-                auto_trigger = true,
+                auto_trigger = false,
                 debounce = 75,
                 keymap = {
                     accept = "<M-\\>",
