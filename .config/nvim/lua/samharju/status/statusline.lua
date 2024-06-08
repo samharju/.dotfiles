@@ -3,7 +3,7 @@ local git = require("samharju.status.git")
 local M = {}
 
 local function active_lsps()
-    local active = vim.lsp.get_active_clients({ bufnr = 0 })
+    local active = vim.lsp.get_clients({ bufnr = 0 })
     if #active == 0 then return "" end
 
     local out = {}

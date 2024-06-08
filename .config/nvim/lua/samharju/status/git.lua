@@ -8,6 +8,53 @@ local M = {
     branch = "",
 }
 
+function M.setup(group)
+    vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
+        group = group,
+        callback = function()
+            local stl_default = vim.api.nvim_get_hl(0, { name = "StatusLine", link = false })
+            local hl_added = vim.api.nvim_get_hl(0, { name = "Added", link = false })
+            local hl_changed = vim.api.nvim_get_hl(0, { name = "Changed", link = false })
+            local hl_removed = vim.api.nvim_get_hl(0, { name = "Removed", link = false })
+
+            vim.api.nvim_set_hl(
+                0,
+                "StatuslineAdded",
+                { fg = hl_added.fg, bg = stl_default.bg, reverse = stl_default.reverse }
+            )
+            vim.api.nvim_set_hl(
+                0,
+                "StatuslineChanged",
+                { fg = hl_changed.fg, bg = stl_default.bg, reverse = stl_default.reverse }
+            )
+            vim.api.nvim_set_hl(
+                0,
+                "StatuslineRemoved",
+                { fg = hl_removed.fg, bg = stl_default.bg, reverse = stl_default.reverse }
+            )
+        end,
+    })
+end
+
+function M.update()
+    M.check_branch()
+    if M.branch == "" then return "" end
+
+    local branch = M.branch .. ""
+
+    M.parse_git_diff()
+
+    local status = M.diff_status
+
+    local output = { branch }
+    if status.added > 0 then table.insert(output, string.format("%%#StatuslineAdded#+%s%%*", status.added)) end
+    if status.changed > 0 then table.insert(output, string.format("%%#StatuslineChanged#~%s%%*", status.changed)) end
+    if status.removed > 0 then table.insert(output, string.format("%%#StatuslineRemoved#-%s%%*", status.removed)) end
+    if status.conflicts > 0 then table.insert(output, string.format("%%#User3#!%s%%*", status.conflicts)) end
+
+    return table.concat(output, " ")
+end
+
 function M.check_branch()
     vim.fn.jobstart("git -C " .. vim.loop.cwd() .. " rev-parse --abbrev-ref HEAD", {
         stdout_buffered = true,
@@ -55,25 +102,6 @@ function M.parse_git_diff()
             M.diff_status = { added = added, changed = changed, removed = removed, conflicts = conflicts }
         end,
     })
-end
-
-function M.update()
-    M.check_branch()
-    if M.branch == "" then return "" end
-
-    local branch = M.branch .. ""
-
-    M.parse_git_diff()
-
-    local status = M.diff_status
-
-    local output = { branch }
-    if status.added > 0 then table.insert(output, string.format("%%#User1#+%s%%*", status.added)) end
-    if status.changed > 0 then table.insert(output, string.format("%%#User2#~%s%%*", status.changed)) end
-    if status.removed > 0 then table.insert(output, string.format("%%#User3#-%s%%*", status.removed)) end
-    if status.conflicts > 0 then table.insert(output, string.format("%%#User3#!%s%%*", status.conflicts)) end
-
-    return table.concat(output, " ")
 end
 
 return M
