@@ -56,11 +56,11 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     end,
 })
 
-vim.api.nvim_create_autocmd("BufWritePre", {
-    group = grp,
-    pattern = "*",
-    command = [[%s/\s\+$//e]],
-})
+-- vim.api.nvim_create_autocmd("BufWritePre", {
+--     group = grp,
+--     pattern = "*",
+--     command = [[%s/\s\+$//e]],
+-- })
 
 -- open telescope on enter if no args given
 vim.api.nvim_create_autocmd("VimEnter", {
@@ -70,13 +70,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
             if show_diff() then
                 require("telescope.builtin").git_status()
             else
-                require("telescope.builtin").find_files({
-                    layout_strategy = "center",
-                    layout_config = {},
-                    previewer = false,
-                    prompt_title = vim.fn.getcwd(),
-                    hidden = true,
-                })
+                require("telescope.builtin").find_files()
             end
         end
     end,

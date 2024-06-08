@@ -4,39 +4,35 @@ return {
         "nvim-lua/plenary.nvim",
     },
     config = function()
-        local function custom_path(_, path)
-            local fname = vim.fs.basename(path)
-            local parent = vim.fs.dirname(path)
-            if parent == "." then return fname end
-            return string.format("%s > %s", fname, parent)
-        end
-
-        vim.api.nvim_create_autocmd("FileType", {
-            pattern = "TelescopeResults",
-            callback = function(ctx)
-                vim.api.nvim_buf_call(ctx.buf, function()
-                    vim.fn.matchadd("TelescopeParent", " > .*$")
-                    vim.api.nvim_set_hl(0, "TelescopeParent", { link = "Comment" })
-                end)
-            end,
-        })
+        -- local function custom_path(_, path)
+        --     local tail = require("telescope.utils").path_tail(path)
+        --     return string.format("%s > %s", tail, path)
+        -- end
+        --
+        -- vim.api.nvim_create_autocmd("FileType", {
+        --     pattern = "TelescopeResults",
+        --     callback = function(ctx)
+        --         vim.api.nvim_buf_call(ctx.buf, function()
+        --             vim.fn.matchadd("TelescopeParent", " > .*$")
+        --             vim.api.nvim_set_hl(0, "TelescopeParent", { link = "Comment" })
+        --         end)
+        --     end,
+        -- })
 
         require("telescope").setup({
             defaults = {
                 file_ignore_patterns = { "%.git/" },
-                path_display = { "smart" },
             },
             pickers = {
                 find_files = {
                     theme = "dropdown",
-                    results_title = false,
                     previewer = false,
-                    path_display = custom_path,
+                    hidden = true,
+                    prompt_title = vim.fn.fnamemodify(vim.fn.getcwd(), ":~"),
                 },
                 buffers = {
                     theme = "dropdown",
                     previewer = false,
-                    results_title = false,
                     mappings = {
                         n = {
                             ["x"] = require("telescope.actions").delete_buffer,
@@ -44,9 +40,11 @@ return {
                     },
                 },
                 current_buffer_fuzzy_find = {
-                    theme = "ivy",
                     previewer = false,
                     results_title = false,
+                },
+                live_grep = {
+                    layout_strategy = "vertical",
                 },
             },
         })
@@ -54,7 +52,7 @@ return {
     keys = {
         {
             "<leader>ff",
-            function() require("telescope.builtin").find_files({ prompt_title = "Files", hidden = true }) end,
+            function() require("telescope.builtin").find_files() end,
             desc = "tele find_files",
         },
         {
@@ -112,6 +110,11 @@ return {
             "<leader>fi",
             function() require("telescope.builtin").highlights() end,
             desc = "tele highlights",
+        },
+        {
+            "<leader>fr",
+            function() require("telescope.builtin").resume() end,
+            desc = "tele resume last search",
         },
     },
 }

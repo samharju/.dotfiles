@@ -7,14 +7,14 @@ return {
             cmp.setup.cmdline("/", {
                 mapping = cmp.mapping.preset.cmdline(),
                 sources = {
-                    { name = "buffer", keyword_length = 4 },
+                    { name = "buffer", keyword_length = 3 },
                 },
             })
 
             cmp.setup.cmdline("?", {
                 mapping = cmp.mapping.preset.cmdline(),
                 sources = {
-                    { name = "buffer", keyword_length = 4 },
+                    { name = "buffer", keyword_length = 3 },
                 },
             })
 
@@ -117,21 +117,6 @@ return {
                             cmp.complete()
                         end
                     end, { "i", "s" }),
-                },
-                sorting = {
-                    priority_weight = 2,
-                    comparators = {
-                        require("cmp.config.compare").offset,
-                        require("cmp.config.compare").exact,
-                        require("cmp.config.compare").scopes,
-                        require("cmp.config.compare").score,
-                        require("cmp.config.compare").recently_used,
-                        require("cmp.config.compare").locality,
-                        require("cmp.config.compare").kind,
-                        -- require('cmp.config.compare').sort_text,
-                        require("cmp.config.compare").length,
-                        require("cmp.config.compare").order,
-                    },
                 },
             })
         end,
