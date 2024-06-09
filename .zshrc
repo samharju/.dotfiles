@@ -57,5 +57,8 @@ export TZ='Europe/Helsinki'
 GPG_TTY=$(tty)
 export GPG_TTY
 
-echo "Dotfiles:"
-GIT_DIR=$HOME/.dotfiles GIT_WORK_TREE=$HOME gitpullneeded
+if [[ -z $(fd --max-depth 1 --type f --hidden --changed-within=12hour .dotfilescheck ~/) ]]; then
+    echo "Dotfiles:"
+    GIT_DIR=$HOME/.dotfiles GIT_WORK_TREE=$HOME gitpullneeded
+    touch .dotfilescheck
+fi
