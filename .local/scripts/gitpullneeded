@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
 git remote update
-branch=$(git branch --show-current)
-local=$(git rev-parse "$branch")
+local=$(git rev-parse HEAD)
 remote=$(git rev-parse '@{upstream}')
-base=$(git merge-base "$branch" '@{upstream}')
+base=$(git merge-base HEAD '@{upstream}')
 
 
 if [ "$local" = "$remote" ]; then
@@ -12,11 +11,11 @@ if [ "$local" = "$remote" ]; then
     exit 0
 elif [ "$local" = "$base" ]; then
     echo "Need to pull" >&2
-    exit 1
 elif [ "$remote" = "$base" ]; then
     echo "Need to push" >&2
-    exit 1
 else
     echo "Diverged"
-    exit 1
 fi
+
+git log 'HEAD^..@{upstream}' --oneline
+exit 1
