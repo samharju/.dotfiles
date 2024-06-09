@@ -56,3 +56,6 @@ export TZ='Europe/Helsinki'
 
 GPG_TTY=$(tty)
 export GPG_TTY
+
+echo "Dotfiles:"
+GIT_DIR=$HOME/.dotfiles GIT_WORK_TREE=$HOME gitpullneeded
