@@ -60,5 +60,5 @@ export GPG_TTY
 if [[ -z $(fd --max-depth 1 --type f --hidden --changed-within=12hour .dotfilescheck ~/) ]]; then
     echo "Dotfiles:"
     GIT_DIR=$HOME/.dotfiles GIT_WORK_TREE=$HOME gitpullneeded
-    touch .dotfilescheck
+    touch ~/.dotfilescheck
 fi
