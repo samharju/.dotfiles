@@ -11,11 +11,14 @@ if [ "$local" = "$remote" ]; then
     exit 0
 elif [ "$local" = "$base" ]; then
     echo "Need to pull" >&2
+    git log 'HEAD^..@{upstream}' --oneline
 elif [ "$remote" = "$base" ]; then
     echo "Need to push" >&2
+    git log '@{upstream}^..HEAD' --oneline
 else
     echo "Diverged"
+    git log 'HEAD^..@{upstream}' --oneline
+    git log '@{upstream}^..HEAD' --oneline
 fi
 
-git log 'HEAD^..@{upstream}' --oneline
 exit 1
