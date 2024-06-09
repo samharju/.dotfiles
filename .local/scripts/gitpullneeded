@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+git remote update
+branch=$(git branch --show-current)
+local=$(git rev-parse "$branch")
+remote=$(git rev-parse '@{upstream}')
+base=$(git merge-base "$branch" '@{upstream}')
+
+
+if [ "$local" = "$remote" ]; then
+    echo "Up to date" >&2
+    exit 0
+elif [ "$local" = "$base" ]; then
+    echo "Need to pull" >&2
+    exit 1
+elif [ "$remote" = "$base" ]; then
+    echo "Need to push" >&2
+    exit 1
+else
+    echo "Diverged"
+    exit 1
+fi
