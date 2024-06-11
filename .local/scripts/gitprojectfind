@@ -5,5 +5,4 @@ fd --hidden --no-ignore --type directory "\.git$" "$HOME" \
     | fzf \
     --query "$1" \
     --header='git projects' \
-    --header-first \
-    --info=hidden
+    --header-first
