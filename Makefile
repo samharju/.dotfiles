@@ -110,6 +110,7 @@ gotools: go
 	go install github.com/segmentio/golines@latest
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin v1.55.2
 	go install github.com/jesseduffield/lazygit@latest
+	go install github.com/go-delve/delve/cmd/dlv@latest
 
 .PHONY: apt
 apt:
