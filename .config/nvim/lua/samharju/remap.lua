@@ -3,6 +3,9 @@ vim.keymap.set("i", "jk", "<ESC>")
 -- wrap selection into quotes
 vim.keymap.set("v", "<leader>s'", "c'<C-r>\"'<Esc>")
 vim.keymap.set("v", '<leader>s"', 'c"<C-r>""<Esc>')
+vim.keymap.set("v", "<leader>s(", 'c(<C-r>")<Esc>')
+vim.keymap.set("v", "<leader>s[", 'c[<C-r>"]<Esc>')
+vim.keymap.set("v", "<leader>s{", 'c{<C-r>"}<Esc>')
 
 -- move block nicely
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
