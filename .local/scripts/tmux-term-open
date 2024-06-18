@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+
+t=$(tmux list-panes -F '#{pane_index}' -f '#{m:bottom_terminal,#T}')
+if [[ -z "$t" ]]; then
+    tmux split-window -v -c "#{pane_current_path}" -l 20
+    tmux select-pane -T bottom_terminal
+    exit 0
+fi
+
+tmux select-pane -t $t
