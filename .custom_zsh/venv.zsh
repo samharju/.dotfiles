@@ -10,4 +10,10 @@ createvenv ()
     python -m venv venv
     pyenv shell --unset
     [ -d "venv" ] && echo "venv created" || echo "venv not created"
+    cat << EOF > pyrightconfig.json
+{
+  "venv": "venv",
+  "venvPath": "."
+}
+EOF
 }

@@ -1,1 +1,3 @@
 lua/dev.lua
+*.vim
+*.shada

@@ -30,6 +30,9 @@ modd*.conf
 TODO.md
 TODO.txt
 
+# pyright project configurations
+pyrightconfig.json
+
 # ------------------------------- https://github.com/github/gitignore/blob/main/Global/Archives.gitignore
 # It's better to unpack these files and commit the raw source because
 # git has its own built in compression methods.
@@ -269,6 +272,7 @@ cython_debug/
 
 # Session
 Session.vim
+Session.shada
 Sessionx.vim
 
 # Temporary
