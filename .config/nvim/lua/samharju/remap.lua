@@ -19,21 +19,60 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
--- exit normal mode in terminal emulator
-vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
-
 -- yank to system clipboard
 vim.keymap.set({ "n", "v" }, "<leader>y", '"+y')
 vim.keymap.set({ "n", "v" }, "<leader>p", '"+p')
 vim.keymap.set("n", "<leader>Y", '"+Y')
 vim.keymap.set("n", "<leader>P", '"+P')
 
--- iterate quick- and loclist
-vim.keymap.set("n", "[q", ":cprev<CR>")
-vim.keymap.set("n", "]q", ":cnext<CR>")
-vim.keymap.set("n", "[l", ":lprev<CR>")
-vim.keymap.set("n", "]l", ":lnext<CR>")
+-- iterate quick- and loclist -----------------------------------------------------
+vim.keymap.set("n", "[q", function()
+    if vim.fn.getqflist({ idx = 0 }).idx == 1 then
+        vim.cmd.clast()
+        return
+    end
+    vim.cmd.cprev()
+end, { desc = "Previous quickfix" })
+vim.keymap.set("n", "]q", function()
+    local qf = vim.fn.getqflist()
+    if vim.fn.getqflist({ idx = 0 }).idx == #qf then
+        vim.cmd.cfirst()
+        return
+    end
+    vim.cmd.cnext()
+end, { desc = "Next quickfix" })
 
+vim.keymap.set("n", "[l", function()
+    if vim.fn.getloclist(0, { idx = 0 }).idx == 1 then
+        vim.cmd.llast()
+        return
+    end
+    vim.cmd.lprev()
+end, { desc = "Previous on loclist" })
+
+vim.keymap.set("n", "]l", function()
+    local lf = vim.fn.getloclist(0)
+    if vim.fn.getloclist(0, { idx = 0 }).idx == #lf then
+        vim.cmd.lfirst()
+        return
+    end
+    vim.cmd.lnext()
+end, { desc = "Next on loclist" })
+
+vim.keymap.set("n", "]a", function()
+    vim.cmd.caddexpr([[expand("%") .. ":" .. line(".") .. ":" .. col(".") ..  ":" .. getline(".")]])
+    vim.cmd.copen()
+    vim.cmd("wincmd p")
+end, { desc = "Add current pos to quickfix" })
+
+vim.keymap.set("n", "[a", function()
+    vim.cmd.laddexpr([[expand("%") .. ":" .. line(".") .. ":" .. col(".") ..  ":" .. getline(".")]])
+    vim.cmd.lopen()
+    vim.cmd("wincmd p")
+end, { desc = "Add current pos to loclist" })
+
+-- /iterate quick- and loclist -----------------------------------------------------
+--
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 vim.keymap.set("n", "<leader>w", vim.diagnostic.open_float, { desc = "Open diagnostic" })
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
@@ -44,7 +83,6 @@ local grp = vim.api.nvim_create_augroup("sami_remap", { clear = true })
 
 --- Define commands to run for specific filetypes with "go"
 local run = {
-    python = ":!python3 %<CR>",
     sh = ":!bash %<CR>",
     lua = ":luafile %<CR>",
 }
@@ -52,7 +90,15 @@ local run = {
 vim.api.nvim_create_autocmd("FileType", {
     group = grp,
     callback = function()
-        local c = run[vim.api.nvim_buf_get_option(0, "filetype")]
+        local ft = vim.api.nvim_get_option_value("filetype", { buf = 0 })
+        if ft == "python" then
+            if vim.fn.executable("venv/bin/python") == 1 then
+                run.python = ":!venv/bin/python %<CR>"
+            else
+                run.python = ":!python3 %<CR>"
+            end
+        end
+        local c = run[ft]
         if c ~= nil then vim.keymap.set("n", "<leader>go", c, { buffer = true }) end
     end,
 })

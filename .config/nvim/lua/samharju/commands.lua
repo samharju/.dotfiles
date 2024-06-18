@@ -12,20 +12,11 @@ cmd("ClearRegs", function(_)
     end
 end, { desc = "Clear registers abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" })
 
-local virtual_text = true
-cmd("FlipVirtualText", function(_)
-    if virtual_text then
-        vim.diagnostic.config({
-            virtual_text = false,
-        })
-        virtual_text = false
-    else
-        vim.diagnostic.config({
-            virtual_text = { source = "if_many" },
-        })
-        virtual_text = true
-    end
-end, { desc = "Toggle virtual text diagnostics" })
+cmd(
+    "DiagnosticToggle",
+    function(_) vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end,
+    { desc = "Toggle diagnostics" }
+)
 
 cmd("ColorMyPencils", function()
     vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
