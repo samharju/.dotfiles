@@ -8,7 +8,7 @@ go_pkg = go$(go_version).linux-amd64.tar.gz
 
 bat_pkg = bat-musl_0.23.0_amd64.deb
 
-all: apt go nvim ohmyzsh nvm python3.10 thefuck formatters fzf bat docker
+all: apt go nvim ohmyzsh nvm python3.10 thefuck formatters fzf bat docker luarocks
 
 .PHONY: nvim
 nvim: .local/bin/nvim
@@ -57,6 +57,7 @@ nvm: .nvm/nvm.sh
 	sudo apt autoremove -y
 
 .pyenv/shims/python3.10: .pyenv/bin/pyenv
+	@figlet python3.10
 	pyenv install 3.10.13
 	pyenv global 3.10.13
 
@@ -67,6 +68,7 @@ python3.10: .pyenv/shims/python3.10
 thefuck: .local/bin/thefuck
 
 .local/bin/thefuck: python3.10
+	@figlet fuck
 	pip3 install thefuck --user
 
 
@@ -168,8 +170,34 @@ docker:
 	    docker-buildx-plugin \
 	    docker-compose-plugin
 
-	sudo apt autoremove
+	sudo apt autoremove -y
 
 	sudo usermod -aG docker sami
 	sudo systemctl enable docker
 	sudo systemctl start docker
+
+
+.PHONY: nlua
+nlua: /bin/luarocks .luarocks/bin/nlua
+
+
+/bin/luarocks:
+	@figlet luarocks
+	sudo apt install luarocks
+	sudo apt autoremove -y
+
+.luarocks/bin/nlua:
+	@figlet nlua
+	luarocks --local install nlua
+	echo "print(1+2)"| nlua
+	luarocks config lua_version 5.1
+	luarocks config lua_interpreter nlua
+	luarocks config variables.LUA_INCDIR /usr/include/luajit-2.1
+
+.PHONY: busted
+busted: .luarocks/bin/busted
+
+.luarocks/bin/busted:
+	@figlet busted
+	luarocks --local install busted
+	busted --version

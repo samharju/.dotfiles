@@ -6,7 +6,8 @@ binpaths=$HOME/bin\
 :$HOME/.local/scripts\
 :$HOME/go/bin\
 :/usr/local/bin\
-:/usr/local/go/bin
+:/usr/local/go/bin\
+:$HOME/.luarocks/bin
 
 if ! [[ "$PATH" =~ "$binpaths" ]]; then
     export PATH=$binpaths:$PATH
