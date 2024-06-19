@@ -18,9 +18,4 @@ return {
             { "<leader>u", vim.cmd.UndotreeToggle, desc = "UndotreeToggle" },
         },
     },
-    {
-        "terrortylor/nvim-comment",
-        event = "VeryLazy",
-        config = function() require("nvim_comment").setup() end,
-    },
 }
