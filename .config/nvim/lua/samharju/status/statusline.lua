@@ -11,7 +11,7 @@ local function active_lsps()
         table.insert(out, lsp.name)
     end
 
-    return "[ls: " .. table.concat(out, " ") .. "]"
+    return "(" .. table.concat(out, " ") .. ")"
 end
 
 local function formatters()
@@ -26,7 +26,7 @@ local function formatters()
         if formatter.available then table.insert(out, formatter.name) end
     end
 
-    return "{f: " .. table.concat(out, " ") .. "}"
+    return "{" .. table.concat(out, " ") .. "}"
 end
 
 local function lint_progress()

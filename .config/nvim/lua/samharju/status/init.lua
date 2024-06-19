@@ -19,20 +19,18 @@ vim.opt.winbar = winbar
 
 --- statusline updates with some sane throttling
 local throttle = false
-local wait = vim.loop.new_timer()
 
 vim.api.nvim_create_autocmd({ "BufWritePost", "VimEnter", "BufEnter", "CmdlineLeave" }, {
     group = group,
     callback = function()
-        if statusline ~= "" and throttle then return end
+        if throttle then return end
         throttle = true
         statusline = status.update()
-
-        if wait ~= nil then vim.loop.timer_start(wait, 500, 0, function() throttle = false end) end
+        vim.defer_fn(function() throttle = false end, 500)
     end,
 })
 
-vim.api.nvim_create_autocmd({ "BufEnter", "BufLeave" }, {
+vim.api.nvim_create_autocmd({ "BufEnter" }, {
     group = group,
     callback = function() tabline = tab.update() end,
 })
