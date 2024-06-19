@@ -13,9 +13,11 @@ return {
             float = {
                 enable = true,
                 quit_on_focus_loss = true,
+                open_win_config = {
+                    width = 50,
+                },
             },
             signcolumn = "yes",
-            width = {}, -- empty table means adaptive
         },
         renderer = {
             icons = {
@@ -23,16 +25,16 @@ return {
                 glyphs = {
                     git = { ignored = "" },
                 },
+                show = {
+                    folder = false,
+                },
             },
             highlight_diagnostics = true,
             highlight_git = true,
+            group_empty = true,
         },
         update_focused_file = {
             enable = true,
-        },
-        diagnostics = {
-            enable = true,
-            show_on_open_dirs = true,
         },
         actions = {
             open_file = {
@@ -42,5 +44,26 @@ return {
                 },
             },
         },
+        filters = {
+            git_ignored = false,
+            custom = {
+                "\\.git/",
+                "\\.mypy_cache",
+                "\\.pytest_cache",
+                "\\.vscode",
+                "\\.idea",
+                "__pycache__",
+            },
+        },
+        on_attach = function(bufnr)
+            local api = require("nvim-tree.api")
+            api.config.mappings.default_on_attach(bufnr)
+
+            local function opts(desc)
+                return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+            end
+            vim.keymap.set("n", "l", api.node.open.edit, opts("Open"))
+            vim.keymap.set("n", "h", api.node.navigate.parent_close, opts("Close Directory"))
+        end,
     },
 }
