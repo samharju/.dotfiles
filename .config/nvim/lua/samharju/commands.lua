@@ -56,6 +56,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- open telescope on enter if no args given
 vim.api.nvim_create_autocmd("VimEnter", {
     callback = function()
+        if vim.g.session_restored then return end
         local arg = vim.api.nvim_eval("argv(0)")
         if arg and arg == "" then
             if show_diff() then
