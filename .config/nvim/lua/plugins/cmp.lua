@@ -67,8 +67,36 @@ return {
                     { name = "nvim_lsp" },
                     { name = "luasnip" },
                     { name = "nvim_lsp_signature_help" },
-                    { name = "path", option = { get_cwd = function(_) return vim.fn.getcwd() end } },
-                    { name = "buffer", keyword_length = 3 },
+                    { name = "path", option = { get_cwd = vim.loop.cwd } },
+                    {
+                        name = "buffer",
+                        option = {
+                            get_bufnrs = function()
+                                -- source from visible buffers
+                                local bufs = {}
+                                for _, win in ipairs(vim.api.nvim_list_wins()) do
+                                    bufs[vim.api.nvim_win_get_buf(win)] = true
+                                end
+                                return vim.tbl_keys(bufs)
+                            end,
+                        },
+                        keyword_length = 3,
+                    },
+                },
+                sorting = {
+                    comparators = {
+                        function(entry1, entry2) return require("cmp_buffer"):compare_locality(entry1, entry2) end,
+                        require("cmp.config.compare").offset,
+                        require("cmp.config.compare").exact,
+                        -- require"cmp.config.compare".scopes,
+                        require("cmp.config.compare").score,
+                        require("cmp.config.compare").recently_used,
+                        require("cmp.config.compare").locality,
+                        require("cmp.config.compare").kind,
+                        -- require"cmp.config.compare".sort_text,
+                        require("cmp.config.compare").length,
+                        require("cmp.config.compare").order,
+                    },
                 },
                 mapping = {
                     ["<C-j>"] = cmp.mapping(function(fallback)
