@@ -25,7 +25,7 @@ return {
         },
         {
             "<leader><BS>",
-            function() require("yeet").open_commands() end,
+            function() require("yeet").list_cmd() end,
         },
     },
     cmd = "Yeet",
