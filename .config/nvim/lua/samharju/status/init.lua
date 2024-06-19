@@ -9,7 +9,7 @@ _G.MyStatus = function() return statusline end
 _G.Tabline = function() return tabline end
 
 local group = vim.api.nvim_create_augroup("samharju_statusline", { clear = true })
-require("samharju.status.git").setup(group)
+require("samharju.status.hl").setup(group)
 
 vim.opt.showtabline = 2
 vim.opt.tabline = "%{%v:lua.Tabline()%}"

@@ -8,34 +8,6 @@ local M = {
     branch = "",
 }
 
-function M.setup(group)
-    vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
-        group = group,
-        callback = function()
-            local stl_default = vim.api.nvim_get_hl(0, { name = "StatusLine", link = false })
-            local hl_added = vim.api.nvim_get_hl(0, { name = "Added", link = false })
-            local hl_changed = vim.api.nvim_get_hl(0, { name = "Changed", link = false })
-            local hl_removed = vim.api.nvim_get_hl(0, { name = "Removed", link = false })
-
-            vim.api.nvim_set_hl(
-                0,
-                "StatusLineAdded",
-                { fg = hl_added.fg, bg = stl_default.bg, reverse = stl_default.reverse }
-            )
-            vim.api.nvim_set_hl(
-                0,
-                "StatusLineChanged",
-                { fg = hl_changed.fg, bg = stl_default.bg, reverse = stl_default.reverse }
-            )
-            vim.api.nvim_set_hl(
-                0,
-                "StatusLineRemoved",
-                { fg = hl_removed.fg, bg = stl_default.bg, reverse = stl_default.reverse }
-            )
-        end,
-    })
-end
-
 function M.update()
     M.check_branch()
     if M.branch == "" then return "" end

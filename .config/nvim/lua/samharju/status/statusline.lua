@@ -1,4 +1,5 @@
 local git = require("samharju.status.git")
+local resolve = require("samharju.venv")
 
 local M = {}
 
@@ -40,15 +41,17 @@ end
 
 local function diagnostics()
     local errors = vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
-    if #errors > 0 then return string.format("%%#DiagnosticError# %s%%*", #errors) end
+    if #errors > 0 then return string.format("%%#StatusLineError# %s%%*", #errors) end
     local warnings = vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
-    if #warnings > 0 then return string.format("%%#DiagnosticWarn# %s%%*", #warnings) end
+    if #warnings > 0 then return string.format("%%#StatusLineWarn# %s%%*", #warnings) end
     local rest = vim.diagnostic.get(0)
-    if #rest > 0 then return string.format("%%#DiagnosticInfo# %s%%*", #rest) end
+    if #rest > 0 then return string.format("%%#StatusLineInfo# %s%%*", #rest) end
     return ""
 end
 
 function M.update()
+    local venv, version = resolve("virtualenv")
+    if venv then version = string.format("%%#StatusLineWarn#%s%%*", version) end
     local status_parts = {
         "%<",
         git.update(),
@@ -57,8 +60,9 @@ function M.update()
         diagnostics(),
         formatters(),
         active_lsps(),
-        "%=",
         "%y",
+        version,
+        "%=",
         "%-14.(%l,%v%)",
         "%P",
     }

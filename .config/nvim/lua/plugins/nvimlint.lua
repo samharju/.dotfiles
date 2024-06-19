@@ -1,14 +1,4 @@
-local function get_root(files)
-    local f = vim.fs.find(files, {
-        path = vim.fs.dirname(vim.api.nvim_buf_get_name(0)),
-        stop = vim.loop.os_homedir(),
-        upward = true,
-    })[1]
-
-    if f then return vim.fs.dirname(f) end
-
-    return vim.loop.cwd()
-end
+local resolve = require("samharju.venv")
 
 local black = {
     cmd = "black",
@@ -16,15 +6,13 @@ local black = {
     stream = "stderr",
     args = { "--check", "-" },
     ignore_exitcode = true,
-    cwd = get_root({ "pyproject.toml", "setup.py", "setup.cfg", ".git" }),
     parser = function(output, _, _)
-        local msg = vim.fn.split(output, "\n")[1]
-        if not string.match(msg, "would reformat") then return {} end
+        if not string.match(output, "would reformat") then return {} end
         return {
             {
                 lnum = 0,
                 col = 0,
-                severity = vim.diagnostic.severity.INFO,
+                severity = vim.diagnostic.severity.HINT,
                 source = "black",
                 message = "this file is utter shit",
             },
@@ -38,15 +26,13 @@ local isort = {
     stream = "stderr",
     args = { "--check", "--profile", "black", "-" },
     ignore_exitcode = true,
-    cwd = get_root({ "pyproject.toml", "setup.py", "setup.cfg", ".git" }),
     parser = function(output, _, _)
-        local msg = vim.fn.split(output, "\n")[1]
-        if not string.match(msg, "ERROR:") then return {} end
+        if output == "" then return {} end
         return {
             {
-                lnum = 1,
+                lnum = 0,
                 col = 0,
-                severity = vim.diagnostic.severity.INFO,
+                severity = vim.diagnostic.severity.HINT,
                 source = "isort",
                 message = "import order is shit",
             },
@@ -54,14 +40,36 @@ local isort = {
     end,
 }
 
-local function available_of(linters)
-    local lint = {}
+local function setup_python()
+    local lint = require("lint")
 
-    for _, value in ipairs(linters) do
-        if vim.fn.executable(value) == 1 then table.insert(lint, value) end
+    local linters = {}
+
+    local ok, path = resolve("flake8")
+    if ok then
+        lint.linters.flake8.cmd = path
+        linters[#linters + 1] = "flake8"
     end
 
-    return lint
+    ok, path = resolve("mypy")
+    if ok then
+        lint.linters.mypy.cmd = path
+        linters[#linters + 1] = "mypy"
+    end
+
+    ok, path = resolve("black")
+    if ok then
+        black.cmd = path
+        linters[#linters + 1] = "black"
+    end
+
+    ok, path = resolve("isort")
+    if ok then
+        isort.cmd = path
+        linters[#linters + 1] = "isort"
+    end
+
+    lint.linters_by_ft.python = linters
 end
 
 return {
@@ -73,14 +81,14 @@ return {
         lint.linters.isort = isort
 
         lint.linters_by_ft = {
-            python = available_of({ "flake8", "black", "isort", "mypy" }),
             go = { "golangcilint" },
             json = { "jq" },
         }
+        setup_python()
 
         local lint_augroup = vim.api.nvim_create_augroup("nvim_lint_au", { clear = true })
 
-        vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost" }, {
+        vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
             group = lint_augroup,
             callback = function()
                 if string.match(vim.api.nvim_buf_get_name(0), "copilot:") then return end
