@@ -3,6 +3,9 @@ local resolve = require("samharju.venv")
 
 local M = {}
 
+local sep_right = ""
+local sep_left = ""
+
 local function active_lsps()
     local active = vim.lsp.get_clients({ bufnr = 0 })
     if #active == 0 then return "" end
@@ -12,7 +15,7 @@ local function active_lsps()
         table.insert(out, lsp.name)
     end
 
-    return "(" .. table.concat(out, " ") .. ")"
+    return table.concat(out, " ")
 end
 
 local function formatters()
@@ -27,7 +30,7 @@ local function formatters()
         if formatter.available then table.insert(out, formatter.name) end
     end
 
-    return "{" .. table.concat(out, " ") .. "}"
+    return table.concat(out, " ")
 end
 
 local function lint_progress()
@@ -50,20 +53,27 @@ local function diagnostics()
 end
 
 function M.update()
-    local venv, version = resolve("virtualenv")
-    if venv then version = string.format("%%#StatusLineWarn#%s%%*", version) end
+    local venv, python_version = resolve("virtualenv")
+    if venv then python_version = string.format("%%#StatusLineWarn#%s%%*", python_version) end
+    local branch, diff = git.update()
+    local diag = diagnostics()
+    local f = formatters()
+    if f ~= "" then f = string.format("%%#StatusLineComment#%s%%*", f) end
     local status_parts = {
         "%<",
-        git.update(),
-        "%=",
+        branch,
+        branch ~= "" and sep_right or "",
+        diff,
+        diag ~= "" and sep_right or "",
+        diag,
         lint_progress(),
-        diagnostics(),
-        formatters(),
-        active_lsps(),
-        "%y",
-        version,
         "%=",
-        "%-14.(%l,%v%)",
+        python_version,
+        f,
+        "%y",
+        active_lsps(),
+        sep_left,
+        "%-8.(%l,%v%)",
         "%P",
     }
 

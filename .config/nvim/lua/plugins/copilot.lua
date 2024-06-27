@@ -21,6 +21,7 @@ return {
                 Buffers = "@buffers",
             },
         },
+        cmd = "CopilotChat",
     },
     {
         "zbirenbaum/copilot.lua",

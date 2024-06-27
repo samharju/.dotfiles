@@ -10,29 +10,29 @@ local M = {
 
 function M.update()
     M.check_branch()
-    if M.branch == "" then return "" end
-
-    local branch = M.branch .. ""
+    if M.branch == "" then return "", "" end
 
     M.parse_git_diff()
 
     local status = M.diff_status
 
-    local output = { branch }
+    local output = {}
     if status.added > 0 then table.insert(output, string.format("%%#StatusLineAdded#+%s%%*", status.added)) end
     if status.changed > 0 then table.insert(output, string.format("%%#StatusLineChanged#~%s%%*", status.changed)) end
     if status.removed > 0 then table.insert(output, string.format("%%#StatusLineRemoved#-%s%%*", status.removed)) end
     if status.conflicts > 0 then table.insert(output, string.format("%%#User3#!%s%%*", status.conflicts)) end
 
-    return table.concat(output, " ")
+    return M.branch, table.concat(output, " ")
 end
 
 function M.check_branch()
-    vim.system(
-        { "git", "-C", vim.loop.cwd(), "rev-parse", "--abbrev-ref", "HEAD" },
-        { text = true },
-        function(out) M.branch = out.stdout:match("([^\n]+)") end
-    )
+    vim.system({ "git", "-C", vim.loop.cwd(), "rev-parse", "--abbrev-ref", "HEAD" }, { text = true }, function(out)
+        local b = out.stdout:match("([^\n]+)")
+        if b ~= nil then
+            M.branch = b
+            return
+        end
+    end)
 end
 
 function M.parse_git_diff()

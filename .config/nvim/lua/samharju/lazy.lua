@@ -19,7 +19,7 @@ require("lazy").setup({
     dev = {
         path = "~/plugins/samharju/",
         patterns = { "samharju" },
-        fallback = true,
+        fallback = false,
     },
     change_detection = { notify = false },
 })

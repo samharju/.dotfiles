@@ -24,6 +24,10 @@ function M.setup(group)
             stl_hl("StatusLineError", hl_diagerr, stl_default)
             stl_hl("StatusLineWarn", hl_diagwarn, stl_default)
             stl_hl("StatusLineInfo", hl_diaginfo, stl_default)
+
+            local hl_comment = vim.api.nvim_get_hl(0, { name = "Comment", link = false })
+
+            stl_hl("StatusLineComment", hl_comment, stl_default)
         end,
     })
 end

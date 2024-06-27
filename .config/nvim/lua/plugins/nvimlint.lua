@@ -1,5 +1,3 @@
-local resolve = require("samharju.venv")
-
 local black = {
     cmd = "black",
     stdin = true,
@@ -42,6 +40,7 @@ local isort = {
 
 local function setup_python()
     local lint = require("lint")
+    local resolve = require("samharju.venv")
 
     local linters = {}
 
@@ -74,6 +73,7 @@ end
 
 return {
     "mfussenegger/nvim-lint",
+    event = "VeryLazy",
     config = function()
         local lint = require("lint")
 

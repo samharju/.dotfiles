@@ -1,3 +1,10 @@
+local function resolve_python_cwd()
+    local p = vim.fs.find({ "tests", "test" }, { type = "directory", limit = 1 })
+    if p then return vim.fn.fnamemodify(p[1], ":h") end
+end
+
+local python_cwd = resolve_python_cwd()
+
 return {
     "mfussenegger/nvim-dap",
     dependencies = {
@@ -18,16 +25,9 @@ return {
         local dap = require("dap")
 
         require("dap-python").setup()
-        require("dap-go").setup()
+        require("dap-python").test_runner = "pytest"
 
-        dap.configurations.python = {
-            {
-                type = "python",
-                request = "launch",
-                name = "Launch file",
-                program = "${file}",
-            },
-        }
+        require("dap-go").setup()
 
         vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint)
         vim.keymap.set("n", "<leader>dh", dap.step_out)
@@ -37,5 +37,10 @@ return {
         vim.keymap.set("n", "<leader>dr", dap.restart)
         vim.keymap.set("n", "<leader>do", dap.repl.open)
         vim.keymap.set("n", "<leader>dw", require("dap.ui.widgets").hover)
+
+        vim.keymap.set("n", "<leader>dt", function()
+            vim.notify("Debugging test", "info", { title = "DAP" })
+            require("dap-python").test_method({ config = { cwd = python_cwd } })
+        end)
     end,
 }

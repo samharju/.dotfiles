@@ -18,11 +18,13 @@ cmd(
     { desc = "Toggle diagnostics" }
 )
 
+local function bg_none(name, hl) vim.api.nvim_set_hl(0, name, { fg = hl.fg, bg = nil, italic = hl.italic }) end
+
 cmd("ColorMyPencils", function()
-    vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-    vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
-    vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
-    vim.api.nvim_set_hl(0, "TablineFill", { bg = "none" })
+    bg_none("Normal", vim.api.nvim_get_hl(0, { name = "Normal" }))
+    bg_none("NormalFloat", vim.api.nvim_get_hl(0, { name = "NormalFloat" }))
+    bg_none("EndOfBuffer", vim.api.nvim_get_hl(0, { name = "EndOfBuffer" }))
+    bg_none("TablineFill", vim.api.nvim_get_hl(0, { name = "TablineFill" }))
 end, {})
 
 local grp = vim.api.nvim_create_augroup("sharju_commands", { clear = true })
@@ -54,16 +56,16 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- })
 
 -- open telescope on enter if no args given
-vim.api.nvim_create_autocmd("VimEnter", {
-    callback = function()
-        if vim.g.session_restored then return end
-        local arg = vim.api.nvim_eval("argv(0)")
-        if arg and arg == "" then
-            if show_diff() then
-                require("telescope.builtin").git_status()
-            else
-                require("telescope.builtin").find_files()
-            end
-        end
-    end,
-})
+-- vim.api.nvim_create_autocmd("VimEnter", {
+--     callback = function()
+--         if vim.g.session_restored then return end
+--         local arg = vim.api.nvim_eval("argv(0)")
+--         if arg and arg == "" then
+--             if show_diff() then
+--                 require("telescope.builtin").git_status()
+--             else
+--                 require("telescope.builtin").find_files()
+--             end
+--         end
+--     end,
+-- })

@@ -22,14 +22,18 @@ local throttle = false
 
 vim.api.nvim_create_autocmd({ "BufWritePost", "VimEnter", "BufEnter", "CmdlineLeave" }, {
     group = group,
+    callback = function() statusline = status.update() end,
+})
+
+vim.api.nvim_create_autocmd({ "CursorMoved" }, {
+    group = group,
     callback = function()
         if throttle then return end
         throttle = true
         statusline = status.update()
-        vim.defer_fn(function() throttle = false end, 500)
+        vim.defer_fn(function() throttle = false end, 1000)
     end,
 })
-
 vim.api.nvim_create_autocmd({ "BufEnter" }, {
     group = group,
     callback = function() tabline = tab.update() end,
