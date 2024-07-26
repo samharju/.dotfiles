@@ -102,6 +102,11 @@ return {
             desc = "tele grep_string",
         },
         {
+            "<leader>ft",
+            function() require("telescope.builtin").grep_string({ search = [[TODO|FIXME|\bFIX]], use_regex = true }) end,
+            desc = "tele todos",
+        },
+        {
             "<leader>fz",
             function() require("telescope.builtin").current_buffer_fuzzy_find() end,
             desc = "tele current_buffer_fuzzy_find",
