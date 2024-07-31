@@ -20,9 +20,14 @@ vim.opt.winbar = winbar
 --- statusline updates with some sane throttling
 local throttle = false
 
-vim.api.nvim_create_autocmd({ "BufWritePost", "VimEnter", "BufEnter", "CmdlineLeave" }, {
+local function update()
+    statusline = status.update()
+    tabline = tab.update()
+end
+
+vim.api.nvim_create_autocmd({ "BufWritePost", "VimEnter", "BufEnter", "CmdlineLeave", "DiagnosticChanged" }, {
     group = group,
-    callback = function() statusline = status.update() end,
+    callback = update,
 })
 
 vim.api.nvim_create_autocmd({ "CursorMoved" }, {
@@ -30,11 +35,7 @@ vim.api.nvim_create_autocmd({ "CursorMoved" }, {
     callback = function()
         if throttle then return end
         throttle = true
-        statusline = status.update()
+        update()
         vim.defer_fn(function() throttle = false end, 1000)
     end,
-})
-vim.api.nvim_create_autocmd({ "BufEnter" }, {
-    group = group,
-    callback = function() tabline = tab.update() end,
 })
