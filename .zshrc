@@ -63,3 +63,5 @@ if [[ -z $(fd --max-depth 1 --type f --hidden --changed-within=12hour .dotfilesc
     http_proxy= http_proxy= GIT_DIR=$HOME/.dotfiles GIT_WORK_TREE=$HOME gitpullneeded
     touch ~/.dotfilescheck
 fi
+
+export SUDO_EDITOR=/home/sami/.local/bin/nvim
