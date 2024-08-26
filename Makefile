@@ -8,7 +8,7 @@ go_pkg = go$(go_version).linux-amd64.tar.gz
 
 bat_pkg = bat-musl_0.23.0_amd64.deb
 
-all: apt go nvim ohmyzsh nvm python3.10 thefuck formatters fzf bat docker luarocks
+all: apt go nvim ohmyzsh nvm python3.10 thefuck formatters fzf bat docker luarocks tmux ripgrep
 
 .PHONY: nvim
 nvim: .local/bin/nvim
@@ -119,8 +119,25 @@ apt:
 	@[ -n "$$(command -v figlet)" ] && figlet apt || true
 	sudo add-apt-repository -y universe
 	sudo apt update
-	sudo apt install -y curl zip unzip ripgrep shellcheck tmux figlet libfuse2 zsh
+	sudo apt install -y curl zip unzip shellcheck figlet libfuse2 zsh
 	sudo apt autoremove -y
+
+.PHONY: ripgrep
+ripgrep: /usr/bin/rg
+
+/usr/bin/rg:
+	@figlet ripgrep 14.1.0
+	curl -LO https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep_14.1.0-1_amd64.deb
+	sudo dpkg -i ripgrep_14.1.0-1_amd64.deb
+
+.PHONY: tmux
+tmux: /usr/local/bin/tmux
+
+/usr/local/bin/tmux:
+	@figlet tmux 3.4
+	sudo apt install libevent-dev ncurses-dev build-essential bison pkg-config
+	git clone https://github.com/tmux/tmux.git ~/git/tmux
+	cd ~/git/tmux; git checkout 3.4; sh autogen.sh; ./configure; make && sudo make install
 
 
 .PHONY: fzf
