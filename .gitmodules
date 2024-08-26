@@ -1,13 +1,7 @@
-[submodule ".custom_zsh/plugins/zsh-autosuggestions"]
-	path = .custom_zsh/plugins/zsh-autosuggestions
-	url = https://github.com/zsh-users/zsh-autosuggestions
 [submodule ".fzf"]
 	path = .fzf
 	url = https://github.com/junegunn/fzf.git
 	branch = 0.46.1
-[submodule ".tmux/plugins/tpm"]
-	path = .tmux/plugins/tpm
-	url = https://github.com/tmux-plugins/tpm
 [submodule "plugins/samharju/synthweave.nvim"]
 	path = plugins/samharju/synthweave.nvim
 	url = git@github.com:samharju/synthweave.nvim.git
@@ -21,3 +15,9 @@
 [submodule "plugins/samharju/yeet.nvim"]
 	path = plugins/samharju/yeet.nvim
 	url = git@github.com:samharju/yeet.nvim.git
+[submodule ".config/tmux/plugins/tpm"]
+	path = .config/tmux/plugins/tpm
+	url = https://github.com/tmux-plugins/tpm
+[submodule ".config/ohmyzsh/plugins/zsh-autosuggestions"]
+	path = .config/ohmyzsh/plugins/zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions

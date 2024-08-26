@@ -1,6 +1,5 @@
 [core]
 	editor = nvim
-	excludesfile = /home/sami/.gitignore.global
 	pager = less -F
 [push]
 	autoSetupRemote = true
@@ -12,7 +11,7 @@
 [diff]
 	colorMoved = zebra
 [commit]
-	template = /home/sami/.gitmessage
+	template = /home/sami/.config/git/commit-template
 [init]
 	defaultBranch = master
 [rebase]

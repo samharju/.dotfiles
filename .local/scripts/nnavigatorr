@@ -19,3 +19,4 @@ if [ -z "$TMUX" ]; then
 else
     tmux switch-client -t "$sessari"
 fi
+tmux refresh-client -S

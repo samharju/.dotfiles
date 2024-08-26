@@ -7,21 +7,24 @@
 /.local/*
 !.local/scripts
 
-# except nvim setup
+# except dotfile configs
+!.zshrc
+!Makefile
+
 !/.config
 .config/*
 !.config/nvim
-
+!.config/git
+!.config/tmux
+.config/tmux/plugins
 # except zsh setup
-!/.custom_zsh
+!.config/ohmyzsh
+.config/ohmyzsh/plugins
+
 
 # stuff with underscores to be forgotten
 ___*
 
 # ignore these anyways so they stay ignored even if fiddling with above patterns
-
-# work stuff, tokens etc
-.secrets
-
-# git folder
-.dotfiles
+.secrets # work stuff, tokens etc
+.dotfiles # git folder

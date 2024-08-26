@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-fd --hidden --ignore-file ~/.gitignore.global --type directory . ~ \
+fd --hidden --ignore-file "$XDG_CONFIG_HOME/git/ignore" --type directory . ~ \
     | fzf \
         --query "$1" \
         --header='all folders' \
         --header-first \
+        --tmux \
         --info=hidden

@@ -9,6 +9,7 @@ ___*
 
 # project local bug reproducing stuff
 bugs/
+debug/
 
 # dull default profile outputdir
 profile
