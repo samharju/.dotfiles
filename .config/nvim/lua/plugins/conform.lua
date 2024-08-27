@@ -32,10 +32,10 @@ return {
 
         local resolve = require("samharju.venv")
 
-        local ok, path = resolve("isort")
-        require("conform").formatters.isort = { cmd = path, condition = function() return ok end }
+        local iok, ipath = resolve("isort")
+        require("conform").formatters.isort = { cmd = ipath, condition = function() return iok end }
 
-        ok, path = resolve("black")
-        require("conform").formatters.black = { cmd = path, condition = function() return ok end }
+        local bok, bpath = resolve("black")
+        require("conform").formatters.black = { cmd = bpath, condition = function() return bok end }
     end,
 }
