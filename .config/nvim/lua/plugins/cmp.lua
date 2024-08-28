@@ -77,6 +77,11 @@ return {
                                 for _, win in ipairs(vim.api.nvim_list_wins()) do
                                     bufs[vim.api.nvim_win_get_buf(win)] = true
                                 end
+                                local res = vim.api.nvim_exec2(":ls", { output = true })
+                                if res ~= nil and res.output ~= nil then
+                                    local _, _, alt = string.find(res.output, "%s+(%d+)%s+#")
+                                    if alt ~= nil then bufs[tonumber(alt)] = true end
+                                end
                                 return vim.tbl_keys(bufs)
                             end,
                         },
@@ -99,14 +104,14 @@ return {
                     },
                 },
                 mapping = {
-                    ["<C-j>"] = cmp.mapping(function(fallback)
+                    ["<C-l>"] = cmp.mapping(function(fallback)
                         if ls.locally_jumpable(1) then
                             ls.jump(1)
                         else
                             fallback()
                         end
                     end, { "i", "s" }),
-                    ["<C-k>"] = cmp.mapping(function(fallback)
+                    ["<C-h>"] = cmp.mapping(function(fallback)
                         if ls.locally_jumpable(-1) then
                             ls.jump(-1)
                         else
