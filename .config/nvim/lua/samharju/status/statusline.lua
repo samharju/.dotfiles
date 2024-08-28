@@ -1,12 +1,16 @@
 local c = require("samharju.status.components")
 local git = require("samharju.status.git")
-local resolve = require("samharju.venv")
+local venv = require("samharju.venv")
 
 local M = {}
 
 function M.update()
-    local venv, python_version = resolve("virtualenv")
-    if venv then python_version = string.format("%%#StatusLineWarn#%s%%*", python_version) end
+    local active, exists, python_version = venv.check_venv()
+    if active then
+        python_version = string.format("%%#StatusLineWarn#venv: %s%%*", python_version)
+    elseif exists then
+        python_version = string.format("%%#StatusLineError#  venv not active%%*")
+    end
     local branch, diff = git.update()
     local diag = c.diagnostics()
     local f = c.formatters()

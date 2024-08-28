@@ -18,9 +18,16 @@ local function smart_terminal()
         end
     end
 
+    if vim.api.nvim_win_get_buf(0) == buf then
+        vim.api.nvim_win_set_height(0, 3)
+        vim.cmd.wincmd("p")
+        return
+    end
+
     for _, win in ipairs(vim.api.nvim_list_wins()) do
         if vim.api.nvim_win_get_buf(win) == buf then
             vim.api.nvim_set_current_win(win)
+            vim.api.nvim_win_set_height(0, 12)
             vim.cmd.startinsert()
             return
         end

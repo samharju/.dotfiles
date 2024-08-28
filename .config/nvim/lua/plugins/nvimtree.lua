@@ -44,7 +44,7 @@ return {
             },
         },
         filters = {
-            git_ignored = false,
+            git_ignored = true,
             custom = {
                 "\\.git/",
                 "\\.mypy_cache",

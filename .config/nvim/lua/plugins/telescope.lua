@@ -46,13 +46,30 @@ return {
                 live_grep = {
                     layout_strategy = "vertical",
                 },
+                lsp_references = {
+                    layout_strategy = "vertical",
+                    include_declaration = false,
+                    fname_width = 50,
+                },
             },
         })
     end,
     keys = {
         {
             "<leader>ff",
-            function() require("telescope.builtin").find_files() end,
+            (function()
+                local cmd = (function()
+                    local test = vim.system({ "git", "config", "--local", "core.excludesfile" }, { text = true }):wait()
+                    if test.code == 0 and test.stdout ~= "" then
+                        local file = test.stdout:gsub("%s+", "")
+                        return { "rg", "--files", "--color", "never", "--ignore-file", file }
+                    end
+                    return { "rg", "--files", "--color", "never" }
+                end)()
+
+                return function() require("telescope.builtin").find_files({ find_command = cmd }) end
+            end)(),
+
             desc = "tele find_files",
         },
         {

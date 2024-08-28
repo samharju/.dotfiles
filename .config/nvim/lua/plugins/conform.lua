@@ -30,7 +30,7 @@ return {
             },
         })
 
-        local resolve = require("samharju.venv")
+        local resolve = require("samharju.venv").resolve
 
         local iok, ipath = resolve("isort")
         require("conform").formatters.isort = { cmd = ipath, condition = function() return iok end }

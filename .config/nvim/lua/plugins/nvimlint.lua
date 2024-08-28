@@ -40,7 +40,7 @@ local isort = {
 
 local function setup_python()
     local lint = require("lint")
-    local resolve = require("samharju.venv")
+    local resolve = require("samharju.venv").resolve
 
     local linters = {}
 

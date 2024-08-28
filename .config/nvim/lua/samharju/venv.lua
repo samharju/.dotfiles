@@ -1,3 +1,5 @@
+local M = {}
+
 local virtual_env = os.getenv("VIRTUAL_ENV")
 local venv_active = virtual_env ~= nil
 
@@ -7,10 +9,12 @@ local function available(venv, tool) return vim.fn.executable(venv .. "/bin/" ..
 
 local venv = false
 local version = ""
+local exists = venv_exists()
+
 if venv_active then
     version = vim.fn.systemlist("python -V")[1]
     venv = true
-elseif venv_exists() then
+elseif exists then
     version = vim.fn.systemlist("venv/bin/python -V")[1]
     venv = true
 else
@@ -21,7 +25,7 @@ version = version:match("Python (%d+.%d+.%d+)")
 
 -- If venv exists, use tool from venv or disable totally
 ---@return boolean, string
-local function resolve(tool)
+function M.resolve(tool)
     if tool == "virtualenv" then
         if vim.api.nvim_get_option_value("filetype", { buf = 0 }) ~= "python" then return false, "" end
         return venv, version
@@ -40,4 +44,6 @@ local function resolve(tool)
     return false, ""
 end
 
-return resolve
+function M.check_venv() return venv_active, exists, version end
+
+return M
