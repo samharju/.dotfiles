@@ -4,83 +4,32 @@ return {
         branch = "canary",
         enabled = os.getenv("USE_COPILOT") == "true",
         dependecies = {
-            "zbirenbaum/copilot.lua",
+            "github/copilot.vim",
         },
         build = function()
             vim.notify("Please update the remote plugins by running ':UpdateRemotePlugins', then restart Neovim.")
         end,
         opts = {
-            show_help = "yes", -- Show help text for CopilotChatInPlace, default: yes
-            debug = false, -- Enable or disable debug mode, the log file will be in ~/.local/state/nvim/CopilotChat.nvim.log
-            disable_extra_info = "no", -- Disable extra information (e.g: system prompt) in the response.
-            language = "English", -- Copilot answer language settings when using default prompts. Default language is English.
-            -- proxy = "socks5://127.0.0.1:3000", -- Proxies requests via https or socks.
-            -- temperature = 0.1,
             prompts = {
                 Buffer = "@buffer",
                 Buffers = "@buffers",
             },
         },
         cmd = "CopilotChat",
+        keys = {
+            { "<leader>cc", ":CopilotChat<CR>" },
+        },
     },
     {
-        "zbirenbaum/copilot.lua",
-        event = "InsertEnter",
+        "github/copilot.vim",
         enabled = os.getenv("USE_COPILOT") == "true",
-        cmd = "Copilot",
-        opts = {
-            panel = {
-                enabled = true,
-                auto_refresh = true,
-                keymap = {
-                    jump_prev = "[[",
-                    jump_next = "]]",
-                    accept = "<CR>",
-                    refresh = "<M-]>",
-                    open = "<M-p>",
-                },
-                layout = {
-                    position = "right", -- | top | left | right
-                    ratio = 0.4,
-                },
-            },
-            suggestion = {
-                enabled = true,
-                auto_trigger = false,
-                debounce = 75,
-                keymap = {
-                    accept = "<M-\\>",
-                    accept_word = "<M-'>",
-                    accept_line = "<M-;>",
-                    next = "<M-]>",
-                    prev = "<M-[>",
-                    dismiss = "<C-]>",
-                },
-            },
-            filetypes = {
-                yaml = true,
-                markdown = false,
-                help = false,
-                gitcommit = false,
-                gitrebase = false,
-                hgcommit = false,
-                svn = false,
-                cvs = false,
-                sh = function()
-                    if string.match(vim.fs.basename(vim.api.nvim_buf_get_name(0)), "^%.env.*") then
-                        -- disable for .env files
-                        return false
-                    end
-                    return true
-                end,
-                ["."] = false,
-            },
-            copilot_node_command = "node", -- Node.js version must be > 18.x
-            server_opts_overrides = {
-                settings = {
-                    advanced = { inlineSuggestCount = 3 },
-                },
-            },
-        },
+        config = function()
+            vim.cmd([[ Copilot enable ]])
+            vim.g.copilot_no_tab_map = true
+            vim.keymap.set("i", "<M-\\>", "copilot#Accept()", {
+                expr = true,
+                replace_keycodes = false,
+            })
+        end,
     },
 }
