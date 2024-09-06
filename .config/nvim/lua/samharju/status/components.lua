@@ -8,7 +8,11 @@ function M.active_lsps(buf)
 
     local out = {}
     for _, lsp in ipairs(active) do
-        table.insert(out, lsp.name)
+        if lsp.name == "GitHub Copilot" then
+            table.insert(out, "ghc")
+        else
+            table.insert(out, lsp.name)
+        end
     end
 
     return table.concat(out, " ")

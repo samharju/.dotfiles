@@ -5,12 +5,17 @@ local venv = require("samharju.venv")
 local M = {}
 
 function M.update()
-    local active, exists, python_version = venv.check_venv()
-    if active then
-        python_version = string.format("%%#StatusLineWarn#venv: %s%%*", python_version)
-    elseif exists then
-        python_version = string.format("%%#StatusLineError#  venv not active%%*")
+    local python_version = ""
+    if vim.bo.filetype == "python" then
+        local active, exists, pyv = venv.check_venv()
+        python_version = pyv
+        if active then
+            python_version = string.format("%%#StatusLineWarn#venv: %s%%*", python_version)
+        elseif exists then
+            python_version = string.format("%%#StatusLineError#  venv not active%%*")
+        end
     end
+
     local branch, diff = git.update()
     local diag = c.diagnostics()
     local f = c.formatters()
@@ -25,7 +30,6 @@ function M.update()
 
     local status_right_parts = {
         python_version,
-        f,
         c.active_lsps(),
         vim.bo.filetype,
         "%-12.(%l,%v%) %P",
