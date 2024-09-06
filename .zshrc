@@ -51,9 +51,7 @@ export NVM_DIR="$HOME/.nvm"
 
 #-fzf-------------------------------------------------------------------------#
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_DEFAULT_COMMAND='fd --type f'
-export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
-export FZF_ALT_C_COMMAND='fd --type d'
+export FZF_ALT_C_OPTS=" --walker-skip .git,venv,node_modules --preview 'tree -C {}'"
 export FZF_COMPLETION_TRIGGER=ff
 
 #-pyenv-----------------------------------------------------------------------#
