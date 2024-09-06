@@ -35,7 +35,7 @@ return {
         vim.keymap.set("n", "<leader>dk", dap.continue)
         vim.keymap.set("n", "<leader>dl", dap.step_into)
         vim.keymap.set("n", "<leader>dr", dap.restart)
-        vim.keymap.set("n", "<leader>do", dap.repl.open)
+        vim.keymap.set("n", "<leader>doo", dap.repl.open)
         vim.keymap.set("n", "<leader>dw", require("dap.ui.widgets").hover)
 
         vim.keymap.set("n", "<leader>dt", function()

@@ -12,6 +12,7 @@ return {
                 desc = "git fugitive",
             },
             { "<leader>gv", ":Gvdiffsplit ", desc = "git diff split" },
+            { "<leader>gb", ":Git blame<CR>", desc = "git blame" },
         },
     },
     {
@@ -65,7 +66,7 @@ return {
                 { desc = "git prev hunk" },
             },
             {
-                "<leader>hl",
+                "<leader>hq",
                 function() require("gitsigns").setqflist() end,
                 { desc = "git hunk qf" },
             },

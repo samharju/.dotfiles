@@ -120,7 +120,7 @@ return {
         },
         {
             "<leader>ft",
-            function() require("telescope.builtin").grep_string({ search = [[TODO|FIXME|\bFIX]], use_regex = true }) end,
+            function() require("telescope.builtin").grep_string({ search = [[TODO|FIXME|\bFIX\b]], use_regex = true }) end,
             desc = "tele todos",
         },
         {
