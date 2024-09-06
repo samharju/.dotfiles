@@ -1,0 +1,87 @@
+#!/usr/bin/env python3
+#
+# An example hook script to check the commit log message.
+# Called by "git commit" with one argument, the name of the file
+# that has the commit message.  The hook should exit with non-zero
+# status after issuing an appropriate message if it wants to stop the
+# commit.  The hook is allowed to edit the commit message file.
+#
+# build     | Affects build components like build tool, ci pipeline, dependencies
+# chore     | Miscellaneous commit e.g. modifying .gitignore
+# ci        | Affect operational components like infrastructure, deployment, backup ...
+# docs      | Affects documentation only
+# feat      | Adds or remove a new feature
+# fix       | Fixes a bug
+# perf      | Special refactor commits, that improve performance
+# refactor  | Rewrites/restructures your code, however does not change any API behaviour
+# style     | Commit does not affect the meaning (white-space, formatting, etc)
+# test      | Add missing tests or correcting existing tests
+
+
+import re
+import sys
+
+summary_err = """Commit message is not of format <type>[optional scope]: <description>
+
+    Types: feat, fix, refactor, perf, style, test, docs, build, ci, chore
+
+Examples:
+
+    feat: add new feature
+    feat(api): added results endpoint
+    ci: install curl"""
+
+
+def main(lines):
+
+    lines = [line.strip() for line in lines if not line.startswith("#")]
+
+    while lines and lines[0] == "":
+        lines.pop(0)
+
+    if not lines:
+        sys.exit(0)
+
+    # ensure valid prefix
+    types = r"(fixup! )?(build|chore|ci|docs|feat|fix|perf|refactor|style|test)"
+    scope = r"(\(\w+\))?"
+    prefix = re.compile(f"^{types}{scope}: .*$")
+
+    body = False
+    ws = False
+
+    for i, line in enumerate(lines):
+        if i == 0:
+            if not prefix.match(line):
+                print(line)
+                print(summary_err)
+                return 1
+            if line.startswith("fixup! "):
+                line = line[len("fixup! ") :]
+            if len(line) > 50:
+                print(line)
+                print("Description should be <=50 characters")
+                return 1
+            continue
+
+        if not body and line == "":
+            ws = True
+        else:
+            if not ws:
+                print(lines)
+                print("Body should be separated by an empty line")
+                return 1
+            body = True
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: commit-msg <commit-msg-file>")
+        sys.exit(1)
+
+    with open(sys.argv[1], "r") as f:
+        lines = f.readlines()
+
+    err = main(lines)
+    if err:
+        sys.exit(1)
