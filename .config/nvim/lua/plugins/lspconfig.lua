@@ -5,7 +5,7 @@ return {
         "williamboman/mason-lspconfig.nvim",
         "WhoIsSethDaniel/mason-tool-installer.nvim",
         "hrsh7th/cmp-nvim-lsp",
-        "folke/neodev.nvim",
+"folke/lazydev.nvim",
     },
     event = "VeryLazy",
     config = function()
@@ -28,8 +28,6 @@ return {
                 "stylua",
             },
         })
-
-        require("neodev").setup({})
 
         require("mason-lspconfig").setup_handlers({
             function(server_name) -- default handler (optional)
