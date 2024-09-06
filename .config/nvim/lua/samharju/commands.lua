@@ -38,6 +38,12 @@ local function show_diff()
     return false
 end
 
+vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
+    group = grp,
+    pattern = "*",
+    callback = function() vim.fn.matchadd("Function", [[TODO\|FIXME\|\<FIX\>]], 100) end,
+})
+
 vim.api.nvim_create_autocmd("TextYankPost", {
     group = grp,
     pattern = "*",
