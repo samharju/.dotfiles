@@ -2,6 +2,8 @@
 
 fd --hidden --ignore-file "$XDG_CONFIG_HOME/git/ignore" --type directory . ~ \
     | fzf \
+        --prompt ' ...' \
+        --bind 'load:change-prompt:> ' \
         --query "$1" \
         --header='all folders' \
         --header-first \

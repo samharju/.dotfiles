@@ -6,7 +6,7 @@ if [ -z "$1" ]; then
 fi
 
 git checkout "$1"
-git pull --ff-only
+git pull --ff-only --tags
 
 # this will exit script if grep has no matches
 purge=$(git branch --merged | grep -Ev "trunk|master|main|development|dev|\*|\+")

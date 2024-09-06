@@ -3,6 +3,8 @@
 fd --hidden --no-ignore --type directory "\.git$" "$HOME" \
     | sed -e 's|/.git$||' \
     | fzf \
+    --prompt ' ...' \
+    --bind 'load:change-prompt:> ' \
     --query "$1" \
     --header='git projects' \
     --header-first \
