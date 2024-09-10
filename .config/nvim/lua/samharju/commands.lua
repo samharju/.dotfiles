@@ -3,6 +3,8 @@ local cmd = vim.api.nvim_create_user_command
 -- cmon not an editor command: W
 cmd("W", "w", {})
 
+cmd("Breakpoints", function() vim.cmd([[ grep -F 'breakpoint()' ]]) end, {})
+
 -- clear registers
 cmd("ClearRegs", function(_)
     local regs = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"

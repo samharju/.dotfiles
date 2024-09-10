@@ -6,6 +6,16 @@ local colors = {
     "rose-pine-main",
     "rose-pine-moon",
     "eldritch",
+    "sorbet",
+    "zaibatsu",
+    "retrobox",
+    "habamax",
+    "wildcharm",
+    "lunaperche",
+    "slate",
+    "default",
+    "koehler",
+    "industry",
 }
 
 local i = 1
