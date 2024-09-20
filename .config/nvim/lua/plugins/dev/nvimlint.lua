@@ -44,29 +44,13 @@ local function setup_python()
 
     local linters = {}
 
-    local ok, path = resolve("flake8")
-    if ok then
-        lint.linters.flake8.cmd = path
-        linters[#linters + 1] = "flake8"
-    end
+    if resolve("flake8") then linters[#linters + 1] = "flake8" end
 
-    ok, path = resolve("mypy")
-    if ok then
-        lint.linters.mypy.cmd = path
-        linters[#linters + 1] = "mypy"
-    end
+    if resolve("mypy") then linters[#linters + 1] = "mypy" end
 
-    ok, path = resolve("black")
-    if ok then
-        black.cmd = path
-        linters[#linters + 1] = "black"
-    end
+    if resolve("black") then linters[#linters + 1] = "black" end
 
-    ok, path = resolve("isort")
-    if ok then
-        isort.cmd = path
-        linters[#linters + 1] = "isort"
-    end
+    if resolve("isort") then linters[#linters + 1] = "isort" end
 
     lint.linters_by_ft.python = linters
 end

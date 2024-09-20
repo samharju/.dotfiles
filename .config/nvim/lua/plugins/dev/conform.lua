@@ -22,20 +22,18 @@ return {
                 html = { "prettierd" },
                 json = { "prettierd" },
                 yaml = { "prettierd" },
-                markdown = { "prettierd" },
+                markdown = { "prettierd", "injected" },
                 graphql = { "prettierd" },
                 lua = { "stylua" },
-                go = { "goimports", "gofmt", "golines" },
+                go = { "golines" },
                 python = { "isort", "black" },
             },
         })
 
         local resolve = require("samharju.venv").resolve
 
-        local iok, ipath = resolve("isort")
-        require("conform").formatters.isort = { cmd = ipath, condition = function() return iok end }
+        require("conform").formatters.isort = { cmd = "isort", condition = function() return resolve("isort") end }
 
-        local bok, bpath = resolve("black")
-        require("conform").formatters.black = { cmd = bpath, condition = function() return bok end }
+        require("conform").formatters.black = { cmd = "black", condition = function() return resolve("black") end }
     end,
 }
