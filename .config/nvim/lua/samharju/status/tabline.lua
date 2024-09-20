@@ -50,13 +50,13 @@ function M.update()
     local val = {}
     for _, harp in ipairs(harpoons()) do
         if harp.fname == current then
-            table.insert(val, string.format("%%#TablineSel#%s%%*", harp.display))
+            table.insert(val, string.format("%%#TablineSel# %s ", harp.display))
         else
-            table.insert(val, string.format("%%#Comment#%s", harp.display))
+            table.insert(val, string.format("%%#Comment# %s ", harp.display))
         end
     end
 
-    return string.format("%%#Tabline#%s%%*", table.concat(val, " "))
+    return string.format("%%#Tabline#%s%%*", table.concat(val, ""))
 end
 
 return M
