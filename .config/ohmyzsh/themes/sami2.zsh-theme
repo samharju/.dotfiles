@@ -24,6 +24,7 @@ ZSH_THEME_GIT_PROMPT_STASHED="$cyan^$reset"
 ZSH_THEME_GIT_PROMPT_UNMERGED="$red↯$reset"
 ZSH_THEME_GIT_PROMPT_UNTRACKED="$red.$reset"
 
+
 from_git_root () {
     local git_root
     git_root=$(git rev-parse --show-toplevel 2> /dev/null)
@@ -33,13 +34,13 @@ from_git_root () {
     else
         echo '%1~'
     fi
-}
+    }
 
-local pwd='$(from_git_root)'
+local pwd='$green$(from_git_root)$reset'
 local prevcmd="%(?.$green➜.$red%?)$reset"
 local jobs="%1(j.$magenta%j$reset .)"
 local timee="$grey%*$reset"
 local git='$(git_prompt_info)$(git_prompt_status)$reset'
 
-PROMPT="$prevcmd${git} $green${pwd}$reset ${jobs}$grey\$$reset "
-RPROMPT=''
+PROMPT="${jobs}$grey\$$reset "
+RPROMPT="$prevcmd${git} ${pwd} "
