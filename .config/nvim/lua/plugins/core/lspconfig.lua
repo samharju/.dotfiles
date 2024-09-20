@@ -58,6 +58,11 @@ return {
                     },
                 })
             end,
+            ["bashls"] = function()
+                require("lspconfig").bashls.setup({
+                    filetypes = { "sh", "zsh" },
+                })
+            end,
         })
 
         vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
