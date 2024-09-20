@@ -1,46 +1,42 @@
 local colors = {
     "serene",
     "serene-transparent",
-    "synthweave",
-    "synthweave-transparent",
-    "rose-pine-main",
-    "rose-pine-moon",
     "eldritch",
     "sorbet",
     "zaibatsu",
+    "synthweave",
+    "synthweave-transparent",
+    "rose-pine-main",
     "retrobox",
-    "habamax",
+    "rose-pine-moon",
+    "tokyonight-night",
     "wildcharm",
-    "lunaperche",
+    "tokyonight-storm",
+    "habamax",
+    "tokyonight-moon",
     "slate",
+    "lunaperche",
     "default",
-    "koehler",
-    "industry",
+    "moonfly",
 }
 
-local i = 1
+math.randomseed(os.time())
+local i = math.random(1, #colors)
 
-vim.keymap.set("n", "<leader>cn", function()
+local function cc()
     if i == #colors then i = 0 end
     i = i + 1
     vim.cmd.colorscheme(colors[i])
-end)
+    vim.notify("colorscheme: " .. colors[i])
+end
+
+vim.keymap.set("n", "<leader>cn", cc)
 
 return {
-    {
-        "eldritch-theme/eldritch.nvim",
-        opts = {},
-    },
-    {
-        "rose-pine/neovim",
-        name = "rose-pine",
-    },
-    {
-        "samharju/synthweave.nvim",
-        dev = true,
-    },
-    {
-        "samharju/serene.nvim",
-        config = function() vim.cmd([[ colorscheme serene ]]) end,
-    },
+    { "eldritch-theme/eldritch.nvim", opts = {} },
+    { "rose-pine/neovim", name = "rose-pine" },
+    { "samharju/synthweave.nvim", dev = true },
+    { "samharju/serene.nvim", config = function() vim.cmd.colorscheme("serene") end },
+    { "folke/tokyonight.nvim", opts = {} },
+    { "bluz71/vim-moonfly-colors" },
 }

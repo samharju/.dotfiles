@@ -1,3 +1,18 @@
+local function is_git_repo()
+    vim.fn.system("git rev-parse --is-inside-work-tree")
+
+    return vim.v.shell_error == 0
+end
+
+local function get_git_root()
+    local dot_git_path = vim.fn.finddir(".git", ".;")
+    return vim.fn.fnamemodify(dot_git_path, ":h")
+end
+
+local cwd = nil
+
+if is_git_repo() then cwd = get_git_root() end
+
 return {
     "nvim-telescope/telescope.nvim",
     dependencies = {
@@ -67,7 +82,7 @@ return {
                     return { "rg", "--files", "--color", "never" }
                 end)()
 
-                return function() require("telescope.builtin").find_files({ find_command = cmd }) end
+                return function() require("telescope.builtin").find_files({ cwd = cwd, find_command = cmd }) end
             end)(),
 
             desc = "tele find_files",
@@ -79,13 +94,14 @@ return {
                     no_ignore = true,
                     hidden = true,
                     prompt_title = "All files, no ignore",
+                    cwd = cwd,
                 })
             end,
             desc = "tele find_files no ignore",
         },
         {
             "<leader>fd",
-            function() require("telescope.builtin").diagnostics() end,
+            function() require("telescope.builtin").diagnostics({ cwd = cwd }) end,
             desc = "tele diagnostics",
         },
         {
@@ -110,17 +126,34 @@ return {
         },
         {
             "<leader>fl",
-            function() require("telescope.builtin").live_grep() end,
+            function()
+                local opts = function()
+                    local test = vim.system({ "git", "config", "--local", "core.excludesfile" }, { text = true }):wait()
+                    if test.code == 0 and test.stdout ~= "" then
+                        local file = test.stdout:gsub("%s+", "")
+                        return { "--ignore-file", file }
+                    end
+                    return {}
+                end
+
+                require("telescope.builtin").live_grep({ additional_args = opts() })
+            end,
             desc = "tele live_grep",
         },
         {
             "<leader>fs",
-            function() require("telescope.builtin").grep_string() end,
+            function() require("telescope.builtin").grep_string({ cwd = cwd }) end,
             desc = "tele grep_string",
         },
         {
             "<leader>ft",
-            function() require("telescope.builtin").grep_string({ search = [[TODO|FIXME|\bFIX\b]], use_regex = true }) end,
+            function()
+                require("telescope.builtin").grep_string({
+                    cwd = cwd,
+                    search = [[TODO|FIXME|\bFIX\b]],
+                    use_regex = true,
+                })
+            end,
             desc = "tele todos",
         },
         {

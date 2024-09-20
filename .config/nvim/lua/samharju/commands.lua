@@ -20,15 +20,6 @@ cmd(
     { desc = "Toggle diagnostics" }
 )
 
-local function bg_none(name, hl) vim.api.nvim_set_hl(0, name, { fg = hl.fg, bg = nil, italic = hl.italic }) end
-
-cmd("ColorMyPencils", function()
-    bg_none("Normal", vim.api.nvim_get_hl(0, { name = "Normal" }))
-    bg_none("NormalFloat", vim.api.nvim_get_hl(0, { name = "NormalFloat" }))
-    bg_none("EndOfBuffer", vim.api.nvim_get_hl(0, { name = "EndOfBuffer" }))
-    bg_none("TablineFill", vim.api.nvim_get_hl(0, { name = "TablineFill" }))
-end, {})
-
 local grp = vim.api.nvim_create_augroup("sharju_commands", { clear = true })
 
 local function show_diff()

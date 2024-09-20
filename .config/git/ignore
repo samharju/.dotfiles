@@ -1,6 +1,3 @@
-# ignore worktrees
-wt-*
-
 # yeet file
 .yeet
 
