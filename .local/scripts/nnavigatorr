@@ -2,7 +2,11 @@
 
 set -e
 
-project=$(gitprojectfind "$1")
+if [[ "$1" == "git" ]]; then
+    project=$(gitprojectfind "$2")
+else
+    project=$(folderfind "$1")
+fi
 
 if [ -z "$project" ]; then
     exit 0

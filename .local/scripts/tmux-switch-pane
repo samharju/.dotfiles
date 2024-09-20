@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-out=$(tmux list-panes -aF '#D #{p14:#{session_name}:#I} #{p5:pane_current_command} #{pane_current_path} #{?#{==:#{window_panes},1},, -- #{?pane_at_top,top,#{?pane_at_bottom,bottom,}}#{?pane_at_left,left,#{?pane_at_right,right,}} #{?pane_active,(active),}}')
+out=$(tmux list-panes -aF '#D #{p30:#{session_name}:#I} #{p5:pane_current_command} #{pane_current_path} #{?#{==:#{window_panes},1},, -- #{?pane_at_top,top,#{?pane_at_bottom,bottom,}}#{?pane_at_left,left,#{?pane_at_right,right,}} #{?pane_active,(active),}}')
 
 declare -A panes
 while IFS= read -r line; do
