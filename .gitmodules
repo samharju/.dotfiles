@@ -21,3 +21,6 @@
 [submodule ".config/ohmyzsh/plugins/zsh-autosuggestions"]
 	path = .config/ohmyzsh/plugins/zsh-autosuggestions
 	url = https://github.com/zsh-users/zsh-autosuggestions
+[submodule "/home/sami/.config/ohmyzsh/plugins/zsh-histdb"]
+	path = /home/sami/.config/ohmyzsh/plugins/zsh-histdb
+	url = https://github.com/larkery/zsh-histdb
