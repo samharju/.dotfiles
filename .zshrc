@@ -1,19 +1,6 @@
 #!/usr/bin/zsh
 # check .oh-my-zsh/templates/zshrc.zsh-template for removed stuff
-
-loaded=0
-
-if [[ -z $(fd --max-depth 1 --type f --hidden --changed-within=12hour .loaded ~/) ]]; then
-    loaded=1
-    touch ~/.loaded
-fi
-
-log() {
-    if [[ $loaded = 1 ]]; then
-        echo -e "\e[1;30m$@\e[0m"
-    fi
-}
-
+#
 #-path------------------------------------------------------------------------#
 # add existing binary folders to path if not present
 binpaths=(
@@ -32,6 +19,19 @@ for p in $binpaths; do
         export PATH=$p:$PATH
     fi
 done
+
+loaded=0
+
+log() {
+    if [[ $loaded = 1 ]]; then
+        echo -e "\e[1;30m$@\e[0m"
+    fi
+}
+
+if [[ -z $(fd --max-depth 1 --type f --hidden --changed-within=12hour .loaded ~/) ]]; then
+    loaded=1
+    touch ~/.loaded
+fi
 
 log PATH="$PATH"
 #-XDG-------------------------------------------------------------------------#
@@ -102,7 +102,7 @@ fi
 eval "$(pyenv init -)"
 
 log PYENV_ROOT=$PYENV_ROOT
-# other parameters------------------------------------------------------------#
+#-other-parameters------------------------------------------------------------#
 export TZ='Europe/Helsinki'
 GPG_TTY=$(tty)
 export GPG_TTY
