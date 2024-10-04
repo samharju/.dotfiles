@@ -1,6 +1,6 @@
 SHELL=/bin/bash
 
-nvim_version = v0.10.1
+nvim_version = v0.10.2
 
 go_checksum = f6c8a87aa03b92c4b0bf3d558e28ea03006eb29db78917daec5cfb6ec1046265
 go_version = 1.22.0
@@ -23,7 +23,7 @@ nvim: .local/bin/nvim
 	mkdir -p ~/.local/bin
 	mv nvim.appimage ~/.local/bin/nvim
 	nvim --version
-	nvim --headless "+Lazy! sync" +qa
+	nvim --headless "+Lazy! restore" +qa
 
 .PHONY: nvim-update
 nvim-update:
