@@ -1,9 +1,16 @@
-
 (
  (expression_statement
-   (assignment
-     right: (string
-              (string_content) @sql))
+   [
+    (assignment
+      right: (string
+               (string_content) @injection.content))
+    (call 
+      arguments: (argument_list 
+                   (string 
+                     (string_content) @injection.content))) 
+    ]
    )
- (#contains? @sql "SELECT" "UPDATE" "DELETE" "INSERT" "CREATE" "ALTER" "DROP" "FROM" "BEGIN")
+ (#any-contains? @injection.content "SELECT" "UPDATE" "DELETE" "INSERT" "CREATE" "ALTER" "DROP" "FROM" "BEGIN" "TABLE")
+ (#set! injection.language "sql")
  )
+
