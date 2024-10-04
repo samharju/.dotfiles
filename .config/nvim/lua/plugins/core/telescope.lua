@@ -150,7 +150,7 @@ return {
             function()
                 require("telescope.builtin").grep_string({
                     cwd = cwd,
-                    search = [[TODO|FIXME|\bFIX\b]],
+                    search = [[TODO|FIXME|\bFIX\b|\\bbbreakpoint\(\)]],
                     use_regex = true,
                 })
             end,

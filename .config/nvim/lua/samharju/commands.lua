@@ -3,7 +3,10 @@ local cmd = vim.api.nvim_create_user_command
 -- cmon not an editor command: W
 cmd("W", "w", {})
 
-cmd("Breakpoints", function() vim.cmd([[ grep -F 'breakpoint()' ]]) end, {})
+cmd("Breakpoints", function()
+    vim.cmd([[ silent grep! -F 'breakpoint()']])
+    vim.cmd([[ copen ]])
+end, {})
 
 -- clear registers
 cmd("ClearRegs", function(_)
@@ -22,19 +25,18 @@ cmd(
 
 local grp = vim.api.nvim_create_augroup("sharju_commands", { clear = true })
 
-local function show_diff()
-    local res = vim.fn.system("git status --porcelain")
-    if res ~= "" then
-        if string.match(res, "fatal") then return false end
-        return true
-    end
-    return false
-end
-
 vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
     group = grp,
     pattern = "*",
-    callback = function() vim.fn.matchadd("Function", [[TODO\|FIXME\|\<FIX\>]], 100) end,
+    callback = function()
+        vim.fn.matchadd("Function", [[TODO\|FIXME\|\<FIX\>]], 100)
+
+        vim.api.nvim_set_hl(0, "DiagnosticUnderlineError", { italic = true })
+        vim.api.nvim_set_hl(0, "DiagnosticUnderlineWarn", { italic = true })
+        vim.api.nvim_set_hl(0, "DiagnosticUnderlineInfo", { italic = true })
+        vim.api.nvim_set_hl(0, "DiagnosticUnderlineHint", { italic = true })
+        vim.api.nvim_set_hl(0, "DiagnosticUnderlineOk", { italic = true })
+    end,
 })
 
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -43,28 +45,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     callback = function()
         vim.highlight.on_yank({
             higroup = "Search",
-            timeout = 100,
+            timeout = 200,
         })
     end,
 })
-
--- vim.api.nvim_create_autocmd("BufWritePre", {
---     group = grp,
---     pattern = "*",
---     command = [[%s/\s\+$//e]],
--- })
-
--- open telescope on enter if no args given
--- vim.api.nvim_create_autocmd("VimEnter", {
---     callback = function()
---         if vim.g.session_restored then return end
---         local arg = vim.api.nvim_eval("argv(0)")
---         if arg and arg == "" then
---             if show_diff() then
---                 require("telescope.builtin").git_status()
---             else
---                 require("telescope.builtin").find_files()
---             end
---         end
---     end,
--- })

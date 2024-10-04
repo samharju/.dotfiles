@@ -53,7 +53,7 @@ function M.diagnostics(buf)
     if #errors > 0 then return string.format("%%#StatusLineError# %s%%*", #errors) end
     local warnings = vim.diagnostic.get(buf, { severity = vim.diagnostic.severity.WARN })
     if #warnings > 0 then return string.format("%%#StatusLineWarn# %s%%*", #warnings) end
-    local rest = vim.diagnostic.get(buf)
+    local rest = vim.diagnostic.get(buf, { severity = { max = vim.diagnostic.severity.INFO } })
     if #rest > 0 then return string.format("%%#StatusLineInfo# %s%%*", #rest) end
     return ""
 end

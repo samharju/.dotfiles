@@ -7,7 +7,8 @@ return {
                 "<leader>gs",
                 function()
                     vim.cmd("vert Git")
-                    vim.cmd("vert res 88")
+                    vim.cmd("wincmd H")
+                    vim.cmd("vert res 79")
                 end,
                 desc = "git fugitive",
             },
@@ -66,7 +67,7 @@ return {
                 { desc = "git prev hunk" },
             },
             {
-                "<leader>hq",
+                "<leader>gq",
                 function() require("gitsigns").setqflist() end,
                 { desc = "git hunk qf" },
             },

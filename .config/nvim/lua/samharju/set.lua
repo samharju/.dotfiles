@@ -9,7 +9,6 @@ vim.opt.guicursor = "n-c-sm:block,v:hor20,i-ci-ve:ver25,r-cr-o:hor20-blinkon175-
 vim.opt.hlsearch = true
 vim.opt.incsearch = true
 vim.opt.isfname:append("@-@")
--- vim.opt.listchars = { eol = "↴", trail = "!", nbsp = "+", tab = "▏ ", leadmultispace = "▏   " }
 vim.opt.listchars = { eol = "↴", trail = "-", nbsp = "+", tab = "  ", leadmultispace = "    " }
 vim.opt.list = true
 vim.opt.nu = true
@@ -31,11 +30,22 @@ vim.opt.clipboard = "unnamedplus"
 vim.opt.foldmethod = "manual"
 vim.opt.foldenable = false
 vim.opt.textwidth = 0
+vim.opt.splitright = true
+vim.opt.grepprg = "rg --vimgrep --hidden"
 
 vim.diagnostic.config({
-    virtual_text = { source = "if_many" },
+    underline = true,
+    virtual_text = {
+        format = function(diag)
+            -- get only text to first newline
+            local message = diag.message:match("[^\n]*")
+            return message
+        end,
+        source = "if_many",
+    },
     severity_sort = true,
     float = {
-        source = "always",
+        source = true,
+        border = "rounded",
     },
 })

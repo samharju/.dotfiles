@@ -12,7 +12,7 @@ local black = {
                 col = 0,
                 severity = vim.diagnostic.severity.HINT,
                 source = "black",
-                message = "this file is utter shit",
+                message = "not kosher",
             },
         }
     end,
@@ -32,7 +32,7 @@ local isort = {
                 col = 0,
                 severity = vim.diagnostic.severity.HINT,
                 source = "isort",
-                message = "import order is shit",
+                message = "haram",
             },
         }
     end,

@@ -27,15 +27,19 @@ vim.keymap.set("n", "<leader>P", '"+P')
 
 -- iterate quick- and loclist -----------------------------------------------------
 vim.keymap.set("n", "[q", function()
-    if vim.fn.getqflist({ idx = 0 }).idx == 1 then
+    local qf = vim.fn.getqflist()
+    if #qf == 0 then return end
+    if #qf == 1 or vim.fn.getqflist({ idx = 0 }).idx == 1 then
         vim.cmd.clast()
         return
     end
     vim.cmd.cprev()
 end, { desc = "Previous quickfix" })
+
 vim.keymap.set("n", "]q", function()
     local qf = vim.fn.getqflist()
-    if vim.fn.getqflist({ idx = 0 }).idx == #qf then
+    if #qf == 0 then return end
+    if #qf == 1 or vim.fn.getqflist({ idx = 0 }).idx == #qf then
         vim.cmd.cfirst()
         return
     end
@@ -43,6 +47,8 @@ vim.keymap.set("n", "]q", function()
 end, { desc = "Next quickfix" })
 
 vim.keymap.set("n", "[l", function()
+    local lf = vim.fn.getloclist(0)
+    if #lf == 0 then return end
     if vim.fn.getloclist(0, { idx = 0 }).idx == 1 then
         vim.cmd.llast()
         return
@@ -52,6 +58,7 @@ end, { desc = "Previous on loclist" })
 
 vim.keymap.set("n", "]l", function()
     local lf = vim.fn.getloclist(0)
+    if #lf == 0 then return end
     if vim.fn.getloclist(0, { idx = 0 }).idx == #lf then
         vim.cmd.lfirst()
         return
@@ -131,6 +138,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 vim.keymap.set("n", "<leader>;", ":b#<CR>", { desc = "Previous buffer" })
 vim.keymap.set({ "n", "v" }, "<leader>x", ":w !cat<CR>", { desc = "print selection" })
 
-vim.keymap.set("n", "<leader>s", "<C-w>H:vert res 84<CR>")
+vim.keymap.set("n", "<leader>s", "<C-w>H:vert res 60<CR>")
 
 vim.keymap.set("n", "<leader>i", ":Inspect<CR>")
