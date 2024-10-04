@@ -29,7 +29,7 @@ return {
                 "dockerls",
                 "gopls",
                 "lua_ls",
-                "jedi_language_server",
+                "basedpyright",
             },
         })
         require("mason-tool-installer").setup({
@@ -61,6 +61,26 @@ return {
             ["bashls"] = function()
                 require("lspconfig").bashls.setup({
                     filetypes = { "sh", "zsh" },
+                })
+            end,
+            ["basedpyright"] = function()
+                require("lspconfig").basedpyright.setup({
+                    settings = {
+                        basedpyright = {
+                            analysis = {
+                                autoSearchPaths = true,
+                                diagnosticMode = "openFilesOnly",
+                                typeCheckingMode = "basic",
+                                useLibraryCodeForTypes = true,
+                                ignore = { "venv" },
+                                diagnosticSeverityOverrides = {
+                                    reportOptionalMemberAccess = "information",
+                                    reportAttributeAccessIssue = "information",
+                                    reportCallIssue = "information",
+                                },
+                            },
+                        },
+                    },
                 })
             end,
         })
