@@ -9,7 +9,7 @@ vim.opt.guicursor = "n-c-sm:block,v:hor20,i-ci-ve:ver25,r-cr-o:hor20-blinkon175-
 vim.opt.hlsearch = true
 vim.opt.incsearch = true
 vim.opt.isfname:append("@-@")
-vim.opt.listchars = { eol = "↴", trail = "-", nbsp = "+", tab = "  ", leadmultispace = "    " }
+vim.opt.listchars = { eol = "↴", trail = "-", nbsp = "+", tab = "> ", leadmultispace = "    " }
 vim.opt.list = true
 vim.opt.nu = true
 vim.opt.relativenumber = true
@@ -39,6 +39,7 @@ vim.diagnostic.config({
         format = function(diag)
             -- get only text to first newline
             local message = diag.message:match("[^\n]*")
+            if #message < 10 then message = diag.source end
             return message
         end,
         source = "if_many",

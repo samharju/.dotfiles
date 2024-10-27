@@ -44,6 +44,11 @@ local function setup_python()
 
     local linters = {}
 
+    lint.linters.flake8 = require("lint.util").wrap(lint.linters.flake8, function(diag)
+        if diag.code == "E501" then diag.severity = "HINT" end
+        return diag
+    end)
+
     if resolve("flake8") then linters[#linters + 1] = "flake8" end
 
     if resolve("mypy") then linters[#linters + 1] = "mypy" end

@@ -23,8 +23,8 @@ return {
     {
         "github/copilot.vim",
         enabled = os.getenv("USE_COPILOT") == "true",
+        cmd = "Copilot",
         config = function()
-            vim.cmd([[ Copilot enable ]])
             vim.g.copilot_no_tab_map = true
             vim.keymap.set("i", "<M-\\>", "copilot#Accept()", {
                 expr = true,

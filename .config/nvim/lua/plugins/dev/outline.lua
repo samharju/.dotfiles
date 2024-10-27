@@ -6,6 +6,7 @@ return {
     },
     opts = {
         -- Your setup opts here
-        outline_window = { position = "left" },
+        outline_window = { position = "left", relative_width = false, width = 60 },
+        symbols = { filter = { "Function", "Class", "Method", "Constant", "Struct" } },
     },
 }

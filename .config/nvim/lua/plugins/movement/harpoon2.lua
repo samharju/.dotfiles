@@ -3,7 +3,6 @@ return {
     branch = "harpoon2",
     dependencies = {
         "nvim-lua/plenary.nvim",
-        "samharju/yeet.nvim",
     },
     config = function()
         local harpoon = require("harpoon")

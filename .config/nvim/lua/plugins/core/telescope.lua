@@ -120,6 +120,11 @@ return {
             desc = "tele help_tags",
         },
         {
+            "<leader>fv",
+            function() require("telescope.builtin").git_files({ layout_strategy = "vertical", previewer = false }) end,
+            desc = "tele git files",
+        },
+        {
             "<leader>fk",
             function() require("telescope.builtin").keymaps() end,
             desc = "tele keymaps",

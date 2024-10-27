@@ -77,6 +77,7 @@ return {
                                     reportOptionalMemberAccess = "information",
                                     reportAttributeAccessIssue = "information",
                                     reportCallIssue = "information",
+                                    reportOperatorIssue = "information",
                                 },
                             },
                         },

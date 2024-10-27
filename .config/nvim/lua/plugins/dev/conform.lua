@@ -25,7 +25,7 @@ return {
                 markdown = { "prettierd", "injected" },
                 graphql = { "prettierd" },
                 lua = { "stylua" },
-                go = { "golines" },
+                go = { "goimports" },
                 python = { "isort", "black" },
             },
         })

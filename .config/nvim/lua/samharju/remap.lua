@@ -88,27 +88,6 @@ vim.keymap.set("n", "<leader>q", vim.diagnostic.setqflist, { desc = "Diagnostic 
 
 local grp = vim.api.nvim_create_augroup("sami_remap", { clear = true })
 
---- Define commands to run for specific filetypes with "go"
-local run = {
-    sh = ":!bash %<CR>",
-    lua = ":luafile %<CR>",
-}
-
-vim.api.nvim_create_autocmd("FileType", {
-    group = grp,
-    callback = function()
-        local ft = vim.api.nvim_get_option_value("filetype", { buf = 0 })
-        if ft == "python" then
-            if vim.fn.executable("venv/bin/python") == 1 then
-                run.python = ":!venv/bin/python %<CR>"
-            else
-                run.python = ":!python3 %<CR>"
-            end
-        end
-        local c = run[ft]
-        if c ~= nil then vim.keymap.set("n", "<leader>go", c, { buffer = true }) end
-    end,
-})
 
 --- Define lsp keymaps only on attach
 vim.api.nvim_create_autocmd("LspAttach", {
