@@ -134,10 +134,10 @@ ripgrep: /usr/bin/rg
 tmux: /usr/local/bin/tmux
 
 /usr/local/bin/tmux:
-	@figlet tmux 3.4
-	sudo apt install libevent-dev ncurses-dev build-essential bison pkg-config
-	git clone https://github.com/tmux/tmux.git ~/git/tmux
-	cd ~/git/tmux; git checkout 3.4; sh autogen.sh; ./configure; make && sudo make install
+	@figlet tmux 3.5a
+	sudo apt install libevent-dev ncurses-dev build-essential bison pkg-config automake
+	git clone https://github.com/tmux/tmux.git ~/git/tmux || true
+	cd ~/git/tmux; git checkout 3.5a; sh autogen.sh; ./configure; make && sudo make install
 
 
 .PHONY: fzf
