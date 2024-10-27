@@ -40,30 +40,30 @@ vim.keymap.set("n", "]q", function()
     local qf = vim.fn.getqflist()
     if #qf == 0 then return end
     if #qf == 1 or vim.fn.getqflist({ idx = 0 }).idx == #qf then
-        vim.cmd.cfirst()
+        pcall(vim.cmd.cfirst)
         return
     end
-    vim.cmd.cnext()
+    pcall(vim.cmd.cnext)
 end, { desc = "Next quickfix" })
 
 vim.keymap.set("n", "[l", function()
     local lf = vim.fn.getloclist(0)
     if #lf == 0 then return end
     if vim.fn.getloclist(0, { idx = 0 }).idx == 1 then
-        vim.cmd.llast()
+        pcall(vim.cmd.llast)
         return
     end
-    vim.cmd.lprev()
+    pcall(vim.cmd.lprev)
 end, { desc = "Previous on loclist" })
 
 vim.keymap.set("n", "]l", function()
     local lf = vim.fn.getloclist(0)
     if #lf == 0 then return end
     if vim.fn.getloclist(0, { idx = 0 }).idx == #lf then
-        vim.cmd.lfirst()
+        pcall(vim.cmd.lfirst)
         return
     end
-    vim.cmd.lnext()
+    pcall(vim.cmd.lnext)
 end, { desc = "Next on loclist" })
 
 vim.keymap.set("n", "]a", function()
