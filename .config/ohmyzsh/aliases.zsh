@@ -50,5 +50,6 @@ alias ssh='TERM=xterm-256color ssh'
 alias cdr='grootdir=$(git rev-parse --show-toplevel) && cd $grootdir && pwd'
 
 alias gitfixup='git -c sequence.editor=true rebase -i --autosquash'
+alias gloo='git log --oneline --decorate $(git merge-base $(git_main_branch) HEAD)..HEAD'
 
 alias chmox="chmod +x"

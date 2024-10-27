@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+fname="${1:-capture.log}"
+
+tmux capture-pane -S - -b los_capturos
+
+tmux save-buffer -b los_capturos "$fname"
+
+tmux delete-buffer -b los_capturos
+
+echo "Saved buffer to $fname" >&2

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+
+hide() {
+    sleep 1
+    tmux set -g status off
+}
+
+tmux set -g status on
+
+hide &
