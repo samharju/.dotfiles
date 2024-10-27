@@ -16,7 +16,7 @@ return {
         )
     ),
     s({ trig = "main", name = "main" }, t({ 'if __name__ == "__main__":', "\t" })),
-    s({ trig = "pprint", snippetType = "autosnippet" }, fmt('__import__("pprint").pprint({})', { i(1) })),
+    s({ trig = "pprint" }, fmt('__import__("pprint").pprint({})', { i(1) })),
     s({ trig = "bpp", snippetType = "autosnippet" }, t("breakpoint()")),
     s(
         { trig = "deflog", snippetType = "autosnippet" },
@@ -25,7 +25,7 @@ return {
             "",
             "logging.basicConfig(",
             "\tlevel=logging.INFO,",
-            '\tformat="%(name)s:%(lineno)s [%(levelname)s]: %(message)s"',
+            '\tformat="%(name)s:%(filename)s:%(lineno)s [%(levelname)s]: %(message)s"',
             ")",
             "",
             "logger = logging.getLogger(__name__)",
