@@ -43,11 +43,18 @@ return {
                     theme = "dropdown",
                     previewer = false,
                     hidden = true,
+                    layout_config = { width = 100, height = 20 },
                     prompt_title = vim.fn.fnamemodify(vim.fn.getcwd(), ":~"),
+                },
+                git_files = {
+                    theme = "dropdown",
+                    layout_config = { width = 100, height = 20 },
+                    previewer = false,
                 },
                 buffers = {
                     theme = "dropdown",
                     previewer = false,
+                    layout_config = { width = 100 },
                     mappings = {
                         n = {
                             ["x"] = require("telescope.actions").delete_buffer,
@@ -101,7 +108,11 @@ return {
         },
         {
             "<leader>fd",
-            function() require("telescope.builtin").diagnostics({ cwd = cwd }) end,
+            function()
+                require("telescope.builtin").diagnostics(
+                    require("telescope.themes").get_ivy({ previewer = false, cwd = cwd })
+                )
+            end,
             desc = "tele diagnostics",
         },
         {
@@ -121,7 +132,7 @@ return {
         },
         {
             "<leader>fv",
-            function() require("telescope.builtin").git_files({ layout_strategy = "vertical", previewer = false }) end,
+            function() require("telescope.builtin").git_files() end,
             desc = "tele git files",
         },
         {
@@ -155,7 +166,7 @@ return {
             function()
                 require("telescope.builtin").grep_string({
                     cwd = cwd,
-                    search = [[TODO|FIXME|\bFIX\b|\\bbbreakpoint\(\)]],
+                    search = [[TODO|FIXME|\bFIX\b|\bbreakpoint\(\)]],
                     use_regex = true,
                 })
             end,

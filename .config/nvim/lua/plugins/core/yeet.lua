@@ -1,32 +1,44 @@
 return {
-    "samharju/yeet.nvim",
-    dev = true,
-    opts = {},
-    keys = {
-        {
-            "<leader>yt",
-            function() require("yeet").select_target() end,
+    {
+        "samharju/yeet.nvim",
+        opts = {
+            clear_before_yeet = false,
         },
-        {
-            "<leader>yc",
-            function() require("yeet").set_cmd() end,
-        },
-        {
-            "\\\\",
-            function() require("yeet").execute() end,
-        },
-        {
-            "<leader>\\",
-            function() require("yeet").execute(nil, { clear_before_yeet = false }) end,
-        },
-        {
-            "<leader>ya",
-            function() require("yeet").toggle_post_write() end,
-        },
-        {
-            "<leader><BS>",
-            function() require("yeet").list_cmd() end,
+        keys = {
+            {
+                "<leader><BS>",
+                function() require("yeet").list_cmd() end,
+            },
+            {
+                "\\\\",
+                function() require("yeet").execute() end,
+            },
+            {
+                "<leader>\\",
+                function()
+                    require("yeet").execute(nil, {
+                        interrupt_before_yeet = true,
+                        clear_before_yeet = true,
+                    })
+                end,
+            },
+            {
+                "\\\\",
+                function() require("yeet").execute_selection() end,
+                mode = { "v" },
+            },
+            {
+                "<leader>yt",
+                function() require("yeet").select_target() end,
+            },
+            {
+                "<leader>yo",
+                function() require("yeet").toggle_post_write() end,
+            },
+            {
+                "<leader>ye",
+                function() require("yeet").setqflist({ open = true }) end,
+            },
         },
     },
-    cmd = "Yeet",
 }
