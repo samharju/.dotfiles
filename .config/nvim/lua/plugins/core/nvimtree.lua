@@ -12,9 +12,16 @@ return {
             float = {
                 enable = true,
                 quit_on_focus_loss = true,
-                open_win_config = {
-                    width = 50,
-                },
+                open_win_config = function()
+                    return {
+                        relative = "editor",
+                        border = "rounded",
+                        width = 50,
+                        height = vim.o.lines - 6,
+                        row = 2,
+                        col = 2,
+                    }
+                end,
             },
             signcolumn = "yes",
         },
@@ -46,7 +53,7 @@ return {
         filters = {
             git_ignored = true,
             custom = {
-                "\\.git/",
+                "\\.git$",
                 "\\.mypy_cache",
                 "\\.pytest_cache",
                 "\\.vscode",

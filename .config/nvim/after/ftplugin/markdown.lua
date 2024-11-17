@@ -3,4 +3,6 @@ vim.opt_local.linebreak = true
 vim.opt_local.wrap = true
 vim.opt_local.shiftwidth = 2
 
-if string.match(vim.fn.expand("%"), vim.fn.expand("~/notes")) then vim.opt.filetype = "markdown.mynotes" end
+local fname = vim.fn.fnamemodify(vim.fn.expand("%"), ":~")
+local notes = vim.fn.fnamemodify(vim.fn.expand("~/notes"), ":~")
+if string.match(fname, notes) then vim.opt.filetype = "markdown.mynotes" end
