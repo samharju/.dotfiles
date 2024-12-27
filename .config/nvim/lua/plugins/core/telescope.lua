@@ -75,6 +75,12 @@ return {
                 },
             },
         })
+
+        vim.api.nvim_create_user_command(
+            "Config",
+            function() require("telescope.builtin").find_files({ cwd = vim.fn.stdpath("config") }) end,
+            {}
+        )
     end,
     keys = {
         {

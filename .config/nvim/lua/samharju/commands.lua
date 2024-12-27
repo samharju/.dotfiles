@@ -36,16 +36,19 @@ vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
         vim.api.nvim_set_hl(0, "DiagnosticUnderlineInfo", { italic = true })
         vim.api.nvim_set_hl(0, "DiagnosticUnderlineHint", { italic = true })
         vim.api.nvim_set_hl(0, "DiagnosticUnderlineOk", { italic = true })
+
+        vim.cmd([[hi! link @custom_injection ColorColumn]])
     end,
 })
 
 vim.api.nvim_create_autocmd("TextYankPost", {
     group = grp,
-    pattern = "*",
-    callback = function()
-        vim.highlight.on_yank({
-            higroup = "Search",
-            timeout = 200,
-        })
-    end,
+    callback = function() vim.highlight.on_yank() end,
 })
+
+vim.api.nvim_create_user_command("GitLineHistory", function()
+    local start = vim.fn.getpos("'<")
+    local stop = vim.fn.getpos("'>")
+
+    vim.cmd(string.format("Git log -L %s,%s:%s", start[2], stop[2], vim.fn.expand("%")))
+end, { range = 1 })
