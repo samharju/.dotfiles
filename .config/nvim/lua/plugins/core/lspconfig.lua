@@ -65,6 +65,7 @@ return {
             end,
             ["basedpyright"] = function()
                 require("lspconfig").basedpyright.setup({
+                    on_init = function(client, _) client.server_capabilities.semanticTokensProvider = nil end,
                     settings = {
                         basedpyright = {
                             analysis = {
@@ -88,11 +89,11 @@ return {
 
         vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
             -- Use a sharp border with `FloatBorder` highlights
-            border = "single",
+            border = "rounded",
         })
         vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
             -- Use a sharp border with `FloatBorder` highlights
-            border = "single",
+            border = "rounded",
         })
     end,
 }

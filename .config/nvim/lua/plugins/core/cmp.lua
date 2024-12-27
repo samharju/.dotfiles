@@ -144,7 +144,7 @@ return {
                             fallback()
                         end
                     end, { "i", "s" }),
-                    ["<C-e>"] = cmp.mapping(function(fallback)
+                    ["<C-space>"] = cmp.mapping(function(_)
                         if cmp.visible() then
                             cmp.close()
                         else

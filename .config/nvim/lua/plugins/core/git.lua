@@ -8,7 +8,7 @@ return {
                 function()
                     vim.cmd("vert Git")
                     vim.cmd("wincmd H")
-                    vim.cmd("vert res 79")
+                    vim.cmd("vert res 69")
                 end,
                 desc = "git fugitive",
             },
