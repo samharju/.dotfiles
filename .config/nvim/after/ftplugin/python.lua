@@ -4,7 +4,7 @@ vim.opt_local.errorformat = {
     "%Z%\\%%(%.%#%trror: %\\)%\\@=%m",
     "%C%.%#",
     "%E_%# %o _%#",
-    "%EE %#%m",
+    "%EE  %#%m",
     "%EFAIL: %m (%o)",
     "%EERROR: %m (%o)",
     "%f:%l: %m",
@@ -33,18 +33,18 @@ if exists and not active then
         relative = "win",
         width = w,
         height = 5,
-        row = vim.o.lines / 2 - h / 2,
-        col = vim.o.columns / 2 - w / 2,
+        row = vim.o.lines - h - 5,
+        col = vim.o.columns - w - 4,
         style = "minimal",
         border = "rounded",
     })
     vim.wo[winid].winhl = "FloatBorder:DiagnosticWarn,Normal:DiagnosticWarn"
 
-    vim.defer_fn(function() vim.api.nvim_win_close(winid, true) end, 3000)
+    vim.defer_fn(function() vim.api.nvim_win_close(winid, true) end, 4000)
 end
 
 if exists and not active then
-    vim.keymap.set("n", "<leader>go", ":!venv/bin/python %<CR>", { buffer = true })
+    vim.keymap.set("n", "<leader>x", ":!venv/bin/python %<CR>", { buffer = true })
 else
-    vim.keymap.set("n", "<leader>go", ":!python %<CR>", { buffer = true })
+    vim.keymap.set("n", "<leader>x", ":!python %<CR>", { buffer = true })
 end
