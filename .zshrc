@@ -121,8 +121,10 @@ log ANSIBLE_STDOUT_CALLBACK=$ANSIBLE_STDOUT_CALLBACK
 
 # dotfile sanity check
 if [[ -z $(fd --max-depth 1 --type f --hidden --changed-within=12hour .dotfilescheck ~/) ]]; then
-    echo "Dotfiles:"
-    https_proxy= http_proxy= GIT_DIR=$HOME/.dotfiles GIT_WORK_TREE=$HOME gitpullneeded
+    if ! ping -c 1 -W 1 "$proxy" &> /dev/null; then
+        unset http_proxy https_proxy
+    fi
+    GIT_DIR=$HOME/.dotfiles GIT_WORK_TREE=$HOME gitpullneeded
     touch ~/.dotfilescheck
 fi
 
