@@ -5,12 +5,15 @@ return {
         { trig = "with o", snippetType = "autosnippet" },
         fmt(
             [[
-              with open("{}", "{}") as f:
+              with open("{}"{}) as f:
                   {}
             ]],
             {
                 i(1),
-                i(2, "w"),
+                c(2, {
+                    t(', "w"'),
+                    t(""),
+                }),
                 i(3),
             }
         )
