@@ -18,6 +18,7 @@ local colors = {
     "lunaperche",
     "default",
     "moonfly",
+    "quitequiet",
 }
 
 math.randomseed(os.time())
@@ -36,7 +37,7 @@ return {
     { "eldritch-theme/eldritch.nvim", opts = {} },
     { "rose-pine/neovim", name = "rose-pine" },
     { "samharju/synthweave.nvim", dev = true },
-    { "samharju/serene.nvim", config = function() vim.cmd.colorscheme("serene") end },
+    { "samharju/serene.nvim" },
     { "folke/tokyonight.nvim", opts = {} },
     { "bluz71/vim-moonfly-colors" },
 }
