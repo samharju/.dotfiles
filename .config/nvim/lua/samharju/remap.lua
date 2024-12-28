@@ -25,10 +25,13 @@ vim.keymap.set({ "n", "v" }, "<leader>p", '"+p')
 vim.keymap.set("n", "<leader>Y", '"+Y')
 vim.keymap.set("n", "<leader>P", '"+P')
 
+vim.keymap.set("n", "<leader>i", ":Inspect<CR>")
 
+-- back and forth
+vim.keymap.set("n", "<leader>;", "<C-^>", { desc = "alt buffer" })
+vim.keymap.set("n", "<leader>k", vim.cmd.bp, { desc = "previous buffer" })
+vim.keymap.set("n", "<leader>j", vim.cmd.bn, { desc = "next buffer" })
 
-
---
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 vim.keymap.set("n", "<leader>w", vim.diagnostic.open_float, { desc = "Open diagnostic" })
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
@@ -36,7 +39,6 @@ vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" }
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setqflist, { desc = "Diagnostic qf" })
 
 local grp = vim.api.nvim_create_augroup("sami_remap", { clear = true })
-
 
 --- Define lsp keymaps only on attach
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -56,16 +58,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
         vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
         vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
         vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
-        vim.keymap.set("n", "<leader>k", vim.lsp.buf.hover, opts)
+        vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
         vim.keymap.set("n", "<leader>gd", vim.lsp.buf.type_definition, opts)
         vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
         vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
     end,
 })
-
-vim.keymap.set("n", "<leader>;", ":b#<CR>", { desc = "Previous buffer" })
-vim.keymap.set({ "n", "v" }, "<leader>x", ":w !cat<CR>", { desc = "print selection" })
-
-vim.keymap.set("n", "<leader>s", "<C-w>H:vert res 60<CR>")
-
-vim.keymap.set("n", "<leader>i", ":Inspect<CR>")
