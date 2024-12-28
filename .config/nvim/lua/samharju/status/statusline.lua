@@ -24,6 +24,7 @@ function M.update()
     local status_left_parts = {
         branch,
         diff,
+        "%f",
         diag,
         c.lint_progress(),
     }

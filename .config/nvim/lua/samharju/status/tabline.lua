@@ -56,6 +56,8 @@ function M.update()
         end
     end
 
+    if #val == 0 then return "" end
+
     return string.format("%%#Tabline#%s%%*", table.concat(val, ""))
 end
 
