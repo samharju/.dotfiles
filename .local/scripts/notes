@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-choice=$(fd -t f . ~/notes | fzf --preview='bat --color=always {}' --preview-window=right:60%)
-if [ -n "$choice" ]; then
-    cd ~/notes || exit
-    nvim "$choice"
-fi
-
