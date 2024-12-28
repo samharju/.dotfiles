@@ -7,5 +7,6 @@ require("samharju.status")
 require("samharju.terminal")
 require("samharju.session")
 require("samharju.notes")
+require("samharju.bufpop").setup({ delay = 1500 })
 
 vim.cmd.colorscheme("quitequiet")
