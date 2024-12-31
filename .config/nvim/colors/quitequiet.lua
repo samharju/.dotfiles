@@ -12,41 +12,56 @@ local hl = function(group, opts)
 end
 
 local p = {
-    white = "#dadada",
-    black = "#000000",
+    black = "#000004",
+    dark_grey = "#151530",
+    deep_grey = "#101014",
+    green = "#40a0a0",
+    light_grey = "#aaaaba",
+    medium_grey = "#606090",
     purple = "#a0a0df",
+    red = "#d0a0a0",
+    white = "#dadada",
     yellow = "#fafaaf",
-    dark_grey = "#303030",
-    medium_grey = "#707070",
-    light_grey = "#aaaaaa",
 }
 
 hl("CurSearch", { fg = p.purple, reverse = true })
+hl("CursorLine", { bg = p.deep_grey })
+hl("CursorLineNr", "CursorLine")
+hl("FloatBorder", { fg = p.dark_grey })
+hl("IncSearch", { bg = p.green })
 hl("NonText", { fg = p.dark_grey })
 hl("Normal", { fg = p.white, bg = p.black })
 hl("NormalFloat", "Normal")
 hl("QuickFixLine", { fg = p.purple })
-hl("Search", { fg = p.yellow, reverse = true })
-hl("StatusLine", { bg = p.dark_grey })
+hl("Search", { fg = p.red, reverse = true })
+hl("StatusLine", { bg = p.deep_grey })
 hl("TabLine", { fg = p.dark_grey })
 hl("TabLineSel", { fg = p.purple })
+hl("VertSplit", { fg = p.deep_grey })
+hl("Visual", { bg = p.dark_grey })
+hl("WinBar", { bg = p.deep_grey })
+hl("WinBarNC", { fg = p.medium_grey, bg = p.deep_grey })
 
-hl("Constant", { fg = p.white })
-
-hl("Identifier", { fg = p.white })
--- hl("Function", { fg = p.yellow })
-
-hl("Statement", { fg = p.white })
-
-hl("PreProc", { fg = p.white })
+hl("Pmenu", { fg = p.white })
+hl("PmenuSel", "CursorLine")
 
 hl("Comment", { fg = p.medium_grey })
-hl("Keyword", { fg = p.purple })
-hl("Special", { fg = p.purple })
+
+hl("Constant", { fg = p.white })
 hl("String", { fg = p.light_grey })
 
-hl("DiagnosticHint", { fg = p.dark_grey })
-hl("DiagnosticInfo", { fg = p.medium_grey })
+hl("Identifier", { fg = p.white })
+
+hl("Statement", { fg = p.white })
+hl("Keyword", { fg = p.purple })
+
+hl("PreProc", { fg = p.green })
+
+hl("Type", { fg = p.red })
+
+hl("Special", { fg = p.purple })
+
+hl("DiagnosticHint", { fg = p.light_grey })
 
 hl("@keyword", "Keyword")
 hl("@keyword.conditional", "@keyword")
@@ -56,21 +71,10 @@ hl("@keyword.exception", "@keyword")
 hl("@keyword.import", "@keyword")
 hl("@keyword.repeat", "@keyword")
 hl("@keyword.type", "@keyword")
+hl("@label.vimdoc", "Keyword")
+hl("@lsp.type.parameter", { italic = true })
+hl("@markup.link.vimdoc", "Keyword")
 hl("@operator", "@keyword")
 hl("@tag", "Normal")
 hl("@tag.delimiter", "Keyword")
-
-hl("@label.vimdoc", "Keyword")
-hl("@markup.link.vimdoc", "Keyword")
-
-hl("CmpItemAbbr", "Normal")
-hl("CmpItemKind", "Keyword")
-hl("CmpItemMenu", "Comment")
-hl("CmpItemAbbrMatch", "Special")
-hl("CmpItemAbbrMatchFuzzy", "Special")
-
-hl("TelescopeMatching", "Search")
-hl("TelescopeSelection", "CursorLine")
-
-hl("fugitiveStagedModifier", "Added")
-hl("fugitiveUnstagedModifier", "Removed")
+hl("@variable.member", { italic = true })
