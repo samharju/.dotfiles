@@ -13,8 +13,6 @@ vim.opt_local.errorformat = {
     "%-G%.%#",
 }
 
--- vim.cmd("cgetfile /tmp/yeeterr")
-
 local active, exists, _ = require("samharju.venv").check_venv()
 
 if exists and not active then
@@ -48,3 +46,5 @@ if exists and not active then
 else
     vim.keymap.set("n", "<leader>x", ":!python %<CR>", { buffer = true })
 end
+
+require("samharju.custom.pyparam")
