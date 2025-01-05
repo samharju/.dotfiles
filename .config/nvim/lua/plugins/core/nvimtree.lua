@@ -49,6 +49,9 @@ return {
                     chars = "AJKLSDF",
                 },
             },
+            change_dir = {
+                global = true,
+            },
         },
         filters = {
             git_ignored = true,

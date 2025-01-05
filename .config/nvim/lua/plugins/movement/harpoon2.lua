@@ -14,7 +14,7 @@ return {
 
         harpoon:extend({
             UI_CREATE = function(cx)
-                vim.keymap.set("n", "<leader>x", function()
+                vim.keymap.set("n", "<leader>d", function()
                     local keep = {}
                     for _, item in ipairs(harpoon:list().items) do
                         keep[item.value] = true
@@ -37,6 +37,16 @@ return {
                                 vim.notify("Closed buffer: " .. f)
                             end
                         end
+                    end
+                    harpoon.ui:close_menu()
+                end, { buffer = cx.bufnr })
+
+                vim.keymap.set("n", "<leader>x", function()
+                    local items = harpoon:list().items
+                    if #harpoon:list().items > 0 then vim.cmd.e(items[1].value) end
+                    if #harpoon:list().items > 1 then
+                        vim.cmd.vsplit()
+                        vim.cmd.e(items[2].value)
                     end
                     harpoon.ui:close_menu()
                 end, { buffer = cx.bufnr })

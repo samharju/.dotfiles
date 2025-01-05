@@ -3,6 +3,8 @@ return {
         "samharju/yeet.nvim",
         opts = {
             clear_before_yeet = false,
+            retry_last_target_on_failure = true,
+            hide_term_buffers = true,
         },
         keys = {
             {

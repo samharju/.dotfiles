@@ -16,8 +16,6 @@ vim.keymap.set("v", ">", ">gv")
 -- keep stuff centered
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
-vim.keymap.set("n", "n", "nzzzv")
-vim.keymap.set("n", "N", "Nzzzv")
 
 -- yank to system clipboard
 vim.keymap.set({ "n", "v" }, "<leader>y", '"+y')
@@ -29,8 +27,6 @@ vim.keymap.set("n", "<leader>i", ":Inspect<CR>")
 
 -- back and forth
 vim.keymap.set("n", "<leader>;", "<C-^>", { desc = "alt buffer" })
-vim.keymap.set("n", "<leader>k", vim.cmd.bp, { desc = "previous buffer" })
-vim.keymap.set("n", "<leader>j", vim.cmd.bn, { desc = "next buffer" })
 
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 vim.keymap.set("n", "<leader>w", vim.diagnostic.open_float, { desc = "Open diagnostic" })
@@ -57,8 +53,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
         vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
         vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
         vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-        vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
-        vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+        vim.keymap.set("n", "K", vim.lsp.buf.signature_help, opts)
+        vim.keymap.set("n", "<C-k>", vim.lsp.buf.hover, opts)
         vim.keymap.set("n", "<leader>gd", vim.lsp.buf.type_definition, opts)
         vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
         vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
