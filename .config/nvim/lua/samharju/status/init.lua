@@ -6,11 +6,11 @@ _G.Tabline = function() return tabline end
 
 local function update()
     statusline = require("samharju.status.statusline").update()
-    tabline = require("samharju.status.tabline").update()
+    -- tabline = require("samharju.status.tabline").update()
 end
 
-vim.opt.showtabline = 0
-vim.opt.tabline = "%{%v:lua.Tabline()%}"
+vim.opt.showtabline = 1
+-- vim.opt.tabline = "%{%v:lua.Tabline()%}"
 vim.opt.laststatus = 3
 vim.opt.statusline = "%{%v:lua.MyStatus()%}"
 vim.opt.winbar = "%t %h%r%m"

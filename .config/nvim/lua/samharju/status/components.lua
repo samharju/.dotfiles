@@ -1,4 +1,38 @@
+local venv = require("samharju.venv")
+
 local M = {}
+
+function M.python_version()
+    if vim.bo.filetype ~= "python" then return "" end
+
+    local active, exists, pyv = venv.check_venv()
+    if active then
+        pyv = string.format("%%#StatusLineWarn#venv: %s%%*", pyv)
+    elseif exists then
+        pyv = string.format("%%#StatusLineError#  venv not active%%*")
+    end
+    return pyv
+end
+
+function M.harpoons()
+    local ok, harpoon = pcall(require, "harpoon")
+    if not ok then return "" end
+
+    local list = harpoon:list().items
+    if #list == 0 then return "" end
+
+    local val = {}
+    local c = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":.")
+    for _, h in ipairs(list) do
+        if h.value == c then
+            table.insert(val, "o")
+        else
+            table.insert(val, "%#StatusLineComment#+%*")
+        end
+    end
+
+    return table.concat(val, "")
+end
 
 ---@param buf? number
 function M.active_lsps(buf)
