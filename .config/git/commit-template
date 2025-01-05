@@ -1,11 +1,15 @@
 
+
 # feat      | Adds or remove a new feature
 # fix       | Fixes a bug
-# refactor  | Rewrites/restructures your code, however does not change any API behaviour
+# refactor  | Rewrites/restructures your code, however does not 
+#               change any API behaviour
 # perf      | Special refactor commits, that improve performance
-# style     | Commit does not affect the meaning (white-space, formatting, missing semi-colons, etc)
+# style     | Commit does not affect the meaning
+#               (white-space, formatting, missing semi-colons, etc)
 # test      | Add missing tests or correcting existing tests
 # docs      | Affects documentation only
 # build     | Affects build components like build tool, ci pipeline, dependencies, project version, ...
-# ci        | Affect operational components like infrastructure, deployment, backup, recovery, ...
+# ci        | Affect operational components like infrastructure,
+#               deployment, backup, recovery, ...
 # chore     | Miscellaneous commit e.g. modifying .gitignore
