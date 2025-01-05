@@ -1,6 +1,6 @@
 #!/usr/bin/zsh
 # check .oh-my-zsh/templates/zshrc.zsh-template for removed stuff
-#
+export TERM=wezterm
 #-path------------------------------------------------------------------------#
 # add existing binary folders to path if not present
 binpaths=(
@@ -107,6 +107,7 @@ export TZ='Europe/Helsinki'
 GPG_TTY=$(tty)
 export GPG_TTY
 export SUDO_EDITOR=/home/sami/.local/bin/nvim
+export EDITOR=/home/sami/.local/bin/nvim
 log TZ=$TZ
 log GPG_TTY=$GPG_TTY
 log SUDO_EDITOR=$SUDO_EDITOR

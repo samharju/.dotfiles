@@ -10,6 +10,12 @@ bat_pkg = bat-musl_0.23.0_amd64.deb
 
 all: apt go nvim ohmyzsh nvm python3.10 thefuck formatters fzf bat docker luarocks tmux ripgrep
 
+.PHONY: terminfo
+terminfo:
+	curl -o ~/tempterminfo https://raw.githubusercontent.com/wez/wezterm/master/termwiz/data/wezterm.terminfo
+	tic -x -o ~/.terminfo ~/tempterminfo
+	rm ~/tempterminfo
+
 .PHONY: nvim
 nvim: .local/bin/nvim
 
