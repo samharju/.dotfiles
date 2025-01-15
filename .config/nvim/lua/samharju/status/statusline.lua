@@ -17,8 +17,6 @@ function M.update()
         diff,
         c.harpoons(),
         "%f",
-        diag,
-        c.lint_progress(),
     }
 
     local right = {
@@ -31,6 +29,10 @@ function M.update()
     local status_parts = {
         "%<",
         c.join(left, sepleft),
+        " ",
+        diag,
+        " ",
+        c.lint_progress(),
         "%=",
         c.join(right, sepright),
     }
