@@ -1,39 +1,9 @@
-local function is_git_repo()
-    vim.fn.system("git rev-parse --is-inside-work-tree")
-
-    return vim.v.shell_error == 0
-end
-
-local function get_git_root()
-    local dot_git_path = vim.fn.finddir(".git", ".;")
-    return vim.fn.fnamemodify(dot_git_path, ":h")
-end
-
-local cwd = nil
-
-if is_git_repo() then cwd = get_git_root() end
-
 return {
     "nvim-telescope/telescope.nvim",
     dependencies = {
         "nvim-lua/plenary.nvim",
     },
     config = function()
-        -- local function custom_path(_, path)
-        --     local tail = require("telescope.utils").path_tail(path)
-        --     return string.format("%s > %s", tail, path)
-        -- end
-        --
-        -- vim.api.nvim_create_autocmd("FileType", {
-        --     pattern = "TelescopeResults",
-        --     callback = function(ctx)
-        --         vim.api.nvim_buf_call(ctx.buf, function()
-        --             vim.fn.matchadd("TelescopeParent", " > .*$")
-        --             vim.api.nvim_set_hl(0, "TelescopeParent", { link = "Comment" })
-        --         end)
-        --     end,
-        -- })
-
         require("telescope").setup({
             defaults = {
                 file_ignore_patterns = { "%.git/" },
@@ -65,39 +35,13 @@ return {
                     previewer = false,
                     results_title = false,
                 },
-                live_grep = {
-                    layout_strategy = "vertical",
-                },
-                lsp_references = {
-                    layout_strategy = "vertical",
-                    include_declaration = false,
-                    fname_width = 50,
-                },
             },
         })
-
-        vim.api.nvim_create_user_command(
-            "Config",
-            function() require("telescope.builtin").find_files({ cwd = vim.fn.stdpath("config") }) end,
-            {}
-        )
     end,
     keys = {
         {
             "<leader>ff",
-            (function()
-                local cmd = (function()
-                    local test = vim.system({ "git", "config", "--local", "core.excludesfile" }, { text = true }):wait()
-                    if test.code == 0 and test.stdout ~= "" then
-                        local file = test.stdout:gsub("%s+", "")
-                        return { "rg", "--files", "--color", "never", "--ignore-file", file }
-                    end
-                    return { "rg", "--files", "--color", "never" }
-                end)()
-
-                return function() require("telescope.builtin").find_files({ cwd = cwd, find_command = cmd }) end
-            end)(),
-
+            function() require("telescope.builtin").find_files() end,
             desc = "tele find_files",
         },
         {
@@ -107,18 +51,13 @@ return {
                     no_ignore = true,
                     hidden = true,
                     prompt_title = "All files, no ignore",
-                    cwd = cwd,
                 })
             end,
             desc = "tele find_files no ignore",
         },
         {
             "<leader>fd",
-            function()
-                require("telescope.builtin").diagnostics(
-                    require("telescope.themes").get_ivy({ previewer = false, cwd = cwd })
-                )
-            end,
+            function() require("telescope.builtin").diagnostics(require("telescope.themes").get_ivy()) end,
             desc = "tele diagnostics",
         },
         {
@@ -142,36 +81,19 @@ return {
             desc = "tele git files",
         },
         {
-            "<leader>fk",
-            function() require("telescope.builtin").keymaps() end,
-            desc = "tele keymaps",
-        },
-        {
             "<leader>fl",
-            function()
-                local opts = function()
-                    local test = vim.system({ "git", "config", "--local", "core.excludesfile" }, { text = true }):wait()
-                    if test.code == 0 and test.stdout ~= "" then
-                        local file = test.stdout:gsub("%s+", "")
-                        return { "--ignore-file", file }
-                    end
-                    return {}
-                end
-
-                require("telescope.builtin").live_grep({ additional_args = opts() })
-            end,
+            function() require("telescope.builtin").live_grep() end,
             desc = "tele live_grep",
         },
         {
             "<leader>fs",
-            function() require("telescope.builtin").grep_string({ cwd = cwd }) end,
+            function() require("telescope.builtin").grep_string() end,
             desc = "tele grep_string",
         },
         {
             "<leader>ft",
             function()
                 require("telescope.builtin").grep_string({
-                    cwd = cwd,
                     search = [[TODO|FIXME|\bFIX\b|\bbreakpoint\(\)]],
                     use_regex = true,
                 })
@@ -192,6 +114,24 @@ return {
             "<leader>fr",
             function() require("telescope.builtin").resume() end,
             desc = "tele resume last search",
+        },
+        {
+            "<leader>fk",
+            function()
+                require("telescope.builtin").find_files({
+                    hidden = false,
+                    find_command = { "fd", "--type", "d", "--color", "never", "-d", "4" },
+                    attach_mappings = function(_, map)
+                        map("i", "<CR>", function(prompt_bufnr)
+                            local entry = require("telescope.actions.state").get_selected_entry()
+                            require("telescope.actions").close(prompt_bufnr)
+                            vim.cmd("e " .. entry[1])
+                        end)
+                        return true
+                    end,
+                })
+            end,
+            desc = "tele folders",
         },
     },
 }
