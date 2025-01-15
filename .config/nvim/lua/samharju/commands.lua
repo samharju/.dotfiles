@@ -58,6 +58,8 @@ vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
         vim.api.nvim_set_hl(0, "fugitiveUnstagedModifier", { link = "Removed", default = true })
         vim.api.nvim_set_hl(0, "fugitiveStagedModifier", { link = "Added", default = true })
 
+        vim.api.nvim_set_hl(0, "GitSignsCurrentLineBlame", { link = "Comment" })
+
         vim.cmd([[hi! link @custom_injection ColorColumn]])
     end,
 })
