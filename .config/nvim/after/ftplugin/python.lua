@@ -47,4 +47,4 @@ else
     vim.keymap.set("n", "<leader>x", ":!python %<CR>", { buffer = true })
 end
 
-require("samharju.custom.pyparam")
+require("samharju.custom.py_param")

@@ -9,3 +9,5 @@ vim.opt_local.errorformat = {
     "%+G %#--- FAIL:%.%#",
     "%-G%.%#",
 }
+
+require("samharju.custom.go_param")
