@@ -60,5 +60,7 @@ return {
         vim.keymap.set("n", "<leader>2", function() harpoon:list():select(2) end, { desc = "harpoonfile 2" })
         vim.keymap.set("n", "<leader>3", function() harpoon:list():select(3) end, { desc = "harpoonfile 3" })
         vim.keymap.set("n", "<leader>4", function() harpoon:list():select(4) end, { desc = "harpoonfile 4" })
+        vim.keymap.set("n", "<leader>j", function() harpoon:list():prev() end, { desc = "harpoonfile prev" })
+        vim.keymap.set("n", "<leader>l", function() harpoon:list():next() end, { desc = "harpoonfile next" })
     end,
 }

@@ -24,27 +24,35 @@ return {
                 delay = 0,
                 virt_text_pos = "eol",
             },
+            signs = {
+                add = { text = "▌" },
+                change = { text = "▌" },
+                delete = { text = "🬭" },
+                topdelete = { text = "🬂" },
+                changedelete = { text = "~" },
+                untracked = { text = "┆" },
+            },
         },
         keys = {
             {
                 "<leader>hs",
                 function() require("gitsigns").stage_hunk() end,
-                { desc = "git stage hunk" },
+                { desc = "git hunk stage" },
             },
             {
                 "<leader>hu",
                 function() require("gitsigns").reset_hunk() end,
-                { desc = "git undo hunk" },
+                { desc = "git hunk undo" },
             },
             {
                 "<leader>hp",
                 function() require("gitsigns").preview_hunk() end,
-                { desc = "git preview hunk" },
+                { desc = "git hunk preview" },
             },
             {
                 "<leader>hb",
                 function() require("gitsigns").blame_line({ full = true }) end,
-                { desc = "git blame line" },
+                { desc = "git hunk blame" },
             },
             {
                 "<leader>hh",
@@ -52,24 +60,19 @@ return {
                 { desc = "git toggle current line blame" },
             },
             {
-                "<leader>gg",
+                "<leader>hg",
                 function() require("gitsigns").toggle_linehl() end,
-                { desc = "git toggle linehl" },
+                { desc = "git hunk gutter" },
             },
             {
                 "]c",
                 function() require("gitsigns").next_hunk() end,
-                { desc = "git next hunk" },
+                { desc = "git hunk next" },
             },
             {
                 "[c",
                 function() require("gitsigns").prev_hunk() end,
-                { desc = "git prev hunk" },
-            },
-            {
-                "<leader>gq",
-                function() require("gitsigns").setqflist() end,
-                { desc = "git hunk qf" },
+                { desc = "git hunk prev" },
             },
         },
     },

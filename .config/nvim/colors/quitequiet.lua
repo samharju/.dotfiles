@@ -16,6 +16,7 @@ local p = {
     black_tint = "#000008",
     blue_dark = "#101022",
     blue_deep = "#181833",
+    blue_medium = "#24244c",
     blue_light = "#606090",
     blue = "#3581b8",
     green = "#4ba0a0",
@@ -30,21 +31,26 @@ local p = {
     orange = "#f7ae62",
 }
 
-hl("CurSearch", { fg = p.red, reverse = true })
+p.bg = p.black
+
+if vim.g.quitequiet_flavor == "transparent" then p.bg = "NONE" end
+
+hl("CurSearch", { fg = p.white, bg = p.blue_medium })
+hl("CursorColumn", "CursorLine")
 hl("CursorLine", { bg = p.blue_dark })
 hl("CursorLineNr", "CursorLine")
 hl("ErrorMsg", { fg = p.red })
 hl("FloatBorder", "NormalFloat")
 hl("FloatTitle", { fg = p.red, bg = p.black_tint })
 hl("IncSearch", { fg = p.purple, reverse = true })
-hl("MatchParen", { reverse = true })
-hl("NonText", { fg = p.blue_deep })
-hl("Normal", { fg = p.white, bg = p.black })
+hl("MatchParen", { fg = p.red, bold = true })
+hl("NonText", { fg = p.blue_medium })
+hl("Normal", { fg = p.white, bg = p.bg })
 hl("NormalFloat", { bg = p.black_tint })
 hl("Pmenu", { fg = p.white })
 hl("PmenuSel", "CursorLine")
-hl("QuickFixLine", { fg = p.purple })
-hl("Search", { fg = p.purple, reverse = true })
+hl("QuickFixLine", { bg = p.blue_medium })
+hl("Search", { fg = p.white, bg = p.blue_light })
 hl("StatusLine", { bg = p.blue_dark })
 hl("Substitute", { fg = p.red, reverse = true })
 hl("TabLine", { fg = p.blue_light })
@@ -52,7 +58,7 @@ hl("TabLineSel", { fg = p.red })
 hl("TermCursor", { fg = p.white, reverse = true })
 hl("Title", { fg = p.red })
 hl("VertSplit", { fg = p.blue_dark })
-hl("Visual", { bg = p.blue_deep })
+hl("Visual", { bg = p.blue_medium })
 hl("WinBar", { bg = p.blue_dark })
 hl("WinBarNC", { fg = p.blue_light, bg = p.blue_dark })
 
@@ -71,6 +77,7 @@ hl("String", { fg = p.grey_light })
 hl("Character", { fg = p.grey_light })
 
 hl("Identifier", { fg = p.white })
+hl("Function", { italic = true })
 
 hl("Statement", { fg = p.white })
 hl("Keyword", { fg = p.purple })

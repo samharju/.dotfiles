@@ -7,12 +7,12 @@ local M = { opts = { auto = false } }
 
 local ns = vim.api.nvim_create_namespace("bufpop")
 
-local make_config = function(h, w, style)
+local make_config = function(h, w, style, relative)
     local common = {
         focusable = false,
         style = "minimal",
         title = "Buffers",
-        title_pos = "center",
+        title_pos = "left",
     }
 
     local win_configs = {
@@ -47,7 +47,7 @@ local make_config = function(h, w, style)
             row = vim.api.nvim_win_get_height(0) - h - 2,
             col = 0,
             style = "minimal",
-            border = { "─", "─", "─", "", "", "", "", "" },
+            border = { "─", "─", "─", "", "", "", "", " " },
         },
         top = {
             relative = "win",
@@ -112,7 +112,7 @@ local function populate_buffer(buffer)
 
     local lines = {}
     for _, v in ipairs(buffers) do
-        table.insert(lines, string.format("  %s %s", v.label, v.name))
+        table.insert(lines, v.name)
     end
 
     vim.api.nvim_set_option_value("modifiable", true, { buf = buffer })
@@ -121,8 +121,8 @@ local function populate_buffer(buffer)
     vim.api.nvim_buf_clear_namespace(buffer, ns, 0, -1)
 
     if hi ~= -1 then vim.api.nvim_buf_add_highlight(buffer, ns, "Keyword", hi - 1, 0, -1) end
-    for i = 0, #buffers - 1, 1 do
-        vim.api.nvim_buf_set_extmark(buffer, ns, i, 0, { end_col = 4, hl_group = "Type" })
+    for i, b in ipairs(buffers) do
+        vim.api.nvim_buf_set_extmark(buffer, ns, i - 1, 0, { sign_hl_group = "Type", sign_text = b.label })
     end
 
     return #buffers, w
@@ -139,7 +139,10 @@ local popup_win = nil
 ---Open popup that is closed automatically.
 ---@param opts bufpop.Opts
 local function bufpopup(opts)
-    if popup_buf == nil then popup_buf = vim.api.nvim_create_buf(false, true) end
+    if popup_buf == nil then
+        popup_buf = vim.api.nvim_create_buf(false, true)
+        vim.api.nvim_buf_set_name(popup_buf, "bufpop.nvim")
+    end
     local cbuf = vim.api.nvim_get_current_buf()
     if cbuf == popup_buf then return end
 
@@ -159,11 +162,14 @@ local function bufpopup(opts)
 
     local files = vim.api.nvim_buf_get_lines(popup_buf, 0, -1, false)
     for i = 1, #files, 1 do
-        vim.keymap.set("n", M.opts.labels:sub(i, i), function()
-            vim.cmd.wincmd("p")
-            vim.api.nvim_set_current_buf(buffers[i].buffer)
-            vim.api.nvim_win_close(popup_win, true)
-        end, { buffer = popup_buf })
+        local l = M.opts.labels:sub(i, i)
+        if l ~= "" then
+            vim.keymap.set("n", l, function()
+                vim.cmd.wincmd("p")
+                vim.api.nvim_set_current_buf(buffers[i].buffer)
+                vim.api.nvim_win_close(popup_win, true)
+            end, { buffer = popup_buf })
+        end
     end
 
     vim.keymap.set("n", "<CR>", function()
@@ -208,8 +214,6 @@ function M.setup(opts)
         { nargs = 1 }
     )
 
-    vim.keymap.set("n", "<leader>b", function() bufpopup({ style = "cursor", auto = false, enter = true }) end)
-
     if M.opts.auto then
         vim.api.nvim_create_autocmd("BufEnter", {
             group = vim.api.nvim_create_augroup("bufpop", { clear = true }),
@@ -217,9 +221,12 @@ function M.setup(opts)
                 if not vim.api.nvim_get_option_value("buflisted", { buf = ev.buffer }) then return end
                 bufpopup({ style = "bottom", auto = true, enter = false })
             end,
+            -1,
         })
     end
 end
 
 M.setup({ auto = false, labels = "asdfhjkl" })
+vim.keymap.set("n", "<leader>m", function() bufpopup({ style = "bottom", auto = false, enter = true }) end)
+
 return M

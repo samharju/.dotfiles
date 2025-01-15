@@ -14,8 +14,8 @@ vim.opt.listchars = { eol = "↴", trail = "·", nbsp = "+", tab = "» ", leadmu
 vim.opt.list = true
 vim.opt.nu = true
 vim.opt.relativenumber = true
-vim.opt.scrolloff = 8
-vim.opt.sidescrolloff = 8
+vim.opt.scrolloff = 4
+vim.opt.sidescrolloff = 4
 vim.opt.shiftwidth = 4
 vim.opt.signcolumn = "yes"
 vim.opt.smartindent = true
@@ -30,13 +30,15 @@ vim.opt.wrap = false
 vim.opt.clipboard = "unnamedplus"
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-vim.opt.foldenable = false
+vim.opt.foldtext = ""
+vim.opt.foldenable = true
+vim.o.foldlevel = 10
 vim.opt.textwidth = 0
-vim.opt.splitright = true
 vim.opt.grepprg = "rg --vimgrep --hidden"
 
 vim.diagnostic.config({
     underline = true,
+    signs = false,
     virtual_text = {
         format = function(diag)
             -- get only text to first newline
@@ -45,10 +47,13 @@ vim.diagnostic.config({
             return message
         end,
         source = "if_many",
+        prefix = "●",
     },
     severity_sort = true,
     float = {
+        header = "",
         source = true,
         border = "rounded",
+        prefix = "",
     },
 })
