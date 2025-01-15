@@ -53,3 +53,5 @@ alias gitfixup='git -c sequence.editor=true rebase -i --autosquash'
 alias gloo='git log --oneline --decorate $(git merge-base $(git_main_branch) HEAD)..HEAD'
 
 alias chmox="chmod +x"
+
+alias glor='git log --pretty="%C(auto)%h%Creset %C(auto)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset"'
