@@ -9,4 +9,4 @@ require("samharju.session")
 require("samharju.notes")
 require("samharju.bufpop")
 
-vim.cmd.colorscheme("quitequiet")
+vim.cmd.colorscheme("quitequiet-transparent")
