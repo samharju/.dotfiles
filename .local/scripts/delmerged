@@ -1,15 +1,47 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 set -e
 if [ -z "$1" ]; then
     echo "usage: delmerged <branch>"
     exit 1
 fi
 
+
+git_main_branch () {
+        command git rev-parse --git-dir &> /dev/null || return
+        local ref
+        for ref in refs/{heads,remotes/{origin,upstream}}/{main,trunk,mainline,default,stable,master}
+        do
+                if command git show-ref -q --verify $ref
+                then
+                        echo ${ref:t}
+                        return 0
+                fi
+        done
+        echo master
+        return 1
+}
+
+git_develop_branch () {
+        command git rev-parse --git-dir &> /dev/null || return
+        local branch
+        for branch in dev devel develop development
+        do
+                if command git show-ref -q --verify refs/heads/$branch
+                then
+                        echo $branch
+                        return 0
+                fi
+        done
+        echo develop
+        return 1
+}
+
 git checkout "$1"
 git pull --ff-only --tags
 
 # this will exit script if grep has no matches
-purge=$(git branch --merged | grep -Ev "trunk|master|main|development|dev|\*|\+")
+purge=$(git branch --merged | grep -Ev "$(git_main_branch)|$(git_develop_branch)|\*|\+")
 
 cat << "FOO"
 ___  _  _ ____ ____ ____    ____ ___ _  _ ____ ____
@@ -18,5 +50,5 @@ ___  _  _ ____ ____ ____    ____ ___ _  _ ____ ____
 
 FOO
 
-echo "$purge" | xargs -r -t -n1 git branch -d
+echo "$purge" | xargs -rtpn1 git branch -d
 
