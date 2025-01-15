@@ -114,7 +114,7 @@ log SUDO_EDITOR=$SUDO_EDITOR
 
 
 # make ansible print stuff readable by default
-export ANSIBLE_STDOUT_CALLBACK=debug
+export ANSIBLE_STDOUT_CALLBACK=unixy
 log ANSIBLE_STDOUT_CALLBACK=$ANSIBLE_STDOUT_CALLBACK
 
 # tokens and stuff from this guy
