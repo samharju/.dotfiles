@@ -34,6 +34,7 @@
   "plantuml-syntax": { "branch": "master", "commit": "667f94c6a9d1f8b1a1ec480560881f38960861b0" },
   "plantuml.nvim": { "branch": "master", "commit": "6983e482c9d272a764aa7f8b63be30ee59c7fc2d" },
   "plenary.nvim": { "branch": "master", "commit": "50012918b2fc8357b87cff2a7f7f0446e47da174" },
+  "quicker.nvim": { "branch": "master", "commit": "cde090601b24cd6f4982e702dd31a810c19ee975" },
   "rose-pine": { "branch": "main", "commit": "14b371fb783a8cfdade04544fb782f0bb6f7c904" },
   "telescope.nvim": { "branch": "master", "commit": "a0bbec21143c7bc5f8bb02e0005fa0b982edc026" },
   "tokyonight.nvim": { "branch": "main", "commit": "b262293ef481b0d1f7a14c708ea7ca649672e200" },
