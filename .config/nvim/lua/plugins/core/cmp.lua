@@ -7,21 +7,22 @@ return {
             cmp.setup.cmdline("/", {
                 mapping = cmp.mapping.preset.cmdline(),
                 sources = {
-                    { name = "buffer", keyword_length = 3 },
+                    { name = "buffer", keyword_length = 2 },
                 },
             })
 
             cmp.setup.cmdline("?", {
                 mapping = cmp.mapping.preset.cmdline(),
                 sources = {
-                    { name = "buffer", keyword_length = 3 },
+                    { name = "buffer", keyword_length = 2 },
                 },
             })
 
             cmp.setup.cmdline(":", {
                 mapping = cmp.mapping.preset.cmdline(),
                 sources = cmp.config.sources({
-                    { name = "path", option = { get_cwd = function(_) return vim.fn.getcwd() end } },
+                    { name = "path", option = { get_cwd = vim.uv.cwd } },
+                    { name = "buffer", keyword_length = 5 },
                     { name = "cmdline" },
                 }),
             })
@@ -52,9 +53,14 @@ return {
                             buffer = "[Buffer]",
                             nvim_lua = "[Lua]",
                             path = "[Path]",
+                            cmdline = "[Cmd]",
                         })[entry.source.name]
+                        if vim_item.menu == nil then vim_item.menu = entry.source.name end
                         return vim_item
                     end,
+                },
+                performance = {
+                    max_view_entries = 10,
                 },
                 window = {
                     completion = cmp.config.window.bordered(),
@@ -65,9 +71,9 @@ return {
                 },
                 sources = {
                     { name = "nvim_lsp" },
-                    { name = "luasnip" },
                     { name = "nvim_lsp_signature_help" },
-                    { name = "path", option = { get_cwd = vim.loop.cwd } },
+                    { name = "luasnip", option = { show_autosnippets = true } },
+                    { name = "path", option = { get_cwd = vim.uv.cwd } },
                     {
                         name = "buffer",
                         option = {
@@ -77,15 +83,14 @@ return {
                                 for _, win in ipairs(vim.api.nvim_list_wins()) do
                                     bufs[vim.api.nvim_win_get_buf(win)] = true
                                 end
-                                local res = vim.api.nvim_exec2(":ls", { output = true })
-                                if res ~= nil and res.output ~= nil then
-                                    local _, _, alt = string.find(res.output, "%s+(%d+)%s+#")
-                                    if alt ~= nil then bufs[tonumber(alt)] = true end
-                                end
                                 return vim.tbl_keys(bufs)
                             end,
                         },
-                        keyword_length = 3,
+                        keyword_length = 2,
+                        entry_filter = function(_, _)
+                            ---@diagnostic disable-next-line: param-type-mismatch
+                            return require("cmp.config.context").in_treesitter_capture({ "string", "comment" })
+                        end,
                     },
                     { name = "lazydev", group_index = 0 },
                 },
@@ -149,6 +154,15 @@ return {
                             cmp.close()
                         else
                             cmp.complete()
+                        end
+                    end, { "i", "s" }),
+                    ["<C-a>"] = cmp.mapping(function(fallback)
+                        if cmp.visible() then
+                            cmp.complete({
+                                sources = { name = "buffer" },
+                            })
+                        else
+                            fallback()
                         end
                     end, { "i", "s" }),
                 },
