@@ -1,17 +1,22 @@
 vim.opt_local.errorformat = {
-    "%CE %#%m",
-    "%Z%f:%l: %m",
-    "%Z%\\%%(%.%#%trror: %\\)%\\@=%m",
-    "%C%.%#",
-    "%E___%# %o _%#",
-    "%EE  %#%m",
-    "%EFAIL: %m (%o)",
-    "%EERROR: %m (%o)",
+    '  File "%f"\\, line %l\\, in %m',
+    "%-GFAILED %.%#",
+    "%-GERROR %.%#",
+    "ERROR %f::%o - %m",
+    "E%\\%%(     -%\\)%\\@=%m",
+    "E%\\%%(     +%\\)%\\@=%m",
+    "E%\\%%(     \\?%\\)%\\@=%m",
+    "E  %\\%%(%.%#%trror: %\\)%\\@=%m",
+    "%\\%%(%.%#%trror: %\\)%\\@=%m",
     "%f:%l: %m",
-    '%+G  File "%f"\\, line %l\\, in %m',
-    -- "%\\%%(%.%#%trror: %\\)%\\@=%m",
+    "%f:%l:",
     "%-G%.%#",
 }
+
+vim.api.nvim_create_user_command("RefreshEfm", function()
+    vim.cmd([[ so ~/.config/nvim/after/ftplugin/python.lua ]])
+    vim.cmd.cgetfile("/tmp/yeeterr")
+end, {})
 
 local active, exists, _ = require("samharju.venv").check_venv()
 
