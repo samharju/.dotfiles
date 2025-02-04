@@ -28,3 +28,5 @@
     unwip = "!git rev-list --max-count=1 --format=\"%s\" HEAD | grep -q \"\\--wip--\" && git reset HEAD~1"
     stashlist = "stash list --pretty=\"%s %Cgreen(%ar)\""
     fix-commit = "!git commit --edit --file=$GIT_DIR/COMMIT_EDITMSG"
+[log]
+    decorate = full

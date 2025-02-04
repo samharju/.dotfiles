@@ -2,6 +2,8 @@
 
 if tmux show -g | grep -q "status on"; then
     tmux set -g status off
+    tmux set status off
 else
     tmux set -g status on
+    tmux set status on
 fi

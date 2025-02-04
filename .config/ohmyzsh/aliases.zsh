@@ -55,3 +55,5 @@ alias gloo='git log --oneline --decorate $(git merge-base $(git_main_branch) HEA
 alias chmox="chmod +x"
 
 alias glor='git log --pretty="%C(auto)%h%Creset %C(auto)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset"'
+
+alias rm='rm -v'
