@@ -67,7 +67,19 @@ return {
         },
         {
             "<leader>fg",
-            function() require("telescope.builtin").git_status() end,
+            function()
+                require("telescope.builtin").git_status({
+                    attach_mappings = function(_, map)
+                        map("i", "<cr>", function(prompt_bufnr)
+                            local entry = require("telescope.actions.state").get_selected_entry()
+                            require("telescope.actions").close(prompt_bufnr)
+                            vim.cmd.e(entry.value)
+                            vim.defer_fn(function() require("gitsigns").next_hunk() end, 500)
+                        end)
+                        return true
+                    end,
+                })
+            end,
             desc = "tele git_status",
         },
         {
