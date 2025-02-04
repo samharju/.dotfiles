@@ -227,6 +227,6 @@ function M.setup(opts)
 end
 
 M.setup({ auto = false, labels = "asdfhjkl" })
-vim.keymap.set("n", "<leader>m", function() bufpopup({ style = "bottom", auto = false, enter = true }) end)
+vim.keymap.set("n", "<leader>m", function() bufpopup({ style = "float", auto = false, enter = true }) end)
 
 return M

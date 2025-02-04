@@ -38,6 +38,28 @@ local isort = {
     end,
 }
 
+local stylua = {
+    cmd = "stylua",
+    stdin = true,
+    args = { "-c", "--output-format=json", "-" },
+    ignore_exitcode = true,
+    parser = function(output, _, _)
+        local res = vim.json.decode(output)
+        local out = {}
+        for _, v in ipairs(res.mismatches) do
+            table.insert(out, {
+                lnum = v.original_start_line,
+                end_lnum = v.original_end_line,
+                col = 0,
+                severity = vim.diagnostic.severity.ERROR,
+                source = "stylua",
+                message = "\n" .. v.expected,
+            })
+        end
+        return out
+    end,
+}
+
 local function setup_python()
     local lint = require("lint")
     local resolve = require("samharju.venv").resolve
@@ -68,10 +90,12 @@ return {
 
         lint.linters.black = black
         lint.linters.isort = isort
+        lint.linters.stylua = stylua
 
         lint.linters_by_ft = {
             go = { "golangcilint" },
             json = { "jq" },
+            lua = { "stylua" },
         }
         setup_python()
 

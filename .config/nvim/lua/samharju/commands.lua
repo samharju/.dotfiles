@@ -25,14 +25,24 @@ cmd("ToggleDiagnostics", function(args)
     end
 end, { desc = "Toggle diagnostics", nargs = "+", complete = function() return { "all", "virtual_text" } end })
 
-local grp = vim.api.nvim_create_augroup("sharju_commands", { clear = true })
-
 local fg_from = function(group)
     local hl = vim.api.nvim_get_hl(0, { name = group })
     return hl.fg
 end
 
-vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
+cmd("GitLineHistory", function()
+    local start = vim.fn.getpos("'<")
+    local stop = vim.fn.getpos("'>")
+
+    vim.cmd(string.format("Git log -L %s,%s:%s", start[2], stop[2], vim.fn.expand("%")))
+end, { range = 1 })
+
+-- autocommands ------------------------------------------------------------------------------------------
+
+local grp = vim.api.nvim_create_augroup("sharju_commands", { clear = true })
+local autocmd = vim.api.nvim_create_autocmd
+
+autocmd({ "VimEnter", "ColorScheme" }, {
     group = grp,
     pattern = "*",
     callback = function()
@@ -53,25 +63,39 @@ vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
         vim.api.nvim_set_hl(0, "CmpItemKindFunction", { link = "Function", default = true })
         vim.api.nvim_set_hl(0, "CmpItemKindOperator", { link = "Operator", default = true })
         vim.api.nvim_set_hl(0, "CmpItemKindVariable", { link = "Variable", default = true })
-        vim.api.nvim_set_hl(0, "CmpItemKindTypeParameter", { link = "TypeParameter", default = true })
+        vim.api.nvim_set_hl(0, "CmpItemKindText", { link = "Comment", default = true })
+        vim.api.nvim_set_hl(0, "CmpItemKindSnippet", { link = "Type", default = true })
 
-        vim.api.nvim_set_hl(0, "fugitiveUnstagedModifier", { link = "Removed", default = true })
+        vim.api.nvim_set_hl(0, "fugitiveUntrackedModifier", { link = "Special", default = true })
+        vim.api.nvim_set_hl(0, "fugitiveUnstagedModifier", { link = "Changed", default = true })
         vim.api.nvim_set_hl(0, "fugitiveStagedModifier", { link = "Added", default = true })
 
         vim.api.nvim_set_hl(0, "GitSignsCurrentLineBlame", { link = "Comment" })
+        vim.api.nvim_set_hl(0, "GitSignsAddInline", { link = "DiffText" })
+
+        vim.api.nvim_set_hl(0, "TelescopeNormal", { link = "NormalFloat" })
 
         vim.cmd([[hi! link @custom_injection ColorColumn]])
     end,
 })
 
-vim.api.nvim_create_autocmd("TextYankPost", {
+autocmd("TextYankPost", {
     group = grp,
     callback = function() vim.highlight.on_yank() end,
 })
 
-vim.api.nvim_create_user_command("GitLineHistory", function()
-    local start = vim.fn.getpos("'<")
-    local stop = vim.fn.getpos("'>")
+autocmd("BufReadPre", {
+    group = grp,
+    pattern = { "*.json", "*.txt", "*.log" },
+    callback = function(args)
+        local ok, s = pcall(function() return vim.uv.fs_stat(vim.api.nvim_buf_get_name(args.buf)) end)
+        if not ok then return false end
+        if not s then return false end
 
-    vim.cmd(string.format("Git log -L %s,%s:%s", start[2], stop[2], vim.fn.expand("%")))
-end, { range = 1 })
+        if s.size > 1000000 then
+            vim.opt_local.foldmethod = "manual"
+            vim.opt_local.swapfile = false
+            vim.opt_local.syntax = "off"
+        end
+    end,
+})
