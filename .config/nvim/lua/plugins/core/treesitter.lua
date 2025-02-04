@@ -1,3 +1,11 @@
+local is_big = function(_, bufnr)
+    local ok, s = pcall(function() return vim.uv.fs_stat(vim.api.nvim_buf_get_name(bufnr)) end)
+    if not ok then return false end
+    if not s then return false end
+
+    return s.size > 1000000
+end
+
 return {
     "nvim-treesitter/nvim-treesitter",
     dependencies = {
@@ -11,6 +19,7 @@ return {
             highlight = {
                 enable = true,
                 additional_vim_regex_highlighting = false,
+                disable = is_big,
             },
             autotag = {
                 enable = true,
