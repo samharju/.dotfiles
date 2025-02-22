@@ -1,9 +1,9 @@
 SHELL=/bin/bash
 
-nvim_version = v0.10.2
+nvim_version = v0.10.4
 
-go_checksum = f6c8a87aa03b92c4b0bf3d558e28ea03006eb29db78917daec5cfb6ec1046265
-go_version = 1.22.0
+go_checksum = dea9ca38a0b852a74e81c26134671af7c0fbe65d81b0dc1c5bfe22cf7d4c8858
+go_version = 1.24.0
 go_pkg = go$(go_version).linux-amd64.tar.gz
 
 bat_pkg = bat-musl_0.23.0_amd64.deb
@@ -21,19 +21,19 @@ nvim: .local/bin/nvim
 
 .local/bin/nvim:
 	@figlet nvim $(nvim_version)
-	wget https://github.com/neovim/neovim/releases/download/$(nvim_version)/nvim.appimage
-	wget https://github.com/neovim/neovim/releases/download/$(nvim_version)/nvim.appimage.sha256sum
-	sha256sum -c nvim.appimage.sha256sum
-	rm nvim.appimage.sha256sum
-	chmod u+x nvim.appimage
+	wget https://github.com/neovim/neovim/releases/download/$(nvim_version)/nvim-linux-x86_64.appimage
+	wget https://github.com/neovim/neovim/releases/download/$(nvim_version)/nvim-linux-x86_64.appimage.sha256sum
+	sha256sum -c nvim-linux-x86_64.appimage.sha256sum
+	rm nvim-linux-x86_64.appimage.sha256sum
+	chmod u+x nvim-linux-x86_64.appimage
 	mkdir -p ~/.local/bin
-	mv nvim.appimage ~/.local/bin/nvim
+	mv nvim-linux-x86_64.appimage ~/.local/bin/nvim
 	nvim --version
 	nvim --headless "+Lazy! restore" +qa
 
 .PHONY: nvim-update
 nvim-update:
-	rm .local/bin/nvim
+	rm .local/bin/nvim || true
 	$(MAKE) nvim
 
 
@@ -110,7 +110,7 @@ prettier:
 	rm stylua-linux-x86_64.zip
 
 .PHONY: formatters
-formatters: gotools prettier
+formatters: gotools prettier .local/bin/stylua
 
 
 .PHONY: gotools
@@ -120,7 +120,7 @@ gotools: go
 	go install github.com/josharian/impl@latest
 	go install golang.org/x/tools/cmd/goimports@latest
 	go install github.com/segmentio/golines@latest
-	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin v1.55.2
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin v1.64.5
 	go install github.com/jesseduffield/lazygit@latest
 	go install github.com/go-delve/delve/cmd/dlv@latest
 
