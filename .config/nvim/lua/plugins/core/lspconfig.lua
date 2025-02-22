@@ -1,9 +1,6 @@
 return {
     "neovim/nvim-lspconfig",
     dependencies = {
-        "williamboman/mason.nvim",
-        "williamboman/mason-lspconfig.nvim",
-        "WhoIsSethDaniel/mason-tool-installer.nvim",
         "hrsh7th/cmp-nvim-lsp",
         {
             "folke/lazydev.nvim",
@@ -20,71 +17,50 @@ return {
     },
     event = "VeryLazy",
     config = function()
-        require("mason").setup()
-        require("mason-lspconfig").setup({
-            ensure_installed = {
-                -- Replace these with whatever servers you want to install
-                "bashls",
-                "docker_compose_language_service",
-                "dockerls",
-                "gopls",
-                "lua_ls",
-                "basedpyright",
-            },
-        })
-        require("mason-tool-installer").setup({
-            ensure_installed = {
-                "tree-sitter-cli",
-                "prettierd",
-                "stylua",
+        local lspconfig = require("lspconfig")
+
+        for _, ls in ipairs({
+            "gopls",
+            "docker_compose_language_service",
+            "dockerls",
+            "ansiblels",
+            "bashls",
+        }) do
+            lspconfig[ls].setup({})
+        end
+
+        lspconfig.basedpyright.setup({
+            on_init = function(client, _) client.server_capabilities.semanticTokensProvider = nil end,
+            settings = {
+                basedpyright = {
+                    analysis = {
+                        autoSearchPaths = true,
+                        diagnosticMode = "openFilesOnly",
+                        typeCheckingMode = "basic",
+                        useLibraryCodeForTypes = true,
+                        ignore = { "venv" },
+                        diagnosticSeverityOverrides = {
+                            reportOptionalMemberAccess = "information",
+                            reportAttributeAccessIssue = "information",
+                            reportCallIssue = "information",
+                            reportOperatorIssue = "information",
+                        },
+                    },
+                },
             },
         })
 
-        require("mason-lspconfig").setup_handlers({
-            function(server_name) -- default handler (optional)
-                require("lspconfig")[server_name].setup({})
-            end,
-            ["lua_ls"] = function()
-                require("lspconfig").lua_ls.setup({
-                    settings = {
-                        Lua = {
-                            diagnostics = {
-                                globals = { "vim" },
-                            },
-                            format = {
-                                enable = false,
-                            },
-                        },
+        lspconfig.lua_ls.setup({
+            settings = {
+                Lua = {
+                    diagnostics = {
+                        globals = { "vim" },
                     },
-                })
-            end,
-            ["bashls"] = function()
-                require("lspconfig").bashls.setup({
-                    filetypes = { "sh", "zsh" },
-                })
-            end,
-            ["basedpyright"] = function()
-                require("lspconfig").basedpyright.setup({
-                    on_init = function(client, _) client.server_capabilities.semanticTokensProvider = nil end,
-                    settings = {
-                        basedpyright = {
-                            analysis = {
-                                autoSearchPaths = true,
-                                diagnosticMode = "openFilesOnly",
-                                typeCheckingMode = "basic",
-                                useLibraryCodeForTypes = true,
-                                ignore = { "venv" },
-                                diagnosticSeverityOverrides = {
-                                    reportOptionalMemberAccess = "information",
-                                    reportAttributeAccessIssue = "information",
-                                    reportCallIssue = "information",
-                                    reportOperatorIssue = "information",
-                                },
-                            },
-                        },
+                    format = {
+                        enable = false,
                     },
-                })
-            end,
+                },
+            },
         })
 
         vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {

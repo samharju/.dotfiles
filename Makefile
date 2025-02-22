@@ -104,6 +104,10 @@ prettier:
 	npm i -g prettier
 	npm i -g @fsouza/prettierd
 
+.local/bin/stylua:
+	wget https://github.com/JohnnyMorganz/StyLua/releases/download/v2.0.2/stylua-linux-x86_64.zip
+	unzip stylua-linux-x86_64.zip -d .local/bin
+	rm stylua-linux-x86_64.zip
 
 .PHONY: formatters
 formatters: gotools prettier
@@ -203,6 +207,14 @@ docker:
 .PHONY: nlua
 nlua: /bin/luarocks .luarocks/bin/nlua
 
+.PHONY: pipx
+pipx: /usr/bin/pipx
+
+/usr/bin/pipx:
+	sudo apt update
+	sudo apt install pipx
+	pipx ensurepath
+	sudo pipx ensurepath --global # optional to allow pipx actions with --global argument
 
 /bin/luarocks:
 	@figlet luarocks
@@ -224,3 +236,41 @@ busted: .luarocks/bin/busted
 	@figlet busted
 	luarocks --local install busted
 	busted --version
+
+
+# language servers etc
+
+lsps: basedpyright bashls gopls luals dockerls composels treesittercli
+
+basedpyright: pipx
+	pipx install basedpyright --force
+
+bashls:
+	npm i -g bash-language-server
+
+gopls:
+	go install golang.org/x/tools/gopls@latest
+
+luals: .local/bin/lua-language-server
+
+.local/bin/lua-language-server:
+	wget https://github.com/LuaLS/lua-language-server/releases/download/3.13.6/lua-language-server-3.13.6-linux-x64.tar.gz
+	mkdir -p .local/share/nvim/luals
+	tar -xf lua-language-server-3.13.6-linux-x64.tar.gz -C .local/share/nvim/luals
+	ln -s .local/share/nvim/luals/bin/lua-language-server .local/bin/lua-language-server
+	rm lua-language-server-3.13.6-linux-x64.tar.gz
+
+dockerls:
+	npm i -g dockerfile-language-server-nodejs
+
+
+composels:
+	npm i -g @microsoft/compose-language-service
+
+treesittercli:
+	npm i -g tree-sitter-cli
+
+ansiblels:
+	npm i -g @ansible/ansible-language-server
+
+
