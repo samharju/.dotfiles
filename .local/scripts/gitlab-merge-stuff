@@ -1,0 +1,109 @@
+#!/home/sami/.pyenv/shims/python3.10
+
+import logging
+import os
+import re
+import subprocess
+
+import requests
+
+logging.basicConfig(level=logging.DEBUG)
+
+
+GITLAB_HOST = os.getenv("GITLAB_HOST", "")
+TOKEN = os.getenv("GITLAB_TOKEN", "")
+
+q = """
+query mergenotes($fullpaths: [String!], $source: [String!]) {
+  projects(fullPaths: $fullpaths) {
+    nodes {
+      mergeRequests(state: opened, sourceBranches: $source) {
+        nodes {
+          notes(filter: ONLY_COMMENTS) {
+            nodes {
+              resolvable
+              resolved
+              resolvedBy {
+                name
+              }
+              author {
+                username
+              }
+              body
+              position {
+                newLine
+                newPath
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+"""
+
+
+def merge_request_comments(project, branch):
+    res = requests.post(
+        GITLAB_HOST + "/api/graphql",
+        headers={"Authorization": "Bearer " + TOKEN},
+        json={
+            "query": q,
+            "variables": {"fullpaths": [project], "source": [branch]},
+        },
+    )
+    d = res.json()
+
+    notes = d["data"]["projects"]["nodes"][0]["mergeRequests"]["nodes"][0]["notes"][
+        "nodes"
+    ]
+
+    out = []
+    for note in notes:
+        type_ = "i"
+        if note["resolvable"]:
+            type_ = "n" if note["resolved"] else "e"
+
+        n = {
+            "type": type_,
+            "author": note["author"]["username"],
+            "msg": note["body"],
+        }
+        if note.get("position"):
+            n["file"] = note["position"]["newPath"]
+            n["line"] = note["position"]["newLine"]
+        out.append(n)
+
+    return out
+
+
+def main():
+    remote = subprocess.check_output(
+        ["git", "remote", "get-url", "origin"], text=True
+    ).strip()
+    m = re.match(r".*:(.*).git", remote)
+    if m:
+        fullpath = m.group(1)
+    else:
+        logging.error("could not figure out path")
+        return
+
+    branch = subprocess.check_output(
+        ["git", "branch", "--show-current"], text=True
+    ).strip()
+
+    logging.info("using path: %s, branch: %s", fullpath, branch)
+    comments = merge_request_comments(fullpath, branch)
+
+    for c in comments:
+        line = ""
+        if "file" in c:
+            line = f'{c["file"]}:{c["line"]}|{c["type"]}|[{c["author"]}] {c["msg"]}'
+        else:
+            line = f'{c["type"]}|[{c["author"]}] {c["msg"]}'
+        print(line)
+
+
+if __name__ == "__main__":
+    main()
