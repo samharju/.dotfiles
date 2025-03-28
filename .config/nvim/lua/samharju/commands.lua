@@ -37,21 +37,6 @@ cmd("GitLineHistory", function()
     vim.cmd(string.format("Git log -L %s,%s:%s", start[2], stop[2], vim.fn.expand("%")))
 end, { range = 1 })
 
-cmd("GitlabMergeNotes", function()
-    vim.system(
-        { "gitlab-merge-stuff" },
-        {
-            text = true,
-        },
-        vim.schedule_wrap(function(out)
-            vim.print(out.stderr)
-
-            local d = vim.fn.getqflist({ lines = vim.split(out.stdout, "\n"), efm = "%f:%l|%t|%m,%t|%m" })
-            vim.fn.setqflist(d.items, "r")
-            vim.cmd.copen()
-        end)
-    )
-end, {})
 -- autocommands ------------------------------------------------------------------------------------------
 
 local grp = vim.api.nvim_create_augroup("sharju_commands", { clear = true })

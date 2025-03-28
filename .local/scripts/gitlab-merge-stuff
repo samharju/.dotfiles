@@ -1,5 +1,6 @@
 #!/home/sami/.pyenv/shims/python3.10
 
+import argparse
 import logging
 import os
 import re
@@ -7,7 +8,9 @@ import subprocess
 
 import requests
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO, format="%(message)s")
+
+logger = logging.getLogger(__name__)
 
 
 GITLAB_HOST = os.getenv("GITLAB_HOST", "")
@@ -19,12 +22,23 @@ query mergenotes($fullpaths: [String!], $source: [String!]) {
     nodes {
       mergeRequests(state: opened, sourceBranches: $source) {
         nodes {
+          title
+          author {
+            username
+          }
+          webUrl
+          mergeStatusEnum
+          shouldBeRebased
+          mergeableDiscussionsState
+          headPipeline {
+            status
+          }
           notes(filter: ONLY_COMMENTS) {
             nodes {
               resolvable
               resolved
               resolvedBy {
-                name
+                username
               }
               author {
                 username
@@ -44,7 +58,9 @@ query mergenotes($fullpaths: [String!], $source: [String!]) {
 """
 
 
-def merge_request_comments(project, branch):
+def merge_request_comments(
+    project, branch, show_resolved=False, show_merge_comments=False
+):
     res = requests.post(
         GITLAB_HOST + "/api/graphql",
         headers={"Authorization": "Bearer " + TOKEN},
@@ -53,16 +69,45 @@ def merge_request_comments(project, branch):
             "variables": {"fullpaths": [project], "source": [branch]},
         },
     )
+    res.raise_for_status()
     d = res.json()
+    logger.debug(d)
 
-    notes = d["data"]["projects"]["nodes"][0]["mergeRequests"]["nodes"][0]["notes"][
-        "nodes"
-    ]
+    projects = d["data"]["projects"]["nodes"]
+    if not projects:
+        logger.error("project not found")
+        return {}
+    mergerequests = projects[0]["mergeRequests"]["nodes"]
 
-    out = []
+    if not mergerequests:
+        logger.info("merge requests not found")
+        return {}
+
+    mr = mergerequests[0]
+    out = {
+        "title": mr["title"],
+        "author": mr["author"]["username"],
+        "pipeline": mr["headPipeline"]["status"],
+        "status": mr["mergeStatusEnum"],
+        "url": mr["webUrl"],
+        "comments": [],
+    }
+
+    if mr["shouldBeRebased"]:
+        out["status"] = "CANNOT_NEED_REBASE"
+    if not mr["mergeableDiscussionsState"]:
+        out["status"] = "CANNOT_OPEN_DISCUSSIONS"
+
+    notes = mr["notes"]["nodes"]
+    if not notes:
+        logger.info("no comments found")
+        return out
+
     for note in notes:
         type_ = "i"
         if note["resolvable"]:
+            if not show_resolved and note["resolved"]:
+                continue
             type_ = "n" if note["resolved"] else "e"
 
         n = {
@@ -70,33 +115,74 @@ def merge_request_comments(project, branch):
             "author": note["author"]["username"],
             "msg": note["body"],
         }
+        if note["resolved"]:
+            n["msg"] = f'({note["resolvedBy"]}) {n["msg"]}'
         if note.get("position"):
             n["file"] = note["position"]["newPath"]
             n["line"] = note["position"]["newLine"]
-        out.append(n)
+        elif not show_merge_comments:
+            continue
+        out["comments"].append(n)
 
     return out
 
 
 def main():
-    remote = subprocess.check_output(
-        ["git", "remote", "get-url", "origin"], text=True
-    ).strip()
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--resolved", action="store_true", help="show resolved comments"
+    )
+    parser.add_argument(
+        "--no-merge-comments",
+        action="store_false",
+        help="do not show merge comments",
+    )
+    parser.add_argument("--debug", action="store_true", help="debug logging")
+    args = parser.parse_args()
+
+    if args.debug:
+        logging.getLogger().setLevel(logging.DEBUG)
+    remotecmd = subprocess.run(
+        ["git", "remote", "get-url", "origin"], text=True, capture_output=True
+    )
+    if remotecmd.returncode != 0:
+        print("not a git repo")
+        return
+
+    remote = remotecmd.stdout.strip()
     m = re.match(r".*:(.*).git", remote)
     if m:
         fullpath = m.group(1)
     else:
-        logging.error("could not figure out path")
+        logger.error("could not figure out path")
         return
 
     branch = subprocess.check_output(
         ["git", "branch", "--show-current"], text=True
     ).strip()
 
-    logging.info("using path: %s, branch: %s", fullpath, branch)
-    comments = merge_request_comments(fullpath, branch)
+    logger.info("using path: %s, branch: %s", fullpath, branch)
 
-    for c in comments:
+    mr = merge_request_comments(
+        fullpath,
+        branch,
+        show_resolved=args.resolved,
+        show_merge_comments=args.no_merge_comments,
+    )
+    if not mr:
+        print("nada")
+        return
+
+    st = "i"
+    if "CANNOT" in mr["status"] or mr["pipeline"] == "FAILED":
+        st = "e"
+
+    logger.info("---")
+    print(f'[{mr["author"]}] {mr["title"]}')
+    print(mr["url"])
+    print(f'{st}|[status] {mr["status"]} [pipeline] {mr["pipeline"]}')
+
+    for c in mr["comments"]:
         line = ""
         if "file" in c:
             line = f'{c["file"]}:{c["line"]}|{c["type"]}|[{c["author"]}] {c["msg"]}'
