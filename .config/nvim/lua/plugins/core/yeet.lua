@@ -16,6 +16,10 @@ return {
                 function() require("yeet").execute() end,
             },
             {
+                "<leader>x",
+                function() require("yeet").execute() end,
+            },
+            {
                 "<leader>\\",
                 function()
                     require("yeet").execute(nil, {
@@ -26,6 +30,11 @@ return {
             },
             {
                 "\\\\",
+                function() require("yeet").execute_selection() end,
+                mode = { "v" },
+            },
+            {
+                "<leader>x",
                 function() require("yeet").execute_selection() end,
                 mode = { "v" },
             },
