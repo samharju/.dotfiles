@@ -1,3 +1,31 @@
+local function ivy(opts)
+    opts = opts or {}
+
+    local theme_opts = {
+        theme = "customivy",
+        sorting_strategy = "ascending",
+        layout_strategy = "bottom_pane",
+        layout_config = {
+            height = 0.5,
+        },
+        border = true,
+        borderchars = {
+            prompt = { "─", " ", " ", " ", "─", "─", " ", " " },
+            results = { " " },
+            preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+        },
+    }
+    if opts.layout_config and opts.layout_config.prompt_position == "bottom" then
+        theme_opts.borderchars = {
+            prompt = { " ", " ", "─", " ", " ", " ", "─", "─" },
+            results = { "─", " ", " ", " ", "─", "─", " ", " " },
+            preview = { "─", " ", "─", "│", "┬", "─", "─", "╰" },
+        }
+    end
+
+    return vim.tbl_deep_extend("force", theme_opts, opts)
+end
+
 return {
     "nvim-telescope/telescope.nvim",
     dependencies = {
@@ -5,35 +33,27 @@ return {
     },
     config = function()
         require("telescope").setup({
-            defaults = {
+            defaults = require("telescope.themes").get_ivy({
                 file_ignore_patterns = { "%.git/" },
-            },
+                preview = { hide_on_startup = true },
+                mappings = {
+                    n = { ["<leader>n"] = require("telescope.actions.layout").toggle_preview },
+                },
+                layout_config = {
+                    height = 0.5,
+                },
+            }),
             pickers = {
                 find_files = {
-                    theme = "dropdown",
-                    previewer = false,
                     hidden = true,
-                    layout_config = { width = 100, height = 20 },
                     prompt_title = vim.fn.fnamemodify(vim.fn.getcwd(), ":~"),
                 },
-                git_files = {
-                    theme = "dropdown",
-                    layout_config = { width = 100, height = 20 },
-                    previewer = false,
-                },
                 buffers = {
-                    theme = "dropdown",
-                    previewer = false,
-                    layout_config = { width = 100 },
                     mappings = {
                         n = {
-                            ["x"] = require("telescope.actions").delete_buffer,
+                            ["d"] = require("telescope.actions").delete_buffer,
                         },
                     },
-                },
-                current_buffer_fuzzy_find = {
-                    previewer = false,
-                    results_title = false,
                 },
             },
         })
@@ -49,7 +69,6 @@ return {
             function()
                 require("telescope.builtin").find_files({
                     no_ignore = true,
-                    hidden = true,
                     prompt_title = "All files, no ignore",
                 })
             end,
@@ -57,7 +76,7 @@ return {
         },
         {
             "<leader>fd",
-            function() require("telescope.builtin").diagnostics(require("telescope.themes").get_ivy()) end,
+            function() require("telescope.builtin").diagnostics() end,
             desc = "tele diagnostics",
         },
         {
@@ -144,6 +163,60 @@ return {
                 })
             end,
             desc = "tele folders",
+        },
+        {
+            "<leader>fj",
+            function()
+                local pickers = require("telescope.pickers")
+                local finders = require("telescope.finders")
+                local make_entry = require("telescope.make_entry")
+                local conf = require("telescope.config").values
+                local opts = { cwd = vim.uv.cwd(), layout_config = { width = 0.95 } }
+
+                local finder = finders.new_async_job({
+                    command_generator = function(prompt)
+                        if not prompt or prompt == "" then return nil end
+
+                        local prompt_args = vim.split(prompt, ":", { trimempty = true })
+                        local args = { "rg" }
+                        if #prompt_args == 2 then
+                            table.insert(args, "-g")
+                            table.insert(args, "*" .. prompt_args[1])
+
+                            table.insert(args, "-e")
+                            table.insert(args, prompt_args[2])
+                        else
+                            return nil
+                        end
+
+                        return vim.iter({
+                            args,
+                            {
+                                "--color=never",
+                                "--no-heading",
+                                "--with-filename",
+                                "--line-number",
+                                "--column",
+                                "--smart-case",
+                            },
+                        })
+                            :flatten()
+                            :totable()
+                    end,
+                    entry_maker = make_entry.gen_from_vimgrep(opts),
+                    cwd = opts.cwd,
+                })
+
+                pickers
+                    .new(opts, {
+                        debounce = 100,
+                        prompt_title = "Grep <glob>  <pattern>",
+                        finder = finder,
+                        previewer = conf.grep_previewer(opts),
+                        sorter = require("telescope.sorters").empty(),
+                    })
+                    :find()
+            end,
         },
     },
 }
