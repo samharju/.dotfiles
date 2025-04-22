@@ -5,6 +5,7 @@ import logging
 import os
 import re
 import subprocess
+import sys
 
 import requests
 
@@ -17,11 +18,13 @@ GITLAB_HOST = os.getenv("GITLAB_HOST", "")
 TOKEN = os.getenv("GITLAB_TOKEN", "")
 
 q = """
-query mergenotes($fullpaths: [String!], $source: [String!]) {
+query mergenotes($fullpaths: [String!], $source: [String!], $state: MergeRequestState) {
   projects(fullPaths: $fullpaths) {
     nodes {
-      mergeRequests(state: opened, sourceBranches: $source) {
+      mergeRequests(state: $state, sourceBranches: $source) {
         nodes {
+          state
+          mergedAt
           title
           author {
             username
@@ -32,6 +35,14 @@ query mergenotes($fullpaths: [String!], $source: [String!]) {
           mergeableDiscussionsState
           headPipeline {
             status
+          }
+          awardEmoji {
+            nodes {
+              name
+              user {
+                username
+              }
+            }
           }
           notes(filter: ONLY_COMMENTS) {
             nodes {
@@ -57,16 +68,116 @@ query mergenotes($fullpaths: [String!], $source: [String!]) {
 }
 """
 
+trace_q = """
+query mergeHeadPipelineStatus($fullpaths: [String!], $source: [String!]) {
+  projects(fullPaths: $fullpaths) {
+    nodes {
+      id
+      mergeRequests(state: opened, sourceBranches: $source) {
+        nodes {
+          headPipeline {
+            status
+            project {
+              webUrl
+            }
+            jobs {
+              nodes {
+                id
+                status
+                name
+                stage { name }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+"""
+
+
+def _parse_id(job):
+    return job.rsplit("/", 1)[1]
+
+
+def _remove_ansi(txt):
+    return re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])").sub("", txt)
+
+
+def command_failed_pipeline_logs(project, branch, color=False):
+    """
+    {
+      "data": {
+        "projects": {
+          "nodes": [
+            {
+              "mergeRequests": {
+                "nodes": [
+
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+    """
+    res = requests.post(
+        GITLAB_HOST + "/api/graphql",
+        headers={"Authorization": "Bearer " + TOKEN},
+        json={
+            "query": trace_q,
+            "variables": {"fullpaths": [project], "source": [branch]},
+        },
+    )
+
+    data = res.json()
+    logger.debug(data)
+
+    try:
+        project = data["data"]["projects"]["nodes"][0]
+        pid = _parse_id(project["id"])
+        mr = project["mergeRequests"]["nodes"][0]
+    except Exception:
+        logger.exception("no data")
+        return
+
+    head = mr["headPipeline"]
+
+    for job in head["jobs"]["nodes"]:
+        if job["status"] != "FAILED":
+            print(f'i|[{job["status"]}] {job["stage"]["name"]}: {job["name"]}')
+        if job["status"] == "FAILED":
+            id_ = job["id"].rsplit("/", 1)[1]
+            res = requests.get(
+                f"{GITLAB_HOST}/api/v4/projects/{pid}/jobs/{id_}/trace",
+                headers={"PRIVATE-TOKEN": TOKEN},
+            )
+            print("========================================")
+            print(f'e|[{job["status"]}] {job["stage"]["name"]}: {job["name"]}')
+            print("========================================")
+            txt = res.text
+            with open("testi.txt", "w") as f:
+                f.write(txt)
+
+            if not color:
+                txt = _remove_ansi(txt)
+            lines = txt.split("\n")
+            for line in lines:
+                line = re.sub(r"(section_(start|end):\d+:\w+)|\r", "", line)
+                print(re.sub(r"^\$", "i|$", line))
+
 
 def merge_request_comments(
-    project, branch, show_resolved=False, show_merge_comments=False
+    project, branch, show_resolved=False, show_merge_comments=False, state="opened"
 ):
     res = requests.post(
         GITLAB_HOST + "/api/graphql",
         headers={"Authorization": "Bearer " + TOKEN},
         json={
             "query": q,
-            "variables": {"fullpaths": [project], "source": [branch]},
+            "variables": {"fullpaths": [project], "source": [branch], "state": state},
         },
     )
     res.raise_for_status()
@@ -91,6 +202,13 @@ def merge_request_comments(
         "status": mr["mergeStatusEnum"],
         "url": mr["webUrl"],
         "comments": [],
+        "state": mr["state"],
+        "mergedAt": mr["mergedAt"],
+        "thumbs": [
+            f'{a["user"]["username"]} 󰔓 '
+            for a in mr["awardEmoji"]["nodes"]
+            if a["name"] == "thumbsup"
+        ],
     }
 
     if mr["shouldBeRebased"]:
@@ -116,7 +234,7 @@ def merge_request_comments(
             "msg": note["body"],
         }
         if note["resolved"]:
-            n["msg"] = f'({note["resolvedBy"]}) {n["msg"]}'
+            n["msg"] = f'{n["msg"]} (closed: {note["resolvedBy"]["username"]})'
         if note.get("position"):
             n["file"] = note["position"]["newPath"]
             n["line"] = note["position"]["newLine"]
@@ -125,6 +243,45 @@ def merge_request_comments(
         out["comments"].append(n)
 
     return out
+
+
+def command_comments(fullpath, branch, show_resolved, no_merge_comments, merged):
+    mr = merge_request_comments(
+        fullpath,
+        branch,
+        show_resolved=show_resolved,
+        show_merge_comments=no_merge_comments,
+        state="merged" if merged else "opened",
+    )
+    if not mr and not merged:
+        if not command_comments(
+            fullpath, branch, show_resolved, no_merge_comments, True
+        ):
+            print("nothing to show")
+        return False
+
+    st = "i"
+    if "CANNOT" in mr["status"] or mr["pipeline"] == "FAILED":
+        st = "e"
+
+    print(f'[{mr["author"]}] {mr["title"]}')
+    print(mr["url"])
+    for thumb in mr["thumbs"]:
+        print(f"i|{thumb}")
+    if mr["state"] == "merged":
+        print(f'merged at: {mr["mergedAt"]}')
+        return True
+    else:
+        print(f'{st}|[status] {mr["status"]} [pipeline] {mr["pipeline"]}')
+
+
+    for c in mr["comments"]:
+        line = ""
+        if "file" in c:
+            line = f'{c["file"]}:{c["line"]}|{c["type"]}|[{c["author"]}] {c["msg"]}'
+        else:
+            line = f'{c["type"]}|[{c["author"]}] {c["msg"]}'
+        print(line)
 
 
 def main():
@@ -138,6 +295,11 @@ def main():
         help="do not show merge comments",
     )
     parser.add_argument("--debug", action="store_true", help="debug logging")
+
+    parser.add_argument("--pipeline", action="store_true")
+    parser.add_argument("--color", action="store_true")
+    parser.add_argument("--merged", action="store_true")
+
     args = parser.parse_args()
 
     if args.debug:
@@ -163,33 +325,17 @@ def main():
 
     logger.info("using path: %s, branch: %s", fullpath, branch)
 
-    mr = merge_request_comments(
-        fullpath,
-        branch,
-        show_resolved=args.resolved,
-        show_merge_comments=args.no_merge_comments,
-    )
-    if not mr:
-        print("nada")
-        return
-
-    st = "i"
-    if "CANNOT" in mr["status"] or mr["pipeline"] == "FAILED":
-        st = "e"
-
-    logger.info("---")
-    print(f'[{mr["author"]}] {mr["title"]}')
-    print(mr["url"])
-    print(f'{st}|[status] {mr["status"]} [pipeline] {mr["pipeline"]}')
-
-    for c in mr["comments"]:
-        line = ""
-        if "file" in c:
-            line = f'{c["file"]}:{c["line"]}|{c["type"]}|[{c["author"]}] {c["msg"]}'
-        else:
-            line = f'{c["type"]}|[{c["author"]}] {c["msg"]}'
-        print(line)
+    if args.pipeline:
+        command_failed_pipeline_logs(fullpath, branch, args.color)
+    else:
+        command_comments(
+            fullpath, branch, args.resolved, args.no_merge_comments, args.merged
+        )
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as exc:
+        print(sys.argv[0] + ": " + str(exc))
+        logger.exception("Failed")

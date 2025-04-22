@@ -77,23 +77,32 @@ cmd("MergeReviewSigns", function(args)
     vim.defer_fn(function() require("gitsigns").setqflist("attached") end, 2000)
 end, { nargs = "?" })
 
-cmd("MergeComments", function(args)
+cmd("MergeStatus", function(args)
     local cmdargs = { "gitlab-merge-stuff" }
     for _, a in ipairs(vim.split(args.args, " ")) do
-        if a == "resolved" then
-            table.insert(cmdargs, "--resolved")
-        elseif a == "no_merge_comments" then
-            table.insert(cmdargs, "--no-merge-comments")
-        end
+        if a ~= "" then table.insert(cmdargs, a) end
     end
     local callback = function(out)
         vim.print(out.stderr)
-        local d = vim.fn.getqflist({ lines = vim.split(out.stdout, "\n"), efm = "%f:%l|%t|%m,%t|%m" })
+        local d = vim.fn.getqflist({
+            lines = vim.split(out.stdout, "\n"),
+            efm = "%f:%l|%t|%m,%t|%m,%tRROR: %m,%tARNING: %m,%-G\\s%#",
+        })
         vim.fn.setqflist(d.items, "r")
+        vim.fn.setqflist({}, "a", { title = "MergeStatus" })
         vim.cmd.copen()
     end
 
     vim.system(cmdargs, {
         text = true,
     }, vim.schedule_wrap(callback))
-end, { nargs = "?", complete = function() return { "resolved", "no_merge_comments" } end })
+end, {
+    nargs = "?",
+    complete = function() return { "--resolved", "--no-merge-comments", "--pipeline", "--debug", "--merged" } end,
+})
+
+cmd("MergeConflicts", function(args)
+    vim.cmd([[ grep! "<<<<<<<\|>>>>>>>" ]])
+    vim.cmd([[copen]])
+    vim.cmd([[wincmd p]])
+end, {})
