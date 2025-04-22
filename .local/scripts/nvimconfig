@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
 
+d="$HOME/.config/nvim"
 if [ -z "$TMUX" ]; then
-    tmux new-session -s nvimconfig -c "$HOME" "GIT_DIR=$HOME/.dotfiles GIT_WORK_TREE=$HOME nvim"
+    tmux new-session -s nvimconfig -c "$d" "GIT_DIR=$HOME/.dotfiles GIT_WORK_TREE=$HOME nvim"
 else
-    tmux new-window -n nvimconfig -c "$HOME" "GIT_DIR=$HOME/.dotfiles GIT_WORK_TREE=$HOME nvim"
+    tmux new-window -n nvimconfig -c "$d" "GIT_DIR=$HOME/.dotfiles GIT_WORK_TREE=$HOME nvim"
 fi
 
