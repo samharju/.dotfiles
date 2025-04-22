@@ -60,7 +60,7 @@ return {
                     end,
                 },
                 performance = {
-                    max_view_entries = 10,
+                    max_view_entries = 50,
                 },
                 window = {
                     completion = cmp.config.window.bordered(),
@@ -158,9 +158,23 @@ return {
                     end, { "i", "s" }),
                     ["<C-a>"] = cmp.mapping(function(fallback)
                         if cmp.visible() then
+                            fallback()
+                        else
                             cmp.complete({
                                 sources = { name = "buffer" },
                             })
+                        end
+                    end, { "i", "s" }),
+                    ["<C-u>"] = cmp.mapping(function(fallback)
+                        if cmp.visible() then
+                            cmp.scroll_docs(-2)
+                        else
+                            fallback()
+                        end
+                    end, { "i", "s" }),
+                    ["<C-d>"] = cmp.mapping(function(fallback)
+                        if cmp.visible() then
+                            cmp.scroll_docs(2)
                         else
                             fallback()
                         end

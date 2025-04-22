@@ -19,6 +19,8 @@ return {
     config = function()
         local lspconfig = require("lspconfig")
 
+        local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
         for _, ls in ipairs({
             "gopls",
             "docker_compose_language_service",
@@ -26,10 +28,11 @@ return {
             "ansiblels",
             "bashls",
         }) do
-            lspconfig[ls].setup({})
+            lspconfig[ls].setup({ capabilities = capabilities })
         end
 
         lspconfig.basedpyright.setup({
+            capabilities = capabilities,
             on_init = function(client, _) client.server_capabilities.semanticTokensProvider = nil end,
             settings = {
                 basedpyright = {
@@ -51,6 +54,7 @@ return {
         })
 
         lspconfig.lua_ls.setup({
+            capabilities = capabilities,
             settings = {
                 Lua = {
                     diagnostics = {
