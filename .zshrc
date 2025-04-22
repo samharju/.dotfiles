@@ -112,6 +112,7 @@ log TZ=$TZ
 log GPG_TTY=$GPG_TTY
 log SUDO_EDITOR=$SUDO_EDITOR
 
+eval "$(direnv hook zsh)"
 
 # make ansible print stuff readable by default
 export ANSIBLE_STDOUT_CALLBACK=unixy
@@ -120,11 +121,12 @@ log ANSIBLE_STDOUT_CALLBACK=$ANSIBLE_STDOUT_CALLBACK
 # tokens and stuff from this guy
 [ -f ~/.secrets ] && source ~/.secrets
 
+if ! ping -c 1 -W 0.5 "$proxy" &> /dev/null; then
+    unset http_proxy https_proxy
+fi
+
 # dotfile sanity check
 if [[ -z $(fd --max-depth 1 --type f --hidden --changed-within=12hour .dotfilescheck ~/) ]]; then
-    if ! ping -c 1 -W 1 "$proxy" &> /dev/null; then
-        unset http_proxy https_proxy
-    fi
     GIT_DIR=$HOME/.dotfiles GIT_WORK_TREE=$HOME gitpullneeded
     touch ~/.dotfilescheck
 fi

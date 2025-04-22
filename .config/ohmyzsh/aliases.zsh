@@ -54,6 +54,10 @@ alias gloo='git log --oneline --decorate $(git merge-base $(git_main_branch) HEA
 
 alias chmox="chmod +x"
 
-alias glor='git log --pretty="%C(auto)%h%Creset %C(auto)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset"'
 
 alias rm='rm -v'
+alias G='git'
+
+alias glor='git log --all --graph --decorate=short --pretty="%C(auto)%h%C(auto)%d %Cgreen%ar %Cblue%<|(50)%an%Creset %s"'
+
+alias whatnow='diff -d ~/.cache/gitlab_status_prev ~/.cache/gitlab_status_now'
