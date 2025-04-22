@@ -4,8 +4,15 @@ return {
         opts = {
             clear_before_yeet = false,
             retry_last_target_on_failure = true,
-            hide_term_buffers = true,
+            custom_eval = function(cmd_string)
+                if string.match(cmd_string, "<file>") then
+                    local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":.")
+                    cmd_string = string.gsub(cmd_string, "<file>", fname)
+                end
+                return cmd_string
+            end,
         },
+        dev = true,
         keys = {
             {
                 "<leader><BS>",
