@@ -6,4 +6,5 @@ if tmux show -g | grep -q "status on"; then
 else
     tmux set -g status on
     tmux set status on
+    tmux set -g status-position top
 fi

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+
+blink() {
+    if [[ "$(tmux show -gv status)" == "off" ]]; then
+        tmux display "#S #{W:#{E:window-status-format},#{E:window-status-current-format}}"
+    fi
+}
+
+case "$1" in
+    next-window)
+        tmux select-window -t :-
+        ;;
+    prev-window)
+        tmux select-window -t :+
+        ;;
+    next-session)
+        tmux switch-client -p
+        ;;
+    prev-session)
+        tmux switch-client -n
+        ;;
+esac
+
+tmux refresh-client -S
+blink
+
