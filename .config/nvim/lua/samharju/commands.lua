@@ -10,6 +10,41 @@ cmd("Scratch", function(args)
     vim.bo.swapfile = false
     if args.args then vim.bo.filetype = args.args end
 end, { nargs = "?", complete = function() return { "python", "markdown" } end })
+
+cmd("JQNIZE", function()
+    local ts = vim.treesitter
+
+    local n = ts.get_node()
+    if n == nil then return end
+    local txt = ts.get_node_text(n, 0)
+
+    txt = txt:gsub("^'", "")
+    txt = txt:gsub("'$", "")
+    local res = vim.system({ "jq" }, {
+        stdin = txt,
+        text = true,
+    }):wait()
+
+    local buf = vim.api.nvim_create_buf(false, true)
+    vim.keymap.set("n", "<CR>", "ggyG", { buffer = buf })
+    vim.keymap.set("n", "q", function() vim.api.nvim_buf_delete(buf, {}) end, { buffer = buf })
+
+    local output = vim.split("'\n" .. res.stdout .. "'", "\n")
+    if res.code ~= 0 then output = vim.split(res.stderr, "\n") end
+
+    vim.api.nvim_buf_set_text(buf, 0, 0, -1, -1, output)
+
+    local w = math.floor(vim.o.columns * 0.8)
+    local h = math.floor(vim.o.lines * 0.8)
+    local col = math.floor((vim.o.columns - w) / 2)
+    local row = math.floor((vim.o.lines - h) / 2)
+    vim.api.nvim_open_win(
+        buf,
+        true,
+        { relative = "editor", col = col, row = row, width = w, height = h, style = "minimal", border = "rounded" }
+    )
+end, {})
+
 cmd("Breakpoints", function()
     vim.cmd([[ silent grep! -F 'breakpoint()']])
     vim.cmd([[ copen ]])
