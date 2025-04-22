@@ -6,13 +6,26 @@ local M = {
         conflicts = 0,
     },
     branch = "",
+    last_output = "",
+    ticks = {},
 }
 
 function M.update()
-    M.check_branch()
+    if M.branch == "" then M.check_branch() end
     if M.branch == "" then return "", "" end
 
-    M.parse_git_diff()
+    local refresh = false
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_is_loaded(buf) and vim.api.nvim_get_option_value("buflisted", { buf = buf }) == true then
+            local ct = vim.api.nvim_buf_get_changedtick(buf)
+            if M.ticks[buf] ~= ct then
+                M.ticks[buf] = ct
+                refresh = true
+            end
+        end
+    end
+
+    if refresh then M.parse_git_diff() end
 
     local status = M.diff_status
 
@@ -20,13 +33,16 @@ function M.update()
     if status.added > 0 then table.insert(output, string.format("%%#StatusLineAdded#+%s%%*", status.added)) end
     if status.changed > 0 then table.insert(output, string.format("%%#StatusLineChanged#~%s%%*", status.changed)) end
     if status.removed > 0 then table.insert(output, string.format("%%#StatusLineRemoved#-%s%%*", status.removed)) end
-    if status.conflicts > 0 then table.insert(output, string.format("%%#User3#!%s%%*", status.conflicts)) end
+    if status.conflicts > 0 then
+        table.insert(output, string.format("%%#StatusLineRemoved#!%s%%*", status.conflicts))
+    end
 
-    return M.branch, table.concat(output, " ")
+    M.last_output = table.concat(output, " ")
+    return M.branch, M.last_output
 end
 
 function M.check_branch()
-    vim.system({ "git", "-C", vim.loop.cwd(), "rev-parse", "--abbrev-ref", "HEAD" }, { text = true }, function(out)
+    vim.system({ "git", "-C", vim.uv.cwd(), "rev-parse", "--abbrev-ref", "HEAD" }, { text = true }, function(out)
         local b = out.stdout:match("([^\n]+)")
         if b ~= nil then
             M.branch = b
@@ -41,7 +57,7 @@ function M.parse_git_diff()
     local removed = 0
     local conflicts = 0
 
-    vim.system({ "git", "-C", vim.loop.cwd(), "--no-pager", "diff", "--unified=0" }, { text = true }, function(out)
+    vim.system({ "git", "-C", vim.uv.cwd(), "--no-pager", "diff", "--unified=0" }, { text = true }, function(out)
         for line in out.stdout:gmatch("[^\n]+") do
             if line:match([[^@@@]]) then
                 conflicts = conflicts + 1

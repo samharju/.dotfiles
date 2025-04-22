@@ -8,31 +8,29 @@ local sepright = string.format("%%#StatusLineComment#%s%%*", "  ")
 
 function M.update()
     local branch, diff = git.update()
-    local diag = c.diagnostics()
+
+    local gst = branch
+    if diff ~= "" and diff ~= nil then gst = branch .. " " .. diff end
+
     local f = c.formatters()
     if f ~= "" then f = string.format("%%#StatusLineComment#%s%%*", f) end
 
     local left = {
-        branch,
-        diff,
+        gst,
         c.harpoons(),
-        "%f",
+        vim.bo.buflisted and "%f" or "",
     }
 
     local right = {
-        c.python_version(),
+        f,
         c.active_lsps(),
-        vim.bo.filetype,
+        c.python_version() or vim.bo.filetype,
         "%-8.(%l,%v%) %P",
     }
 
     local status_parts = {
         "%<",
         c.join(left, sepleft),
-        " ",
-        diag,
-        " ",
-        c.lint_progress(),
         "%=",
         c.join(right, sepright),
     }

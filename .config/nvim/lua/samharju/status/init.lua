@@ -1,37 +1,68 @@
-local tabline = ""
-local statusline = ""
+local M = {
+    _tabline = "",
+    _statusline = "",
+    tabline = false,
+    status = true,
+    winbar = true,
+}
 
-_G.MyStatus = function() return statusline end
-_G.Tabline = function() return tabline end
-
-local function update()
-    statusline = require("samharju.status.statusline").update()
-    -- tabline = require("samharju.status.tabline").update()
+local winbars = function()
+    for _, winid in ipairs(vim.api.nvim_list_wins()) do
+        if vim.api.nvim_win_get_config(winid).relative == "" then
+            vim.wo[winid].winbar = require("samharju.status.winbar").update(winid)
+        end
+    end
 end
 
-vim.opt.showtabline = 1
--- vim.opt.tabline = "%{%v:lua.Tabline()%}"
-vim.opt.laststatus = 3
-vim.opt.statusline = "%{%v:lua.MyStatus()%}"
-vim.opt.winbar = "%t %h%r%m"
-
-local group = vim.api.nvim_create_augroup("samharju_statusline", { clear = true })
-require("samharju.status.hl").setup(group)
-
---- statusline updates with some sane throttling
 local throttle = false
+local timer = vim.uv.new_timer()
 
-vim.api.nvim_create_autocmd({ "BufWritePost", "VimEnter", "BufEnter", "CmdlineLeave", "DiagnosticChanged" }, {
-    group = group,
-    callback = update,
-})
+function M.update_now()
+    if M.status then M._statusline = require("samharju.status.statusline").update() end
+    if M.tabline then M._tabline = require("samharju.status.tabline").update() end
+    if M.winbar then winbars() end
+end
 
-vim.api.nvim_create_autocmd({ "CursorMoved" }, {
-    group = group,
-    callback = function()
-        if throttle then return end
-        throttle = true
-        update()
-        vim.defer_fn(function() throttle = false end, 1000)
-    end,
-})
+function M.update()
+    if throttle then return end
+    vim.defer_fn(function() throttle = false end, 1000)
+    throttle = true
+    M.update_now()
+end
+
+function M.setup()
+    local group = vim.api.nvim_create_augroup("samharju_statusline", { clear = true })
+
+    if M.tabline then
+        vim.opt.showtabline = 2
+        _G.MyTabline = function() return M._tabline end
+        vim.opt.tabline = "%{%v:lua.MyTabline()%}"
+    end
+
+    if M.status then
+        _G.MyStatus = function() return M._statusline end
+        vim.opt.statusline = "%{%v:lua.MyStatus()%}"
+    end
+
+    require("samharju.status.hl").setup(group)
+
+    vim.api.nvim_create_autocmd({ "BufWritePost", "VimEnter", "BufEnter" }, {
+        group = group,
+        callback = M.update_now,
+    })
+
+    vim.api.nvim_create_autocmd({ "User" }, {
+        pattern = "FugitiveChanged",
+        group = group,
+        callback = require("samharju.status.git").check_branch,
+    })
+
+    vim.api.nvim_create_autocmd({ "CursorMoved" }, {
+        group = group,
+        callback = M.update,
+    })
+
+    vim.uv.timer_start(timer, 0, 5000, vim.schedule_wrap(M.update))
+end
+
+M.setup()

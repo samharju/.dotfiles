@@ -9,7 +9,7 @@ function M.python_version()
     if active then
         pyv = string.format("%%#StatusLineWarn#venv: %s%%*", pyv)
     elseif exists then
-        pyv = string.format("%%#StatusLineError#  venv not active%%*")
+        pyv = string.format("%%#StatusLineError# venv%%*")
     end
     return pyv
 end
@@ -25,9 +25,9 @@ function M.harpoons()
     local c = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":.")
     for _, h in ipairs(list) do
         if h.value == c then
-            table.insert(val, "o")
+            table.insert(val, "●")
         else
-            table.insert(val, "%#StatusLineComment#+%*")
+            table.insert(val, "%#StatusLineComment#◌%*")
         end
     end
 
