@@ -2,14 +2,21 @@
  (expression_statement
    (call 
      arguments: (argument_list 
-                  (string 
-                    (string_content) @injection.content
-                    ))) 
+                    [
+                     (string
+                       (string_content) @injection.content)
+                     (concatenated_string 
+                       (string
+                         (string_content) @injection.content))
+                     (_ 
+                       (concatenated_string 
+                          (string
+                            (string_content) @injection.content)))
+                    ]
+                )
+     ) 
    )
- [
   (#any-contains? @injection.content "SELECT" "UPDATE" "DELETE" "INSERT" "CREATE" "ALTER" "DROP" "FROM" "BEGIN" "TABLE" "SHOW" "USE" )
-  (#match? @injection.content ";$")
-  ]
  (#set! injection.language "sql")
  )
 
@@ -22,14 +29,12 @@
                (string_content) @injection.content)
              (concatenated_string 
                (string
-                 (string_content) @injection.content)
-               )
-             (_ (concatenated_string 
+                 (string_content) @injection.content))
+             (_ 
+               (concatenated_string 
                   (string
-                    (string_content) @injection.content)
-                  ))
-
-             ]
+                    (string_content) @injection.content)))
+            ]
      )
    )
  [
