@@ -37,6 +37,7 @@ if vim.g.quitequiet_flavor == "transparent" then p.bg = "NONE" end
 
 hl("CurSearch", { fg = p.white, bg = p.blue_medium })
 hl("CursorColumn", "CursorLine")
+hl("ColorColumn", "CursorLine")
 hl("CursorLine", { bg = p.blue_dark })
 hl("CursorLineNr", "CursorLine")
 hl("ErrorMsg", { fg = p.red })

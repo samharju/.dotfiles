@@ -12,12 +12,13 @@ vim.opt.incsearch = true
 vim.opt.isfname:append("@-@")
 vim.opt.listchars = { eol = "↴", trail = "·", nbsp = "+", tab = "» ", leadmultispace = "›   " }
 vim.opt.list = true
-vim.opt.nu = true
-vim.opt.relativenumber = true
+vim.opt.nu = false
+vim.opt.relativenumber = false
 vim.opt.scrolloff = 4
 vim.opt.sidescrolloff = 4
 vim.opt.shiftwidth = 4
 vim.opt.signcolumn = "yes"
+vim.opt.laststatus = 3
 vim.opt.smartindent = true
 vim.opt.softtabstop = 4
 vim.opt.swapfile = false
@@ -34,7 +35,14 @@ vim.opt.foldtext = ""
 vim.opt.foldenable = true
 vim.o.foldlevel = 10
 vim.opt.textwidth = 0
-vim.opt.grepprg = "rg --vimgrep --hidden"
+vim.opt.grepprg = "rg --vimgrep --hidden --smart-case"
+
+local signs = {
+    [vim.diagnostic.severity.ERROR] = "󰚌 ",
+    [vim.diagnostic.severity.WARN] = "󰯈 ",
+    [vim.diagnostic.severity.INFO] = "󰋼 ",
+    [vim.diagnostic.severity.HINT] = "󰩔 ",
+}
 
 vim.diagnostic.config({
     underline = true,
@@ -47,7 +55,10 @@ vim.diagnostic.config({
             return message
         end,
         source = "if_many",
-        prefix = "●",
+        prefix = function(diag, i, t)
+            if t > 1 and i ~= t then return "" end
+            return signs[diag.severity]
+        end,
     },
     severity_sort = true,
     float = {

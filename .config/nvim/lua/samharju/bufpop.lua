@@ -36,8 +36,8 @@ local make_config = function(h, w, style, relative)
             relative = "cursor",
             width = w + vim.o.sidescrolloff,
             height = h,
-            row = -1,
-            col = -1,
+            row = 1,
+            col = 1,
             border = "single",
         },
         bottom = {
@@ -198,8 +198,8 @@ local function bufpopup(opts)
 end
 
 ---@class bufpop.Options
----@field delay integer
----@field auto boolean
+---@field delay? integer
+---@field auto? boolean
 
 local defaultopts = {
     delay = 1000,
@@ -227,6 +227,6 @@ function M.setup(opts)
 end
 
 M.setup({ auto = false, labels = "asdfhjkl" })
-vim.keymap.set("n", "<leader>m", function() bufpopup({ style = "float", auto = false, enter = true }) end)
+vim.keymap.set("n", "<leader>m", function() bufpopup({ style = "cursor", auto = false, enter = true }) end)
 
 return M

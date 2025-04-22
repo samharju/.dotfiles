@@ -1,6 +1,7 @@
 ---@diagnostic disable: undefined-global
 return {
 
+    s({ trig = "wip", snippetType = "autosnippet" }, t("--wip--")),
     s({
         trig = "cc",
         name = "conventional commit",

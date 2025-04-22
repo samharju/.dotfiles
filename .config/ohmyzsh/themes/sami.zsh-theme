@@ -11,7 +11,7 @@ local reset="%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_PREFIX=" $blue"
 ZSH_THEME_GIT_PROMPT_SUFFIX="$reset"
 ZSH_THEME_GIT_PROMPT_DIRTY=""
-ZSH_THEME_GIT_PROMPT_CLEAN=""
+ZSH_THEME_GIT_PROMPT_CLEAN="$green✓"
 
 ZSH_THEME_GIT_PROMPT_ADDED="$green+$reset"
 ZSH_THEME_GIT_PROMPT_AHEAD="↑"
@@ -22,7 +22,7 @@ ZSH_THEME_GIT_PROMPT_MODIFIED="$red+$reset"
 ZSH_THEME_GIT_PROMPT_RENAMED="$red+$reset"
 ZSH_THEME_GIT_PROMPT_STASHED="$cyan^$reset"
 ZSH_THEME_GIT_PROMPT_UNMERGED="$red↯$reset"
-ZSH_THEME_GIT_PROMPT_UNTRACKED="$red.$reset"
+ZSH_THEME_GIT_PROMPT_UNTRACKED="${red}_${reset}"
 
 from_git_root () {
     local git_root

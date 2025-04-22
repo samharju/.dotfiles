@@ -111,9 +111,12 @@ autocmd({ "VimEnter", "ColorScheme" }, {
         vim.api.nvim_set_hl(0, "fugitiveUntrackedModifier", { link = "Special", default = true })
         vim.api.nvim_set_hl(0, "fugitiveUnstagedModifier", { link = "Changed", default = true })
         vim.api.nvim_set_hl(0, "fugitiveStagedModifier", { link = "Added", default = true })
+        vim.api.nvim_set_hl(0, "fugitiveHunk", { link = "Comment", default = true })
 
         vim.api.nvim_set_hl(0, "GitSignsCurrentLineBlame", { link = "Comment" })
-        vim.api.nvim_set_hl(0, "GitSignsAddInline", { link = "DiffText" })
+        vim.api.nvim_set_hl(0, "GitSignsAddInline", { link = "added" })
+        vim.api.nvim_set_hl(0, "GitSignsDeleteInline", { link = "removed" })
+        vim.api.nvim_set_hl(0, "GitSignsChangeInline", { link = "changed" })
 
         vim.api.nvim_set_hl(0, "TelescopeNormal", { link = "NormalFloat" })
 
