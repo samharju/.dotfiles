@@ -1,1 +1,1 @@
-vim.opt_local.listchars = { leadmultispace = "▏ " }
+vim.opt_local.listchars = { leadmultispace = "╎ " }
