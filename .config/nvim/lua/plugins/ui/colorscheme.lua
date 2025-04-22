@@ -1,7 +1,6 @@
 local colors = {
     "serene",
     "serene-transparent",
-    "eldritch",
     "sorbet",
     "zaibatsu",
     "synthweave",
@@ -9,11 +8,8 @@ local colors = {
     "rose-pine-main",
     "retrobox",
     "rose-pine-moon",
-    "tokyonight-night",
     "wildcharm",
-    "tokyonight-storm",
     "habamax",
-    "tokyonight-moon",
     "slate",
     "lunaperche",
     "default",
@@ -34,10 +30,8 @@ end
 vim.keymap.set("n", "<leader>cn", cc)
 
 return {
-    { "eldritch-theme/eldritch.nvim", opts = {} },
     { "rose-pine/neovim", name = "rose-pine" },
     { "samharju/synthweave.nvim", dev = true },
     { "samharju/serene.nvim" },
-    { "folke/tokyonight.nvim", opts = {} },
     { "bluz71/vim-moonfly-colors" },
 }
