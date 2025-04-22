@@ -3,6 +3,13 @@ local cmd = vim.api.nvim_create_user_command
 -- cmon not an editor command: W
 cmd("W", "w", {})
 
+cmd("Scratch", function(args)
+    vim.cmd([[ vert new ]])
+    vim.bo.buftype = "nofile"
+    vim.bo.bufhidden = "hide"
+    vim.bo.swapfile = false
+    if args.args then vim.bo.filetype = args.args end
+end, { nargs = "?", complete = function() return { "python", "markdown" } end })
 cmd("Breakpoints", function()
     vim.cmd([[ silent grep! -F 'breakpoint()']])
     vim.cmd([[ copen ]])
