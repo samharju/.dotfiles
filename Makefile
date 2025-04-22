@@ -8,15 +8,14 @@ go_pkg = go$(go_version).linux-amd64.tar.gz
 
 bat_pkg = bat-musl_0.23.0_amd64.deb
 
-all: apt go nvim ohmyzsh nvm python3.10 thefuck formatters fzf bat docker luarocks tmux ripgrep
+all: apt go nvim ohmyzsh nvm python3.10 thefuck formatters fzf bat docker luarocks tmux ripgrep lsps
 
-.PHONY: terminfo
 terminfo:
+	@figlet terminfo
 	curl -o ~/tempterminfo https://raw.githubusercontent.com/wez/wezterm/master/termwiz/data/wezterm.terminfo
 	tic -x -o ~/.terminfo ~/tempterminfo
 	rm ~/tempterminfo
 
-.PHONY: nvim
 nvim: .local/bin/nvim
 
 .local/bin/nvim:
@@ -31,13 +30,12 @@ nvim: .local/bin/nvim
 	nvim --version
 	nvim --headless "+Lazy! restore" +qa
 
-.PHONY: nvim-update
 nvim-update:
+	@figlet nvim-update
 	rm .local/bin/nvim || true
 	$(MAKE) nvim
 
 
-.PHONY: ohmyzsh
 ohmyzsh: .oh-my-zsh/oh-my-zsh.sh
 
 .oh-my-zsh/oh-my-zsh.sh: apt
@@ -45,7 +43,6 @@ ohmyzsh: .oh-my-zsh/oh-my-zsh.sh
 	sh -c $$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)
 
 
-.PHONY:
 nvm: .nvm/nvm.sh
 
 .nvm/nvm.sh:
@@ -67,10 +64,8 @@ nvm: .nvm/nvm.sh
 	pyenv install 3.10.13
 	pyenv global 3.10.13
 
-.PHONY: python3.10
 python3.10: .pyenv/shims/python3.10
 
-.PHONY: thefuck
 thefuck: .local/bin/thefuck
 
 .local/bin/thefuck: python3.10
@@ -81,8 +76,8 @@ thefuck: .local/bin/thefuck
 .PHONY: go
 go: /usr/local/go/bin/go
 
-.PHONY: go-update
 go-update:
+	@figlet go-update
 	@sudo rm /usr/local/go/bin/go
 	@$(MAKE) go
 
@@ -98,22 +93,21 @@ $(go_pkg):
 	go version
 
 
-.PHONY: prettier
 prettier:
 	@figlet prettier
 	npm i -g prettier
 	npm i -g @fsouza/prettierd
 
 .local/bin/stylua:
+	@figlet stylua 2.0.2
 	wget https://github.com/JohnnyMorganz/StyLua/releases/download/v2.0.2/stylua-linux-x86_64.zip
 	unzip stylua-linux-x86_64.zip -d .local/bin
 	rm stylua-linux-x86_64.zip
 
-.PHONY: formatters
+
 formatters: gotools prettier .local/bin/stylua
 
 
-.PHONY: gotools
 gotools: go
 	@figlet gotools
 	go install github.com/fatih/gomodifytags@latest
@@ -124,7 +118,6 @@ gotools: go
 	go install github.com/jesseduffield/lazygit@latest
 	go install github.com/go-delve/delve/cmd/dlv@latest
 
-.PHONY: apt
 apt:
 	@[ -n "$$(command -v figlet)" ] && figlet apt || true
 	sudo add-apt-repository -y universe
@@ -132,7 +125,6 @@ apt:
 	sudo apt install -y curl zip unzip shellcheck figlet libfuse2 zsh
 	sudo apt autoremove -y
 
-.PHONY: ripgrep
 ripgrep: /usr/bin/rg
 
 /usr/bin/rg:
@@ -140,7 +132,6 @@ ripgrep: /usr/bin/rg
 	curl -LO https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep_14.1.0-1_amd64.deb
 	sudo dpkg -i ripgrep_14.1.0-1_amd64.deb
 
-.PHONY: tmux
 tmux: /usr/local/bin/tmux
 
 /usr/local/bin/tmux:
@@ -150,7 +141,6 @@ tmux: /usr/local/bin/tmux
 	cd ~/git/tmux; git checkout 3.5a; sh autogen.sh; ./configure; make && sudo make install
 
 
-.PHONY: fzf
 fzf: .local/bin/fd
 
 .local/bin/fd:
@@ -159,7 +149,6 @@ fzf: .local/bin/fd
 	sudo apt install fd-find
 	ln -s $$(command -v fdfind) ~/.local/bin/fd
 
-.PHONY: bat
 bat: /usr/bin/bat
 
 /usr/bin/bat:
@@ -168,7 +157,6 @@ bat: /usr/bin/bat
 	sudo dpkg -i "$(bat_pkg)"
 
 
-.PHONY: docker
 docker:
 	@figlet docker
 	sudo apt update
@@ -204,13 +192,12 @@ docker:
 	sudo systemctl start docker
 
 
-.PHONY: nlua
 nlua: /bin/luarocks .luarocks/bin/nlua
 
-.PHONY: pipx
 pipx: /usr/bin/pipx
 
 /usr/bin/pipx:
+	@figlet pipx
 	sudo apt update
 	sudo apt install pipx
 	pipx ensurepath
@@ -229,7 +216,6 @@ pipx: /usr/bin/pipx
 	luarocks config lua_interpreter nlua
 	luarocks config variables.LUA_INCDIR /usr/include/luajit-2.1
 
-.PHONY: busted
 busted: .luarocks/bin/busted
 
 .luarocks/bin/busted:
@@ -243,17 +229,21 @@ busted: .luarocks/bin/busted
 lsps: basedpyright bashls gopls luals dockerls composels treesittercli
 
 basedpyright: pipx
-	pipx install basedpyright --force
+	@figlet basedpyright
+	pipx install basedpyright==1.29.0
 
 bashls:
+	@figlet bashls
 	npm i -g bash-language-server
 
 gopls:
+	@figlet gopls
 	go install golang.org/x/tools/gopls@latest
 
 luals: .local/bin/lua-language-server
 
 .local/bin/lua-language-server:
+	@figlet luals 3.13.6
 	wget https://github.com/LuaLS/lua-language-server/releases/download/3.13.6/lua-language-server-3.13.6-linux-x64.tar.gz
 	mkdir -p .local/share/nvim/luals
 	tar -xf lua-language-server-3.13.6-linux-x64.tar.gz -C .local/share/nvim/luals
@@ -261,16 +251,30 @@ luals: .local/bin/lua-language-server
 	rm lua-language-server-3.13.6-linux-x64.tar.gz
 
 dockerls:
+	@figlet dockerls
 	npm i -g dockerfile-language-server-nodejs
 
 
 composels:
+	@figlet composels
 	npm i -g @microsoft/compose-language-service
 
 treesittercli:
+	@figlet tree-sitter-cli
 	npm i -g tree-sitter-cli
 
 ansiblels:
+	@figlet ansiblels
 	npm i -g @ansible/ansible-language-server
+
+
+# linters
+
+linters: .local/bin/hadolint
+
+.local/bin/hadolint:
+	wget https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
+	mv hadolint-Linux-x86_64 .local/bin/hadolint
+	chmod +x .local/bin/hadolint
 
 
