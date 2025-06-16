@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-fd --hidden --no-ignore --type directory "\.git$" "$HOME" \
+fd --hidden --no-ignore --type directory "\.git$" \
+    "$HOME/.local/share" \
+    "$HOME/git" \
+    "$HOME/plugins" \
     | sed -e 's|/.git$||' \
     | fzf \
     --prompt ' ...' \

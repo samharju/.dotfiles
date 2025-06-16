@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+color=always
+[ -n "$1" ] && color=auto
+diff --color=$color -d ~/.cache/gitlab_status_prev ~/.cache/gitlab_status_now

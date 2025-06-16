@@ -1,5 +1,5 @@
 
-review ()
+worktree-checkout ()
 {
     commitish="$1"
     # go to project root to get folder name
@@ -10,8 +10,17 @@ review ()
     new_wt="$HOME/wt-dump/$project/$commitish"
     git worktree add "$new_wt" "$commitish"
 
-    echo "$new_wt"
-    cd "$new_wt"
+    sessari="$project-$commitish"
+    if ! tmux has-session -t="$sessari" 2> /dev/null; then
+        tmux new-session -ds "$sessari" -c "$new_wt"
+    fi
+
+    if [ -z "$TMUX" ]; then
+        tmux attach -t "$sessari"
+    else
+        tmux switch-client -t "$sessari"
+    fi
+    tmux refresh-client -S
 }
 
-compdef _git review=git-checkout
+compdef _git worktree-checkout=git-checkout

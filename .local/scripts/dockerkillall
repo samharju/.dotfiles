@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+
+docker ps
+docker ps -q | xargs docker rm -f
+
