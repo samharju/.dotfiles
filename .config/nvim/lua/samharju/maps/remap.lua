@@ -33,6 +33,7 @@ vim.keymap.set("n", "<leader>w", vim.diagnostic.open_float, { desc = "Open diagn
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setqflist, { desc = "Diagnostic qf" })
+vim.keymap.set("n", "<leader>d", vim.diagnostic.setloclist, { desc = "Diagnostic qf" })
 
 local grp = vim.api.nvim_create_augroup("sami_remap", { clear = true })
 

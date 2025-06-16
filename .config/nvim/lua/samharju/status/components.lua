@@ -2,6 +2,40 @@ local venv = require("samharju.venv")
 
 local M = {}
 
+local ctr = 0
+local ollama_str = ""
+
+local function ttl(timestamp)
+    local year, mon, day, h, m, s = timestamp:match("(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+).*")
+    return math.floor((os.time({ year = year, month = mon, day = day, hour = h, min = m, sec = s }) - os.time()) / 60)
+end
+
+function M.ollama()
+    if os.time() - ctr > 10 then
+        ctr = os.time()
+        vim.system({ "curl", "-s", "http://10.0.2.2:11434/api/ps" }, { text = true }, function(out)
+            if out.code ~= 0 then return end
+            local str = {}
+            local d = vim.json.decode(out.stdout)
+            for _, model in ipairs(d.models) do
+                table.insert(
+                    str,
+                    string.format(
+                        "%%#StatusLineComment#%s %s%%%% GPU (%smin)%%*",
+                        model.name,
+                        math.floor(model.size_vram * 100 / model.size),
+                        ttl(model.expires_at)
+                    )
+                )
+            end
+
+            ollama_str = table.concat(str, ",")
+        end)
+    end
+
+    return ollama_str .. (vim.g.model_churning or "")
+end
+
 function M.python_version()
     if vim.bo.filetype ~= "python" then return "" end
 

@@ -12,7 +12,7 @@ function M.update(winid)
     local diag = c.diagnostics(buf)
 
     return c.join({
-        "%t",
+        "%f",
         diag,
         c.lint_progress(buf),
     }, " ")

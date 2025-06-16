@@ -19,6 +19,7 @@ function M.update()
         gst,
         c.harpoons(),
         vim.bo.buflisted and "%f" or "",
+        c.ollama(),
     }
 
     local right = {

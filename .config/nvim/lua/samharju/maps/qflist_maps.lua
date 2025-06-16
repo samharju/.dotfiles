@@ -50,4 +50,3 @@ vim.keymap.set("n", "[a", function()
     vim.cmd.lopen()
     vim.cmd("wincmd p")
 end, { desc = "Add current pos to loclist" })
-

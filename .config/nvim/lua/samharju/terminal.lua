@@ -89,6 +89,5 @@ end
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
 -- open terminal without spamming new windows
 vim.keymap.set("n", "<leader><tab>", M.float_terminal)
-vim.keymap.set("t", "<leader><tab>", M.float_terminal)
 
 return M
