@@ -60,4 +60,4 @@ alias G='git'
 
 alias glor='git log --all --graph --decorate=short --pretty="%C(auto)%h%C(auto)%d %Cgreen%ar %Cblue%<|(50)%an%Creset %s"'
 
-alias whatnow='diff -d ~/.cache/gitlab_status_prev ~/.cache/gitlab_status_now'
+alias dockerpyv='fd Dockerfile -x grep -oP "(?<=python:)[\d\.]+"'

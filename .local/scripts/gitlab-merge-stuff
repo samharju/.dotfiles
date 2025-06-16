@@ -1,4 +1,4 @@
-#!/home/sami/.pyenv/shims/python3.10
+#!/home/sami/.pyenv/shims/python3.11
 
 import argparse
 import logging
@@ -157,9 +157,8 @@ def command_failed_pipeline_logs(project, branch, color=False):
             print("========================================")
             print(f'e|[{job["status"]}] {job["stage"]["name"]}: {job["name"]}')
             print("========================================")
+
             txt = res.text
-            with open("testi.txt", "w") as f:
-                f.write(txt)
 
             if not color:
                 txt = _remove_ansi(txt)
@@ -273,7 +272,6 @@ def command_comments(fullpath, branch, show_resolved, no_merge_comments, merged)
         return True
     else:
         print(f'{st}|[status] {mr["status"]} [pipeline] {mr["pipeline"]}')
-
 
     for c in mr["comments"]:
         line = ""

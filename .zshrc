@@ -108,6 +108,7 @@ GPG_TTY=$(tty)
 export GPG_TTY
 export SUDO_EDITOR=/home/sami/.local/bin/nvim
 export EDITOR=/home/sami/.local/bin/nvim
+export PIPX_HOME=/data2/pipx
 log TZ=$TZ
 log GPG_TTY=$GPG_TTY
 log SUDO_EDITOR=$SUDO_EDITOR

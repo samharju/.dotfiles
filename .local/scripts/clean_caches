@@ -11,8 +11,3 @@ npm cache clean --force
 pip cache purge
 
 docker system prune --volumes -f
-
-if ! poetry cache list --no-ansi |& grep -q "No caches found"; then
-    poetry cache list --no-ansi | xargs -n1 -p poetry cache clear --all
-fi
-

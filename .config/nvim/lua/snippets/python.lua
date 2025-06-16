@@ -19,7 +19,7 @@ return {
         )
     ),
     s({ trig = "main", name = "main" }, t({ 'if __name__ == "__main__":', "\t" })),
-    s({ trig = "pprint" }, fmt('__import__("pprint").pprint({})', { i(1) })),
+    s({ trig = "pprint" }, fmt('__import__("pprint").pprint({}', { i(1) })),
     s({ trig = "bpp", snippetType = "autosnippet" }, t("breakpoint()")),
     s(
         { trig = "deflog", snippetType = "autosnippet" },

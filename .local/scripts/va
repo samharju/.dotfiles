@@ -56,6 +56,11 @@ EOF
 
 cprint "$gray" "$title"
 
+git_dir="$(git rev-parse --git-dir 2>/dev/null)"
+if [[ $? -eq 0 ]]; then
+    cd $git_dir
+fi
+
 while [[ -z $venvpath ]]
 do
     if [[ "$(pwd)" == ~ ]]; then
@@ -82,6 +87,8 @@ do
         cprint "$gray" "found $venvpath"
         . "$venvpath"
         echo "${green}OK: ${nocolor}VIRTUAL_ENV=$VIRTUAL_ENV"
+        cprint "$yellow" "${$(which python)#$rt/}"
+        cprint "$yellow" "${$(which pip)#$rt/}"
         cprint "$yellow" "$(python -V)"
         alias dea='[ -n "$VIRTUAL_ENV" ] && deactivate && unalias dea'
         cprint "$gray" "Run 'dea' to deactivate"

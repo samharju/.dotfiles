@@ -8,7 +8,7 @@ go_pkg = go$(go_version).linux-amd64.tar.gz
 
 bat_pkg = bat-musl_0.23.0_amd64.deb
 
-all: apt go nvim ohmyzsh nvm python3.10 thefuck formatters fzf bat docker luarocks tmux ripgrep lsps
+all: apt go nvim ohmyzsh nvm python3.11 thefuck formatters fzf bat docker luarocks tmux ripgrep lsps ansible
 
 terminfo:
 	@figlet terminfo
@@ -50,8 +50,8 @@ nvm: .nvm/nvm.sh
 	curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 
 
-.pyenv/bin/pyenv:
-	@figlet pyenv
+pyenvdeps:
+	@figlet pyenvdeps
 	# https://github.com/pyenv/pyenv/wiki#suggested-build-environment
 	sudo apt update
 	sudo apt install -y build-essential libssl-dev zlib1g-dev \
@@ -59,18 +59,22 @@ nvm: .nvm/nvm.sh
 		libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
 	sudo apt autoremove -y
 
-.pyenv/shims/python3.10: .pyenv/bin/pyenv
-	@figlet python3.10
-	pyenv install 3.10.13
-	pyenv global 3.10.13
+.pyenv/bin/pyenv: pyenvdeps
+	@figlet pyenv
+	cd .pyenv && git describe
 
-python3.10: .pyenv/shims/python3.10
+.pyenv/shims/python3.11: .pyenv/bin/pyenv
+	@figlet python3.11
+	pyenv install 3.11
+	pyenv global 3.11
+
+python3.11: .pyenv/shims/python3.11
 
 thefuck: .local/bin/thefuck
 
-.local/bin/thefuck: python3.10
+.local/bin/thefuck: pipx
 	@figlet fuck
-	pip3 install thefuck --user
+	pipx install thefuck
 
 
 .PHONY: go
@@ -194,14 +198,12 @@ docker:
 
 nlua: /bin/luarocks .luarocks/bin/nlua
 
-pipx: /usr/bin/pipx
+pipx: .local/bin/pipx
 
-/usr/bin/pipx:
+.local/bin/pipx:
 	@figlet pipx
-	sudo apt update
-	sudo apt install pipx
+	python -m pip install --user pipx
 	pipx ensurepath
-	sudo pipx ensurepath --global # optional to allow pipx actions with --global argument
 
 /bin/luarocks:
 	@figlet luarocks
@@ -223,14 +225,16 @@ busted: .luarocks/bin/busted
 	luarocks --local install busted
 	busted --version
 
+ansible:
+	pipx install --include-deps ansible
 
 # language servers etc
 
-lsps: basedpyright bashls gopls luals dockerls composels treesittercli
+lsps: basedpyright bashls gopls luals dockerls composels treesittercli ansiblels
 
 basedpyright: pipx
 	@figlet basedpyright
-	pipx install basedpyright==1.29.0
+	pipx install --force basedpyright==1.29.4
 
 bashls:
 	@figlet bashls
@@ -270,11 +274,15 @@ ansiblels:
 
 # linters
 
-linters: .local/bin/hadolint
+linters: .local/bin/hadolint .local/bin/ansible-lint
 
 .local/bin/hadolint:
+	@figlet hadolint
 	wget https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
 	mv hadolint-Linux-x86_64 .local/bin/hadolint
 	chmod +x .local/bin/hadolint
 
+.local/bin/ansible-lint:
+	@figlet ansible-lint
+	pipx install ansible-lint
 
