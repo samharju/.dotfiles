@@ -27,6 +27,7 @@ return {
             "dockerls",
             "ansiblels",
             "bashls",
+            "ts_ls",
         }) do
             lspconfig[ls].setup({ capabilities = capabilities })
         end

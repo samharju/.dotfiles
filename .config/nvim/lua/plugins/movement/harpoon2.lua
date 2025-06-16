@@ -43,11 +43,15 @@ return {
 
                 vim.keymap.set("n", "<leader>x", function()
                     local items = harpoon:list().items
-                    if #harpoon:list().items > 0 then vim.cmd.e(items[1].value) end
-                    if #harpoon:list().items > 1 then
-                        vim.cmd.vsplit()
-                        vim.cmd.e(items[2].value)
+                    for i, item in ipairs(items) do
+                        if i < 4  then
+                            vim.cmd("botright vsplit " .. item.value)
+                        else
+                            vim.cmd("belowright split " .. item.value)
+                        end
                     end
+                    vim.cmd.wincmd("=")
+                    vim.cmd.wincmd("w")
                     harpoon.ui:close_menu()
                 end, { buffer = cx.bufnr })
             end,

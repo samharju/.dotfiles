@@ -181,7 +181,7 @@ return {
                         local args = { "rg" }
                         if #prompt_args == 2 then
                             table.insert(args, "-g")
-                            table.insert(args, "*" .. prompt_args[1])
+                            table.insert(args, prompt_args[1])
 
                             table.insert(args, "-e")
                             table.insert(args, prompt_args[2])
@@ -210,7 +210,7 @@ return {
                 pickers
                     .new(opts, {
                         debounce = 100,
-                        prompt_title = "Grep <glob>  <pattern>",
+                        prompt_title = "Grep <glob>:<pattern>",
                         finder = finder,
                         previewer = conf.grep_previewer(opts),
                         sorter = require("telescope.sorters").empty(),

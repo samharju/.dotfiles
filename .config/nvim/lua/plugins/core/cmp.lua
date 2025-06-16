@@ -87,10 +87,10 @@ return {
                             end,
                         },
                         keyword_length = 2,
-                        entry_filter = function(_, _)
-                            ---@diagnostic disable-next-line: param-type-mismatch
-                            return require("cmp.config.context").in_treesitter_capture({ "string", "comment" })
-                        end,
+                        -- entry_filter = function(_, _)
+                        --     ---@diagnostic disable-next-line: param-type-mismatch
+                        --     return require("cmp.config.context").in_treesitter_capture({ "comment" })
+                        -- end,
                     },
                     { name = "lazydev", group_index = 0 },
                 },
@@ -110,14 +110,14 @@ return {
                     },
                 },
                 mapping = {
-                    ["<C-l>"] = cmp.mapping(function(fallback)
+                    ["<C-k>"] = cmp.mapping(function(fallback)
                         if ls.locally_jumpable(1) then
                             ls.jump(1)
                         else
                             fallback()
                         end
                     end, { "i", "s" }),
-                    ["<C-h>"] = cmp.mapping(function(fallback)
+                    ["<C-j>"] = cmp.mapping(function(fallback)
                         if ls.locally_jumpable(-1) then
                             ls.jump(-1)
                         else
@@ -154,15 +154,6 @@ return {
                             cmp.close()
                         else
                             cmp.complete()
-                        end
-                    end, { "i", "s" }),
-                    ["<C-a>"] = cmp.mapping(function(fallback)
-                        if cmp.visible() then
-                            fallback()
-                        else
-                            cmp.complete({
-                                sources = { name = "buffer" },
-                            })
                         end
                     end, { "i", "s" }),
                     ["<C-u>"] = cmp.mapping(function(fallback)

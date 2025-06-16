@@ -16,10 +16,10 @@ return {
                     return {
                         relative = "editor",
                         border = "rounded",
-                        width = 50,
-                        height = vim.o.lines - 6,
-                        row = 2,
-                        col = 2,
+                        width = 80,
+                        height = vim.o.lines - 7,
+                        row = 3,
+                        col = 3,
                     }
                 end,
             },

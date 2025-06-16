@@ -31,7 +31,8 @@ vim.keymap.set("n", "<leader>cn", cc)
 
 return {
     { "rose-pine/neovim", name = "rose-pine" },
-    { "samharju/synthweave.nvim", dev = true },
+    { "samharju/synthweave.nvim" },
     { "samharju/serene.nvim" },
+    { "samharju/quitequiet.nvim", dev = true },
     { "bluz71/vim-moonfly-colors" },
 }
