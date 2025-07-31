@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+spec=$(fd -uuu --type file . "$HOME/.cache/tmux-load-session" | fzf --tmux)
+
+if [ -z "$spec" ]; then
+    exit 0
+fi
+
+tmux-load-session "$spec"
