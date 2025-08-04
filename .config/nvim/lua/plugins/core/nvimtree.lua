@@ -13,24 +13,26 @@ return {
                 enable = true,
                 quit_on_focus_loss = true,
                 open_win_config = function()
+                    local h = math.floor(vim.o.lines * 0.8)
+                    local row = math.floor((vim.o.lines - h) / 2) - 2
+                    local w = math.floor(vim.o.columns * 0.8)
+                    local col = math.floor((vim.o.columns - w) / 2)
                     return {
                         relative = "editor",
                         border = "rounded",
-                        width = 80,
-                        height = vim.o.lines - 7,
-                        row = 3,
-                        col = 3,
+                        width = w,
+                        height = h,
+                        row = row,
+                        col = col,
                     }
                 end,
             },
             signcolumn = "yes",
         },
         renderer = {
+            indent_width = 8,
             icons = {
                 git_placement = "after",
-                glyphs = {
-                    git = { ignored = "" },
-                },
                 show = {
                     folder = false,
                 },
@@ -38,6 +40,10 @@ return {
             highlight_diagnostics = true,
             highlight_git = true,
             group_empty = true,
+            -- indent_markers = {
+            --     enable = true,
+            --     inline_arrows = false,
+            -- },
         },
         update_focused_file = {
             enable = true,

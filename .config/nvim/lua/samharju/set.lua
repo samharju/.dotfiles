@@ -12,7 +12,7 @@ vim.opt.incsearch = true
 vim.opt.isfname:append("@-@")
 vim.opt.listchars = { eol = "↴", trail = "·", nbsp = "+", tab = "» ", leadmultispace = "›   " }
 vim.opt.list = true
-vim.opt.nu = true
+vim.opt.nu = false
 vim.opt.relativenumber = false
 vim.opt.scrolloff = 4
 vim.opt.sidescrolloff = 4
@@ -21,7 +21,7 @@ vim.opt.signcolumn = "yes"
 vim.opt.laststatus = 3
 vim.opt.smartindent = true
 vim.opt.smartcase = true
-vim.opt.ignorecase  = true
+vim.opt.ignorecase = true
 vim.opt.softtabstop = 4
 vim.opt.swapfile = false
 vim.opt.tabstop = 4

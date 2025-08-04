@@ -25,6 +25,26 @@ vim.keymap.set("n", "<leader>P", '"+P')
 
 vim.keymap.set("n", "<leader>i", ":Inspect<CR>")
 
+local nustate = 2
+vim.keymap.set("n", "<leader>'", function()
+    if nustate == 2 then
+        nustate = 0
+    else
+        nustate = nustate + 1
+    end
+
+    if nustate == 0 then
+        vim.o.number = false
+        vim.o.relativenumber = false
+    elseif nustate == 1 then
+        vim.o.number = true
+        vim.o.relativenumber = true
+    else
+        vim.o.number = true
+        vim.o.relativenumber = false
+    end
+end)
+
 -- back and forth
 vim.keymap.set("n", "<leader>;", "<C-^>", { desc = "alt buffer" })
 

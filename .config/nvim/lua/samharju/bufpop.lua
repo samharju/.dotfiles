@@ -36,8 +36,8 @@ local make_config = function(h, w, style, relative)
             relative = "cursor",
             width = w + vim.o.sidescrolloff,
             height = h,
-            row = 1,
-            col = 1,
+            row = -1,
+            col = -3,
             border = "single",
         },
         bottom = {

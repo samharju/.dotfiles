@@ -44,7 +44,7 @@ return {
                 vim.keymap.set("n", "<leader>x", function()
                     local items = harpoon:list().items
                     for i, item in ipairs(items) do
-                        if i < 4  then
+                        if i < 4 then
                             vim.cmd("botright vsplit " .. item.value)
                         else
                             vim.cmd("belowright split " .. item.value)

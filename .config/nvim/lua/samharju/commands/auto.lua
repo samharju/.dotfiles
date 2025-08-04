@@ -10,7 +10,7 @@ autocmd({ "VimEnter", "ColorScheme" }, {
     group = grp,
     pattern = "*",
     callback = function()
-        vim.fn.matchadd("Todo", [[TODO\|FIXME\|\<FIX\>]], 100)
+        vim.fn.matchadd("Todo", [[.*\(TODO\|FIXME\|\<FIX\>\|breakpoint(\?)\?\).*]], 100)
 
         vim.api.nvim_set_hl(0, "DiagnosticUnderlineError", { undercurl = true, sp = fg_from("DiagnosticError") })
         vim.api.nvim_set_hl(0, "DiagnosticUnderlineWarn", { undercurl = true, sp = fg_from("DiagnosticWarn") })

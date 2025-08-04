@@ -96,6 +96,7 @@ return {
                 },
                 sorting = {
                     comparators = {
+                        require("cmp.config.compare").kind,
                         function(entry1, entry2) return require("cmp_buffer"):compare_locality(entry1, entry2) end,
                         require("cmp.config.compare").offset,
                         require("cmp.config.compare").exact,
@@ -103,7 +104,6 @@ return {
                         require("cmp.config.compare").score,
                         require("cmp.config.compare").recently_used,
                         require("cmp.config.compare").locality,
-                        require("cmp.config.compare").kind,
                         -- require"cmp.config.compare".sort_text,
                         require("cmp.config.compare").length,
                         require("cmp.config.compare").order,
