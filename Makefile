@@ -18,15 +18,13 @@ terminfo:
 
 nvim: .local/bin/nvim
 
+.ONESHELL:
 .local/bin/nvim:
-	@figlet nvim $(nvim_version)
-	wget https://github.com/neovim/neovim/releases/download/$(nvim_version)/nvim-linux-x86_64.appimage
-	wget https://github.com/neovim/neovim/releases/download/$(nvim_version)/nvim-linux-x86_64.appimage.sha256sum
-	sha256sum -c nvim-linux-x86_64.appimage.sha256sum
-	rm nvim-linux-x86_64.appimage.sha256sum
-	chmod u+x nvim-linux-x86_64.appimage
-	mkdir -p ~/.local/bin
-	mv nvim-linux-x86_64.appimage ~/.local/bin/nvim
+	figlet nvim $(nvim_version)
+	cd ~/tooling/neovim
+	git checkout $(nvim_version)
+	make CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX=/home/sami/.local
+	make install
 	nvim --version
 	nvim --headless "+Lazy! restore" +qa
 
@@ -234,7 +232,7 @@ lsps: basedpyright bashls gopls luals dockerls composels treesittercli ansiblels
 
 basedpyright: pipx
 	@figlet basedpyright
-	pipx install --force basedpyright==1.29.4
+	pipx install --force basedpyright==1.31.0
 
 bashls:
 	@figlet bashls

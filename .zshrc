@@ -112,6 +112,7 @@ export PIPX_HOME=/data2/pipx
 log TZ=$TZ
 log GPG_TTY=$GPG_TTY
 log SUDO_EDITOR=$SUDO_EDITOR
+export BAT_THEME=OneHalfDark
 
 eval "$(direnv hook zsh)"
 
@@ -123,7 +124,10 @@ log ANSIBLE_STDOUT_CALLBACK=$ANSIBLE_STDOUT_CALLBACK
 [ -f ~/.secrets ] && source ~/.secrets
 
 if ! ping -c 1 -W 0.5 "$proxy" &> /dev/null; then
+    log removing proxy
     unset http_proxy https_proxy
+else
+    log proxy ok
 fi
 
 # dotfile sanity check
