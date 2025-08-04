@@ -7,7 +7,8 @@ local sepleft = string.format("%%#StatusLineComment#%s%%*", "  ")
 local sepright = string.format("%%#StatusLineComment#%s%%*", "  ")
 
 function M.update()
-    local branch, diff = git.update()
+    local buf = vim.api.nvim_get_current_buf()
+    local branch, diff = git.update(buf)
 
     local gst = branch
     if diff ~= "" and diff ~= nil then gst = branch .. " " .. diff end
@@ -17,9 +18,10 @@ function M.update()
 
     local left = {
         gst,
-        c.harpoons(),
         vim.bo.buflisted and "%f" or "",
+        c.diagnostics(buf),
         c.ollama(),
+        c.lint_progress(buf),
     }
 
     local right = {

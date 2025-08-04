@@ -5,30 +5,16 @@ local M = {
         removed = 0,
         conflicts = 0,
     },
+    per_file = true,
+    diff_status_files = {},
     branch = "",
-    last_output = "",
+    last_status = "",
+    last_file_status = {},
     ticks = {},
 }
 
-function M.update()
-    if M.branch == "" then M.check_branch() end
-    if M.branch == "" then return "", "" end
-
-    local refresh = false
-    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-        if vim.api.nvim_buf_is_loaded(buf) and vim.api.nvim_get_option_value("buflisted", { buf = buf }) == true then
-            local ct = vim.api.nvim_buf_get_changedtick(buf)
-            if M.ticks[buf] ~= ct then
-                M.ticks[buf] = ct
-                refresh = true
-            end
-        end
-    end
-
-    if refresh then M.parse_git_diff() end
-
-    local status = M.diff_status
-
+local function parse_diff_str(status)
+    if status == nil then return "" end
     local output = {}
     if status.added > 0 then table.insert(output, string.format("%%#StatusLineAdded#+%s%%*", status.added)) end
     if status.changed > 0 then table.insert(output, string.format("%%#StatusLineChanged#~%s%%*", status.changed)) end
@@ -37,8 +23,45 @@ function M.update()
         table.insert(output, string.format("%%#StatusLineRemoved#!%s%%*", status.conflicts))
     end
 
-    M.last_output = table.concat(output, " ")
-    return M.branch, M.last_output
+    return table.concat(output, " ")
+end
+
+function M.update(curbuf)
+    if M.branch == "" then M.check_branch() end
+    if M.branch == "" then return "", "" end
+
+    local refresh = false
+
+    if curbuf ~= nil then
+        local ct = vim.api.nvim_buf_get_changedtick(curbuf)
+        if M.ticks[curbuf] ~= ct then
+            M.ticks[curbuf] = ct
+            refresh = true
+        end
+        local fname = vim.api.nvim_buf_get_name(curbuf)
+        if refresh then
+            M.refresh_diff_stats(
+                fname,
+                function() M.last_file_status[fname] = parse_diff_str(M.diff_status_files[fname]) end
+            )
+        end
+
+        return M.branch, M.last_file_status[fname]
+    end
+
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_is_loaded(buf) and vim.api.nvim_get_option_value("buflisted", { buf = buf }) == true then
+            local ct = vim.api.nvim_buf_get_changedtick(buf)
+            if M.ticks[buf] ~= ct then
+                M.ticks[buf] = ct
+                refresh = true
+                break
+            end
+        end
+    end
+    if refresh then M.refresh_diff_stats(nil, function() M.last_status = parse_diff_str(M.diff_status) end) end
+
+    return M.branch, M.last_status
 end
 
 function M.check_branch()
@@ -51,13 +74,16 @@ function M.check_branch()
     end)
 end
 
-function M.parse_git_diff()
+function M.refresh_diff_stats(filename, callback)
     local added = 0
     local changed = 0
     local removed = 0
     local conflicts = 0
 
-    vim.system({ "git", "-C", vim.uv.cwd(), "--no-pager", "diff", "--unified=0" }, { text = true }, function(out)
+    local cmd = { "git", "-C", vim.uv.cwd(), "--no-pager", "diff", "--unified=0" }
+    if filename ~= nil then table.insert(cmd, filename) end
+
+    vim.system(cmd, { text = true }, function(out)
         for line in out.stdout:gmatch("[^\n]+") do
             if line:match([[^@@@]]) then
                 conflicts = conflicts + 1
@@ -84,7 +110,13 @@ function M.parse_git_diff()
             end
         end
 
-        M.diff_status = { added = added, changed = changed, removed = removed, conflicts = conflicts }
+        local stats = { added = added, changed = changed, removed = removed, conflicts = conflicts }
+        if filename ~= nil then
+            M.diff_status_files[filename] = stats
+        else
+            M.diff_status = stats
+        end
+        if callback ~= nil then callback() end
     end)
 end
 

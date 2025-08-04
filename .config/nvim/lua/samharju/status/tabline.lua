@@ -48,17 +48,30 @@ function M.update()
     local current = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":.")
 
     local val = {}
-    for _, harp in ipairs(harpoons()) do
-        if harp.fname == current then
-            table.insert(val, string.format("%%#TablineSel# %s ", harp.display))
-        else
-            table.insert(val, string.format("%%#Comment# %s ", harp.display))
+
+    local tabs = vim.api.nvim_list_tabpages()
+    if #tabs > 1 then
+        table.insert(val, "%#TablineFill#")
+        local ct = vim.api.nvim_get_current_tabpage()
+        for i, tab in ipairs(tabs) do
+            if tab == ct then
+                table.insert(val, " ●")
+            else
+                table.insert(val, " ◌")
+            end
         end
+    end
+    if #val > 0 then table.insert(val, " | ") end
+
+    for _, harp in ipairs(harpoons()) do
+        local item = string.format("%%#Comment# ◌ %s ", harp.display)
+        if harp.fname == current then item = string.format("%%#TablineSel# ● %s ", harp.display) end
+        table.insert(val, item)
     end
 
     if #val == 0 then return "" end
 
-    return string.format("%%#Tabline#%s%%*", table.concat(val, ""))
+    return string.format("%%#Tabline#%s%%#TabLineFill#", table.concat(val, ""))
 end
 
 return M

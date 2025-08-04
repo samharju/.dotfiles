@@ -1,9 +1,9 @@
 local M = {
     _tabline = "",
     _statusline = "",
-    tabline = false,
+    tabline = true,
     status = true,
-    winbar = true,
+    winbar = false,
 }
 
 local winbars = function()
@@ -24,8 +24,10 @@ function M.update_now()
 end
 
 function M.update()
-    if throttle then return end
-    vim.defer_fn(function() throttle = false end, 1000)
+    if throttle then
+        return
+    end
+    vim.defer_fn(function() throttle = false end, 250)
     throttle = true
     M.update_now()
 end
@@ -62,7 +64,7 @@ function M.setup()
         callback = M.update,
     })
 
-    vim.uv.timer_start(timer, 0, 5000, vim.schedule_wrap(M.update))
+    vim.uv.timer_start(timer, 0, 200, vim.schedule_wrap(M.update))
 end
 
 M.setup()
