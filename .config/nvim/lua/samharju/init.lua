@@ -9,7 +9,6 @@ require("samharju.notes")
 require("samharju.bufpop")
 require("samharju.cospaget")
 require("samharju.ollama")
-
-vim.filetype.add({ extension = { log = "log" } })
+require("samharju.custom.filetypes")
 
 vim.cmd.colorscheme("quitequiet-transparent")
