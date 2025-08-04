@@ -37,7 +37,7 @@ return {
                 file_ignore_patterns = { "%.git/" },
                 preview = { hide_on_startup = true },
                 mappings = {
-                    n = { ["<leader>n"] = require("telescope.actions.layout").toggle_preview },
+                    n = { ["<leader>p"] = require("telescope.actions.layout").toggle_preview },
                 },
                 layout_config = {
                     height = 0.5,
@@ -120,6 +120,11 @@ return {
             "<leader>fs",
             function() require("telescope.builtin").grep_string() end,
             desc = "tele grep_string",
+        },
+        {
+            "<leader>fb",
+            function() require("telescope.builtin").git_branches() end,
+            desc = "tele git_branches",
         },
         {
             "<leader>ft",
