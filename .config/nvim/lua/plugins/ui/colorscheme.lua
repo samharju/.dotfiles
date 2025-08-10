@@ -47,6 +47,7 @@ local i = math.random(1, #colors)
 local function cc()
     if i == #colors then i = 0 end
     i = i + 1
+    vim.o.background = "dark"
     vim.cmd.colorscheme(colors[i])
     vim.notify("colorscheme: " .. colors[i])
 end

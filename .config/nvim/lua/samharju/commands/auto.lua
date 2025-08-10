@@ -56,13 +56,38 @@ autocmd("BufReadPre", {
     pattern = { "*.json", "*.txt", "*.log" },
     callback = function(args)
         local ok, s = pcall(function() return vim.uv.fs_stat(vim.api.nvim_buf_get_name(args.buf)) end)
-        if not ok then return false end
-        if not s then return false end
+        if not ok or not s then return end
 
         if s.size > 1000000 then
             vim.opt_local.foldmethod = "manual"
             vim.opt_local.swapfile = false
             vim.opt_local.syntax = "off"
+            vim.treesitter.stop(args.buf)
         end
     end,
 })
+
+local function trace()
+    local buf = vim.api.nvim_create_buf(false, true)
+
+    vim.cmd.split()
+    vim.api.nvim_set_current_buf(buf)
+
+    autocmd("LspProgress", {
+        group = grp,
+        callback = function(event) vim.api.nvim_buf_set_lines(buf, -1, -1, false, vim.split(vim.inspect(event), "\n")) end,
+    })
+end
+
+local function proge()
+    autocmd("LspProgress", {
+        group = grp,
+        callback = function(event)
+            local e = event.data.params.value
+            local lsp = vim.lsp.get_client_by_id(event.data.client_id).name
+            if e.kind == "begin" then vim.print(string.format("[%s]: %s %s", lsp, e.title, e.message or "")) end
+        end,
+    })
+    vim.g.proge_created = 1
+
+end

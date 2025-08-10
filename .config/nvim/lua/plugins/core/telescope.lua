@@ -45,7 +45,7 @@ return {
             }),
             pickers = {
                 find_files = {
-                    hidden = true,
+                    hidden = false,
                     prompt_title = vim.fn.fnamemodify(vim.fn.getcwd(), ":~"),
                 },
                 buffers = {
@@ -69,6 +69,7 @@ return {
             function()
                 require("telescope.builtin").find_files({
                     no_ignore = true,
+                    hidden = true,
                     prompt_title = "All files, no ignore",
                 })
             end,
@@ -93,7 +94,7 @@ return {
                             local entry = require("telescope.actions.state").get_selected_entry()
                             require("telescope.actions").close(prompt_bufnr)
                             vim.cmd.e(entry.value)
-                            vim.defer_fn(function() require("gitsigns").next_hunk() end, 500)
+                            vim.defer_fn(function() require("gitsigns").nav_hunk('first') end, 500)
                         end)
                         return true
                     end,

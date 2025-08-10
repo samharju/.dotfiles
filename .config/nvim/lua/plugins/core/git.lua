@@ -108,12 +108,12 @@ return {
             },
             {
                 "]c",
-                function() require("gitsigns").next_hunk() end,
+                function() require("gitsigns").nav_hunk("next") end,
                 desc = "git hunk next",
             },
             {
                 "[c",
-                function() require("gitsigns").prev_hunk() end,
+                function() require("gitsigns").nav_hunk("prev") end,
                 desc = "git hunk prev",
             },
         },

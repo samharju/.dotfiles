@@ -36,7 +36,6 @@ return {
             "hrsh7th/cmp-buffer",
             "hrsh7th/cmp-cmdline",
             "hrsh7th/cmp-nvim-lsp",
-            "hrsh7th/cmp-nvim-lsp-signature-help",
             "hrsh7th/cmp-nvim-lua",
             "hrsh7th/cmp-path",
             "saadparwaiz1/cmp_luasnip",
@@ -71,7 +70,6 @@ return {
                 },
                 sources = {
                     { name = "nvim_lsp" },
-                    { name = "nvim_lsp_signature_help" },
                     { name = "luasnip", option = { show_autosnippets = true } },
                     { name = "path", option = { get_cwd = vim.uv.cwd } },
                     {

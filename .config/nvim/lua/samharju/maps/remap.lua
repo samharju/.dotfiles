@@ -48,36 +48,18 @@ end)
 -- back and forth
 vim.keymap.set("n", "<leader>;", "<C-^>", { desc = "alt buffer" })
 
--- See `:help vim.diagnostic.*` for documentation on any of the below functions
 vim.keymap.set("n", "<leader>w", vim.diagnostic.open_float, { desc = "Open diagnostic" })
-vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
-vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setqflist, { desc = "Diagnostic qf" })
 vim.keymap.set("n", "<leader>d", vim.diagnostic.setloclist, { desc = "Diagnostic qf" })
 
-local grp = vim.api.nvim_create_augroup("sami_remap", { clear = true })
-
---- Define lsp keymaps only on attach
-vim.api.nvim_create_autocmd("LspAttach", {
-    group = grp,
-    callback = function(e)
-        local opts = { buffer = e.buf }
-        local tele = require("telescope.builtin")
-        vim.keymap.set(
-            "n",
-            "<leader>fw",
-            function() tele.lsp_document_symbols({ symbol_width = 35 }) end,
-            { buffer = e.buf, desc = "tele lsp_document_symbols" }
-        )
-
-        vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-        vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-        vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-        vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-        vim.keymap.set("n", "K", vim.lsp.buf.signature_help, opts)
-        vim.keymap.set("n", "<C-k>", vim.lsp.buf.hover, opts)
-        vim.keymap.set("n", "<leader>gd", vim.lsp.buf.type_definition, opts)
-        vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-        vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
-    end,
-})
+-- lsp 0.11 ,appings:
+-- grn N vim.lsp.buf.rename()
+-- grr N vim.lsp.buf.references()
+-- gri N vim.lsp.buf.implementation()
+-- gO  N vim.lsp.buf.document_symbol()
+-- gra NV vim.lsp.buf.code_action()
+-- grt N vim.lsp.buf.type_definition()
+vim.keymap.set("n", "K", function() vim.lsp.buf.hover({ border = "rounded" }) end)
+vim.keymap.set("n", "gD", vim.lsp.buf.declaration)
+vim.keymap.set("n", "gd", vim.lsp.buf.definition)
+vim.keymap.set({ "n", "i", "s" }, "<C-k>", function() vim.lsp.buf.signature_help({ border = "rounded" }) end)
