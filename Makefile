@@ -1,6 +1,6 @@
 SHELL=/bin/bash
 
-nvim_version = v0.10.4
+nvim_version = v0.11.3
 
 go_checksum = dea9ca38a0b852a74e81c26134671af7c0fbe65d81b0dc1c5bfe22cf7d4c8858
 go_version = 1.24.0
