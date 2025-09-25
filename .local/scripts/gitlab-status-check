@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+if [ -e /tmp/gitlabnotify ]; then
+    exit 0
+fi
+
+
+res=$(~/bin/mergecheck --all --no-color --no-time --no-progress)
+if [[ $? != 0 ]]; then
+    date
+    exit
+fi
+
+now="$HOME/.cache/gitlab_status_now"
+prev="$HOME/.cache/gitlab_status_prev"
+
+if [ -e "$now" ]; then
+    mv "$now" "$prev"
+fi
+echo "$res" > "$now"
+
+diff -q "$prev" "$now"
+st=$?
+
+if [[ $st == 1 ]]; then
+    date
+    touch /tmp/gitlabnotify
+fi

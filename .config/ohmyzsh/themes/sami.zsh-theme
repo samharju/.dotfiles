@@ -20,7 +20,7 @@ ZSH_THEME_GIT_PROMPT_DELETED="$red-$reset"
 ZSH_THEME_GIT_PROMPT_DIVERGED="$red↯$reset"
 ZSH_THEME_GIT_PROMPT_MODIFIED="$red+$reset"
 ZSH_THEME_GIT_PROMPT_RENAMED="$green $reset"
-ZSH_THEME_GIT_PROMPT_STASHED="$cyan^$reset"
+ZSH_THEME_GIT_PROMPT_STASHED="${cyan} ${reset}"
 ZSH_THEME_GIT_PROMPT_UNMERGED="$red↯$reset"
 ZSH_THEME_GIT_PROMPT_UNTRACKED="${red}_${reset}"
 
@@ -35,11 +35,17 @@ from_git_root () {
     fi
 }
 
+wip () {
+    if git log -1 --pretty=%B 2> /dev/null | rg -qi wip; then
+        echo "${green}-󰲼 "
+    fi
+}
+
 local pwd='$(from_git_root)'
 local prevcmd="%(?.$green➜.$red%?)$reset"
 local jobs="%1(j.$magenta%j$reset .)"
 local timee="$grey%*$reset"
-local git='$(git_prompt_info)$(git_prompt_status)$reset'
+local git='$(git_prompt_info)$(git_prompt_status)$(wip)$reset'
 
 PROMPT="$prevcmd${git} $green${pwd}$reset ${jobs}$grey\$$reset "
 RPROMPT=''

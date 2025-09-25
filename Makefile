@@ -1,9 +1,9 @@
 SHELL=/bin/bash
 
-nvim_version = v0.11.3
+nvim_version = v0.11.4
 
-go_checksum = dea9ca38a0b852a74e81c26134671af7c0fbe65d81b0dc1c5bfe22cf7d4c8858
-go_version = 1.24.0
+go_checksum = 7716a0d940a0f6ae8e1f3b3f4f36299dc53e31b16840dbd171254312c41ca12e
+go_version = 1.25.1
 go_pkg = go$(go_version).linux-amd64.tar.gz
 
 bat_pkg = bat-musl_0.23.0_amd64.deb
@@ -22,8 +22,10 @@ nvim: .local/bin/nvim
 .local/bin/nvim:
 	figlet nvim $(nvim_version)
 	cd ~/tooling/neovim
+	git fetch --all
 	git checkout $(nvim_version)
-	make CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX=/home/sami/.local
+	#make distclean
+	make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=/home/sami/.local
 	make install
 	nvim --version
 	nvim --headless "+Lazy! restore" +qa
@@ -78,7 +80,7 @@ thefuck: .local/bin/thefuck
 .PHONY: go
 go: /usr/local/go/bin/go
 
-go-update:
+go-update: | $(go_pkg)
 	@figlet go-update
 	@sudo rm /usr/local/go/bin/go
 	@$(MAKE) go
@@ -87,7 +89,7 @@ $(go_pkg):
 	@figlet get go $(go_version)
 	wget https://go.dev/dl/$(go_pkg)
 
-/usr/local/go/bin/go: | $(go_pkg)
+/usr/local/go/bin/go: 
 	@figlet install go $(go_version)
 	sha256sum -c <<< "$(go_checksum) $(go_pkg)"
 	sudo rm -rf /usr/local/go
@@ -232,7 +234,7 @@ lsps: basedpyright bashls gopls luals dockerls composels treesittercli ansiblels
 
 basedpyright: pipx
 	@figlet basedpyright
-	pipx install --force basedpyright==1.31.0
+	pipx install --force basedpyright==1.31.4
 
 bashls:
 	@figlet bashls

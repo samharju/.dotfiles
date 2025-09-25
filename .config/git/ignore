@@ -1,38 +1,16 @@
-# direnv
-
-.envrc
-
-# yeet file
-.yeet
-
-# prefix garbage with underscores for visual and git separation
-___*
-
-# project local bug reproducing stuff
-bugs/
-debug/
-
-# dull default profile outputdir
-profile
-
-
-# editor default locations
-.vscode
-.idea
-
-
-# random log files
 *.log
-
-
-# personal modd config
-modd*.conf
-
-# mandatory note in many projects
+.envrc
+.idea
+.testmondata
+.vaultpass
+.vscode
+.yeet
 TODO.md
 TODO.txt
-
-# pyright project configurations
+___*
+debug/
+modd*.conf
+profile/
 pyrightconfig.json
 
 # ------------------------------- https://github.com/github/gitignore/blob/main/Global/Archives.gitignore

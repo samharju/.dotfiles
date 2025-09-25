@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+
+projects=$(curl "$GITLAB_HOST/api/graphql" \
+        -H "Authorization: Bearer $GITLAB_TOKEN" \
+        -H "content-type:application/json" \
+        -d '
+{
+  "query": "query { projects(membership:true, searchNamespaces:true) { nodes{ sshUrlToRepo } } }"
+}
+' | jq -r '.data.projects.nodes[].sshUrlToRepo' )
+
+sshurl=$(echo "$projects" | fzf)
+[[ -z "$sshurl" ]] && exit 0
+
+path="${sshurl#*:}"
+path="${path#*taca/}"
+path="$HOME/git/${path%.git}"
+
+
+echo $path
+[[ -e $path ]] && echo exists && exit 0
+
+
+mkdir -p $path
+git clone $sshurl $path

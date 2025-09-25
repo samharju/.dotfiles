@@ -36,6 +36,9 @@ def kill_session(name):
 
 def new_pane(pane):
     r = run_cmd(["tmux", "split-pane", "-t", pane, "-PF", "#D", "-c", "$HOME"])
+    if r.returncode != 0 and r.stderr.strip() == "no space for new pane":
+        run_cmd(["tmux", "next-layout", "-t", pane])
+        r = run_cmd(["tmux", "split-pane", "-t", pane, "-PF", "#D", "-c", "$HOME"])
     return r.stdout.strip()
 
 
@@ -64,6 +67,7 @@ def load(*, name=None, panes=None, settings=None):
 
     cur_pane = create_session(name)
     pane_run_cmds(cur_pane, panes[0])
+
     for pane_cmds in panes[1:]:
         cur_pane = new_pane(cur_pane)
         pane_run_cmds(cur_pane, pane_cmds)

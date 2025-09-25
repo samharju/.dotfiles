@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
-fd --hidden --no-ignore --type directory "\.git$" \
+fd --hidden --no-ignore "\.git$" \
     "$HOME/.local/share" \
     "$HOME/git" \
     "$HOME/plugins" \
+    "$HOME/wt-dump" \
     | sed -e 's|/.git$||' \
     | fzf \
     --prompt ' ...' \

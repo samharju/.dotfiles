@@ -106,23 +106,6 @@ def _remove_ansi(txt):
 
 
 def command_failed_pipeline_logs(project, branch, color=False):
-    """
-    {
-      "data": {
-        "projects": {
-          "nodes": [
-            {
-              "mergeRequests": {
-                "nodes": [
-
-                ]
-              }
-            }
-          ]
-        }
-      }
-    }
-    """
     res = requests.post(
         GITLAB_HOST + "/api/graphql",
         headers={"Authorization": "Bearer " + TOKEN},

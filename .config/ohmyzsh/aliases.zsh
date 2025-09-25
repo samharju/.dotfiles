@@ -37,8 +37,6 @@ alias nodotfiles='unset GIT_DIR GIT_WORK_TREE'
 alias cnf='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
 alias cnfs='cnf status -unormal'
 
-# heavy duty flaking for code review
-alias flakereview="~/.local/bin/flake8 --max-line-length=88 --extend-ignore=E501,E203,U101  --extend-select=B9 --enable-extensions=G --unused-arguments-ignore-variadic-names --unused-arguments-ignore-dunder"
 
 
 # env
@@ -61,3 +59,10 @@ alias G='git'
 alias glor='git log --all --graph --decorate=short --pretty="%C(auto)%h%C(auto)%d %Cgreen%ar %Cblue%<|(50)%an%Creset %s"'
 
 alias dockerpyv='fd Dockerfile -x grep -oP "(?<=python:)[\d\.]+"'
+
+
+alias cospagetchat='nvim -c "CospagetChat" -c "wincmd o"'
+
+alias forkpointdiff='git diff --name-only --diff-filter=d `git merge-base --fork-point origin/master`..HEAD'
+
+alias gbt='git branch --sort "authordate" --format "%(HEAD) %(align:width=12)%(authordate:short)%(end)%(if)%(HEAD)%(then)%(color:green)%(end)%(align:width=32)%(refname:short)%(end)%(color:reset) %(objectname:short) %(subject)"'

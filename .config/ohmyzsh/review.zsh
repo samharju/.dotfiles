@@ -8,7 +8,10 @@ worktree-checkout ()
 
     # create worktree to dump
     new_wt="$HOME/wt-dump/$project/$commitish"
-    git worktree add "$new_wt" "$commitish"
+
+    if [ ! -d "$new_wt" ]; then
+        git worktree add "$new_wt" "$commitish"
+    fi
 
     sessari="$project-$commitish"
     if ! tmux has-session -t="$sessari" 2> /dev/null; then
