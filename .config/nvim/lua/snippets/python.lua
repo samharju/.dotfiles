@@ -18,7 +18,29 @@ return {
             }
         )
     ),
-    s({ trig = "main", name = "main" }, t({ 'if __name__ == "__main__":', "\t" })),
+    s(
+        { trig = "main", name = "main" },
+        fmt(
+            [[
+            def main():
+                {}
+
+            if __name__ == "__main__":
+                main()
+            ]],
+            { i(0) }
+        )
+    ),
+    s(
+        { trig = "def", name = "funcdef" },
+        fmt(
+            [[
+            def {}():
+                pass
+            ]],
+            { i(0) }
+        )
+    ),
     s({ trig = "pprint" }, fmt('__import__("pprint").pprint({}', { i(1) })),
     s({ trig = "bpp", snippetType = "autosnippet" }, t("breakpoint()")),
     s(
