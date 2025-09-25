@@ -1,15 +1,26 @@
+vim.keymap.set("n", "<leader>bm", function() require("dap-python").test_method() end)
+
 vim.opt_local.errorformat = {
     '  File "%f"\\, line %l%m',
-    "ERROR %f::%o - %m",
-    "%+GFAILED %.%#",
+
+    "%Z=%.%#",
+    "%Z_%.%#",
+    "%CE %#%\\%%(%.%#%\\)%\\@=%m",
+    "%C%.%#",
+
+    "ERROR %f::%m",
+    "ERROR %f",
     "%+GERROR %.%#",
-    "E %#%\\%%(-%\\)%\\@=%m",
-    "E %#%\\%%(+%\\)%\\@=%m",
-    "E %#%\\%%(\\?%\\)%\\@=%m",
-    "E %#%\\%%(%.%#%trror: %\\)%\\@=%m",
+
+    "FAILED %f::%m",
+    "FAILED %f",
+    "%+GFAILED %.%#",
+
     "%\\%%(%.%#%trror: %\\)%\\@=%m",
-    "%f:%l: %m",
-    "%f:%l:",
+
+    "%E%f:%l: %m",
+    "%E%f:%l:",
+
     "%+GTraceback %.%#",
     "%-G%.%#",
 }
@@ -44,5 +55,3 @@ if exists and not active then
 
     vim.defer_fn(function() vim.api.nvim_win_close(winid, true) end, 4000)
 end
-
-require("samharju.custom.py_param")
