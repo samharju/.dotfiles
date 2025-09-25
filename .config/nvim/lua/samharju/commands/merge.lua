@@ -77,8 +77,10 @@ cmd("MergeReviewSigns", function(args)
     vim.defer_fn(function() require("gitsigns").setqflist("attached") end, 2000)
 end, { nargs = "?" })
 
+local ns = vim.api.nvim_create_namespace("mergestatus-diag")
+
 cmd("MergeStatus", function(args)
-    local cmdargs = { "gitlab-merge-stuff" }
+    local cmdargs = { "gitlab-merge-status" }
     for _, a in ipairs(vim.split(args.args, " ")) do
         if a ~= "" then table.insert(cmdargs, a) end
     end
@@ -91,6 +93,31 @@ cmd("MergeStatus", function(args)
         vim.fn.setqflist(d.items, "r")
         vim.fn.setqflist({}, "a", { title = "MergeStatus" })
         vim.cmd.copen()
+
+        vim.diagnostic.reset(ns)
+        local qf = vim.fn.getqflist()
+
+        local diags = setmetatable({}, {
+            __index = function(table, key)
+                table[key] = {}
+                return table[key]
+            end,
+        })
+
+        for _, item in ipairs(qf) do
+            if item.valid == 1 and item.bufnr ~= 0 then
+                local diagnostic = {
+                    ns = ns,
+                    lnum = item.lnum - 1,
+                    col = item.col - 1,
+                    message = item.text,
+                }
+                table.insert(diags[item.bufnr], diagnostic)
+            end
+        end
+        for buf, buf_diags in pairs(diags) do
+            vim.diagnostic.set(ns, buf, buf_diags)
+        end
     end
 
     vim.system(cmdargs, {
@@ -102,7 +129,7 @@ end, {
 })
 
 cmd("MergeConflicts", function(args)
-    vim.cmd([[ grep! "<<<<<<<\|>>>>>>>" ]])
+    vim.cmd([[ grep! "<<<<\|>>>>" ]])
     vim.cmd([[copen]])
     vim.cmd([[wincmd p]])
 end, {})

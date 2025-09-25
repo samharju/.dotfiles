@@ -24,6 +24,7 @@ local f_query = ts.query.parse(
     )
   (block) @func_body
   )
+    (identifier) @id 
         ]]
 )
 

@@ -1,10 +1,14 @@
 return {
     "j-hui/fidget.nvim",
-    tag = "v1.2.0",
     event = "VeryLazy",
     opts = {
         notification = {
             override_vim_notify = true, -- Automatically override vim.notify() with Fidget
+        },
+        integration = {
+            ["nvim-tree"] = {
+                enable = false, -- Integrate with nvim-tree/nvim-tree.lua (if installed)
+            },
         },
     },
 }

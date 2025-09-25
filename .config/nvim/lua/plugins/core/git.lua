@@ -55,7 +55,7 @@ return {
         event = "VeryLazy",
         opts = {
             current_line_blame_opts = {
-                delay = 0,
+                delay = 1000,
                 virt_text_pos = "eol",
             },
             signs = {
@@ -80,7 +80,7 @@ return {
             },
             {
                 "<leader>hp",
-                function() require("gitsigns").preview_hunk() end,
+                function() require("gitsigns").preview_hunk_inline() end,
                 desc = "git hunk preview",
             },
             {
@@ -96,13 +96,8 @@ return {
             {
                 "<leader>hg",
                 function()
-                    local on = require("gitsigns").toggle_linehl()
+                    require("gitsigns").toggle_linehl()
                     require("gitsigns").toggle_word_diff()
-                    if on then
-                        require("gitsigns").setqflist("all")
-                    else
-                        vim.cmd.cclose()
-                    end
                 end,
                 desc = "git hunk gutter",
             },

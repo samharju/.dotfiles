@@ -86,6 +86,7 @@ return {
         lint.linters.black = black
         lint.linters.isort = isort
         lint.linters.stylua = stylua
+        lint.linters.hadolint.args = { "--info", "DL3013", "--info", "DL3008", "-f", "json", "-" }
 
         lint.linters_by_ft = {
             go = { "golangcilint" },

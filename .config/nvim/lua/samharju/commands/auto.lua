@@ -6,7 +6,7 @@ local fg_from = function(group)
     return hl.fg
 end
 
-autocmd({ "VimEnter", "ColorScheme" }, {
+autocmd({ "VimEnter", "ColorScheme", "BufEnter" }, {
     group = grp,
     pattern = "*",
     callback = function()
@@ -89,5 +89,4 @@ local function proge()
         end,
     })
     vim.g.proge_created = 1
-
 end

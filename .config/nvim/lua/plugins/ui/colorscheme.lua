@@ -1,9 +1,6 @@
 local colors = {
-    "bloom",
-    "bloom-transparent",
     "blue",
     "darkblue",
-    "daymode",
     "default",
     "delek",
     "desert",
@@ -13,7 +10,6 @@ local colors = {
     "industry",
     "koehler",
     "lunaperche",
-    "moonfly",
     "morning",
     "murphy",
     "pablo",
@@ -23,10 +19,6 @@ local colors = {
     "quitequiet-transparent",
     "retrobox",
     "ron",
-    "rose-pine",
-    "rose-pine-dawn",
-    "rose-pine-main",
-    "rose-pine-moon",
     "serene",
     "serene-transparent",
     "shine",
@@ -55,9 +47,7 @@ end
 vim.keymap.set("n", "<leader>cn", cc)
 
 return {
-    { "rose-pine/neovim", name = "rose-pine" },
-    { "samharju/synthweave.nvim" },
+    { "samharju/synthweave.nvim", dev = true },
     { "samharju/serene.nvim" },
     { "samharju/quitequiet.nvim", dev = true },
-    { "bluz71/vim-moonfly-colors" },
 }

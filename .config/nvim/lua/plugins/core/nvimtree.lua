@@ -35,10 +35,13 @@ return {
                 git_placement = "after",
                 show = {
                     folder = false,
+                    folder_arrow = false,
                 },
             },
-            highlight_diagnostics = true,
-            highlight_git = true,
+            add_trailing = true,
+            highlight_diagnostics = "all",
+            highlight_git = "all",
+            highlight_hidden = "all",
             group_empty = true,
             -- indent_markers = {
             --     enable = true,
@@ -60,14 +63,14 @@ return {
             },
         },
         filters = {
-            git_ignored = true,
+            git_ignored = false,
             custom = {
                 "\\.git$",
-                "\\.mypy_cache",
-                "\\.pytest_cache",
-                "\\.vscode",
-                "\\.idea",
-                "__pycache__",
+                -- "\\.mypy_cache",
+                -- "\\.pytest_cache",
+                -- "\\.vscode",
+                -- "\\.idea",
+                -- "__pycache__",
             },
         },
         on_attach = function(bufnr)

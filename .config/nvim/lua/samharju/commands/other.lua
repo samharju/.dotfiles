@@ -96,3 +96,10 @@ cmd("Whatnow", function()
     vim.cmd.term("whatnow")
     vim.cmd.startinsert()
 end, {})
+
+cmd("LastCommit", function()
+    vim.system({ "git", "-C", vim.uv.cwd(), "log", "-1", "--pretty=%B" }, { text = true }, function(out)
+        local b = out.stdout:match("([^\n]+)")
+        if b ~= nil then vim.print(b) end
+    end)
+end, {})

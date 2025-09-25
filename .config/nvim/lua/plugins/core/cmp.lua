@@ -85,28 +85,24 @@ return {
                             end,
                         },
                         keyword_length = 2,
-                        -- entry_filter = function(_, _)
-                        --     ---@diagnostic disable-next-line: param-type-mismatch
-                        --     return require("cmp.config.context").in_treesitter_capture({ "comment" })
-                        -- end,
                     },
                     { name = "lazydev", group_index = 0 },
                 },
-                sorting = {
-                    comparators = {
-                        require("cmp.config.compare").kind,
-                        function(entry1, entry2) return require("cmp_buffer"):compare_locality(entry1, entry2) end,
-                        require("cmp.config.compare").offset,
-                        require("cmp.config.compare").exact,
-                        -- require"cmp.config.compare".scopes,
-                        require("cmp.config.compare").score,
-                        require("cmp.config.compare").recently_used,
-                        require("cmp.config.compare").locality,
-                        -- require"cmp.config.compare".sort_text,
-                        require("cmp.config.compare").length,
-                        require("cmp.config.compare").order,
-                    },
-                },
+                -- sorting = {
+                -- comparators = {
+                --     require("cmp.config.compare").kind,
+                --     function(entry1, entry2) return require("cmp_buffer"):compare_locality(entry1, entry2) end,
+                --     require("cmp.config.compare").offset,
+                --     require("cmp.config.compare").exact,
+                --     -- require"cmp.config.compare".scopes,
+                --     require("cmp.config.compare").score,
+                --     require("cmp.config.compare").recently_used,
+                --     require("cmp.config.compare").locality,
+                --     -- require"cmp.config.compare".sort_text,
+                --     require("cmp.config.compare").length,
+                --     require("cmp.config.compare").order,
+                -- },
+                -- },
                 mapping = {
                     ["<C-k>"] = cmp.mapping(function(fallback)
                         if ls.locally_jumpable(1) then

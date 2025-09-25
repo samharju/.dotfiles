@@ -1,6 +1,6 @@
 local M = {}
 
-local logfile = vim.fn.stdpath("cache") .. "/cospaget.log"
+local logfile = vim.fn.stdpath("cache") .. "/cospagette.log"
 
 local function log(...)
     local w = io.open(logfile, "a")
@@ -115,7 +115,7 @@ local function open_prompt(response, row)
         height = 2,
         border = "rounded",
         style = "minimal",
-        title = "Cospaget",
+        title = "Cospagette",
         title_pos = "center",
     })
 
@@ -160,7 +160,7 @@ local feedback = function()
     }
     local args = { "curl", "-s", "http://10.0.2.2:11434/api/generate", "-d", vim.json.encode(pt) }
 
-    log("Cospaget brewing...")
+    log("Cospagette brewing...")
     vim.system(args, { text = true, clear_env = true, env = {} }, function(out)
         local ok, res = pcall(vim.json.decode, out.stdout)
         if not ok then
@@ -183,8 +183,8 @@ local function loop()
     vim.defer_fn(loop, math.random(max_interval_ms))
 end
 
-vim.api.nvim_create_user_command("Cospaget", feedback, {})
-vim.api.nvim_create_user_command("CospagetToggle", function()
+vim.api.nvim_create_user_command("Cospagette", feedback, {})
+vim.api.nvim_create_user_command("CospagetteToggle", function()
     enabled = not enabled
     if enabled then loop() end
 end, {})

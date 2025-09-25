@@ -8,7 +8,7 @@ require("samharju.session")
 require("samharju.notes")
 require("samharju.bufpop")
 require("samharju.cospaget")
-require("samharju.ollama")
 require("samharju.custom.filetypes")
+require("samharju.lsp")
 
 vim.cmd.colorscheme("quitequiet-transparent")

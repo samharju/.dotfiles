@@ -26,7 +26,7 @@ M.highlight_scope_identifiers = function(ns_id, scope_q, identifier_q, lang)
                 if vim.tbl_contains(params, var_name) then
                     local start_row, start_col, _, end_col = i_node:range()
 
-                    vim.api.nvim_buf_add_highlight(bufnr, ns_id, "@variable.parameter", start_row, start_col, end_col)
+                    vim.api.nvim_buf_add_highlight(bufnr, ns_id, "@lsp.type.parameter", start_row, start_col, end_col)
                 end
             end
             scope = nil
