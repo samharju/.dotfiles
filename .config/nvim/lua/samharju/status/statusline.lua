@@ -19,15 +19,17 @@ function M.update()
     local left = {
         gst,
         vim.bo.buflisted and "%f" or "",
-        c.diagnostics(buf),
         c.ollama(),
+        c.dap_status(),
+        c.diagnostics(buf),
         c.lint_progress(buf),
     }
 
     local right = {
         f,
         c.active_lsps(),
-        c.python_version() or vim.bo.filetype,
+        c.filetypeicon(),
+        c.python_version(),
         "%-8.(%l,%v%) %P",
     }
 

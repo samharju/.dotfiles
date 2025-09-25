@@ -3,7 +3,9 @@ local M = {
     _statusline = "",
     tabline = true,
     status = true,
-    winbar = false,
+    winbar = true,
+    update_interval = 100,
+    throttle_duration = 250,
 }
 
 local winbars = function()
@@ -21,13 +23,12 @@ function M.update_now()
     if M.status then M._statusline = require("samharju.status.statusline").update() end
     if M.tabline then M._tabline = require("samharju.status.tabline").update() end
     if M.winbar then winbars() end
+    vim.cmd.redrawstatus()
 end
 
 function M.update()
-    if throttle then
-        return
-    end
-    vim.defer_fn(function() throttle = false end, 250)
+    if throttle then return end
+    vim.defer_fn(function() throttle = false end, M.throttle_duration)
     throttle = true
     M.update_now()
 end
@@ -48,7 +49,7 @@ function M.setup()
 
     require("samharju.status.hl").setup(group)
 
-    vim.api.nvim_create_autocmd({ "BufWritePost", "VimEnter", "BufEnter" }, {
+    vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter" }, {
         group = group,
         callback = M.update_now,
     })
@@ -56,15 +57,15 @@ function M.setup()
     vim.api.nvim_create_autocmd({ "User" }, {
         pattern = "FugitiveChanged",
         group = group,
-        callback = require("samharju.status.git").check_branch,
+        callback = function() require("samharju.status.git").update() end,
     })
 
-    vim.api.nvim_create_autocmd({ "CursorMoved" }, {
-        group = group,
-        callback = M.update,
-    })
+    -- vim.api.nvim_create_autocmd({ "CursorMoved" }, {
+    --     group = group,
+    --     callback = M.update_now,
+    -- })
 
-    vim.uv.timer_start(timer, 0, 200, vim.schedule_wrap(M.update))
+    vim.uv.timer_start(timer, 0, M.update_interval, vim.schedule_wrap(M.update))
 end
 
 M.setup()

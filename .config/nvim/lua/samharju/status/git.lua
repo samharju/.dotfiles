@@ -9,6 +9,7 @@ local M = {
     diff_status_files = {},
     branch = "",
     last_status = "",
+    last_commit = "",
     last_file_status = {},
     ticks = {},
 }
