@@ -3,42 +3,49 @@ vim.g.loaded_netrwPlugin = 1
 vim.g.mapleader = " "
 
 vim.opt.backup = false
-vim.opt.cursorline = true
-vim.opt.cursorcolumn = false
-vim.opt.expandtab = true
-vim.opt.guicursor = "n-c-sm:block,v:hor20,i-ci-ve:ver25,r-cr-o:hor20-blinkon175-blinkoff150-blinkwait175"
-vim.opt.hlsearch = true
-vim.opt.incsearch = true
-vim.opt.isfname:append("@-@")
-vim.opt.listchars = { eol = "↴", trail = "·", nbsp = "+", tab = "» ", leadmultispace = "›   " }
-vim.opt.list = true
-vim.opt.nu = false
-vim.opt.relativenumber = false
-vim.opt.scrolloff = 4
-vim.opt.sidescrolloff = 4
-vim.opt.shiftwidth = 4
-vim.opt.signcolumn = "yes"
-vim.opt.laststatus = 3
-vim.opt.smartindent = true
-vim.opt.smartcase = true
-vim.opt.ignorecase = true
-vim.opt.softtabstop = 4
+vim.opt.clipboard = "unnamedplus"
+vim.opt.grepprg = "rg --vimgrep --hidden --smart-case"
 vim.opt.swapfile = false
-vim.opt.tabstop = 4
-vim.opt.termguicolors = true
 vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 vim.opt.undofile = true
 vim.opt.updatetime = 50
-vim.opt.wrap = false
+vim.opt.termguicolors = true
+
+vim.opt.hlsearch = true
+vim.opt.ignorecase = true
+vim.opt.incsearch = true
+vim.opt.isfname:append("@-@")
+vim.opt.smartcase = true
+
+vim.opt.cursorcolumn = false
+vim.opt.cursorline = true
+vim.opt.guicursor = "n-c-sm:block,v:hor20,i-ci-ve:ver25,r-cr-o:hor20-blinkon175-blinkoff150-blinkwait175"
+vim.opt.laststatus = 3
+vim.opt.nu = false
+vim.opt.relativenumber = false
+vim.opt.scrolloff = 2
+vim.opt.sidescrolloff = 2
+vim.opt.signcolumn = "yes"
+vim.opt.autoindent = true
+vim.opt.smartindent = true
+
 vim.opt.linebreak = true
-vim.opt.clipboard = "unnamedplus"
+vim.opt.wrap = false
+
+vim.opt.listchars = { eol = "↴", trail = "·", nbsp = "+", tab = "» ", leadmultispace = "›   " }
+vim.opt.list = true
+
+vim.opt.expandtab = true
+vim.opt.softtabstop = 4
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.textwidth = 0
+
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.opt.foldtext = ""
 vim.opt.foldenable = true
 vim.o.foldlevel = 10
-vim.opt.textwidth = 0
-vim.opt.grepprg = "rg --vimgrep --hidden --smart-case"
 
 local signs = {
     [vim.diagnostic.severity.ERROR] = "󰚌 ",
