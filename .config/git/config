@@ -1,36 +1,41 @@
 [core]
-    editor = nvim
-    pager = less -F
+	editor = nvim
+	pager = less -F
 [push]
-    autoSetupRemote = true
-    default = current
+	autoSetupRemote = true
+	default = current
 [fetch]
-    prune = true
-    all = true
+	prune = true
+	all = true
 [pull]
-    rebase = true
+	rebase = true
 [diff]
-    colorMoved = zebra
+	colorMoved = zebra
 [commit]
-    template = /home/sami/.config/git/commit-template
+	template = /home/sharju/.config/git/commit-template
+	gpgsign = true
 [init]
-    defaultBranch = master
+	defaultBranch = master
 [rebase]
-    autosquash = true
+	autosquash = true
 [merge]
-    tool = diffview
+	tool = diffview
 [mergetool]
-    prompt = false
-    keepBackup = false
+	prompt = false
+	keepBackup = false
 [mergetool "diffview"]
-    cmd = nvim -n -c "DiffviewOpen" "$MERGE"
+	cmd = nvim -n -c "DiffviewOpen" "$MERGE"
 [alias]
-    wip = "!git add -A; git rm $(git ls-files --deleted) 2> /dev/null; git commit --no-verify --no-gpg-sign --message \"--wip--\""
-    unwip = "!git rev-list --max-count=1 --format=\"%s\" HEAD | grep -q \"\\--wip--\" && git reset HEAD~1"
-    stashlist = "stash list --pretty=\"%s %Cgreen(%ar)\""
-    fix-commit = "!git commit --edit --file=$GIT_DIR/COMMIT_EDITMSG"
-    amend = "commit --amend --no-edit"
-    garbagefiles = "!fd -uu -t f | rg -v \"venv|\\.git\\b|\\.env|node_modules\" | git check-ignore --stdin"
-    garbagedirs = "!fd -uu -t d | rg -v \"venv|\\.git\\b|\\.env|node_modules\" | git check-ignore --stdin"
+	wip = "!git add -A; git rm $(git ls-files --deleted) 2> /dev/null; git commit --no-verify --no-gpg-sign --message \"--wip--\""
+	unwip = "!git rev-list --max-count=1 --format=\"%s\" HEAD | grep -q \"\\--wip--\" && git reset HEAD~1"
+	stashlist = "stash list --pretty=\"%s %Cgreen(%ar)\""
+	fix-commit = "!git commit --edit --file=$GIT_DIR/COMMIT_EDITMSG"
+	amend = "commit --amend --no-edit"
+	garbagefiles = "!fd -uu -t f | rg -v \"venv|\\.git\\b|\\.env|node_modules\" | git check-ignore --stdin"
+	garbagedirs = "!fd -uu -t d | rg -v \"venv|\\.git\\b|\\.env|node_modules\" | git check-ignore --stdin"
 [log]
-    decorate = full
+	decorate = full
+[gpg]
+	format = ssh
+[user]
+	signingkey = /home/sharju/.ssh/gitsigningkey
