@@ -4,10 +4,6 @@
 [submodule "plugins/samharju/tmux-synthweave-theme"]
 	path = plugins/samharju/tmux-synthweave-theme
 	url = git@github.com:samharju/tmux-synthweave-theme.git
-[submodule ".pyenv"]
-	path = .pyenv
-	url = https://github.com/pyenv/pyenv.git
-	branch = v2.3.35
 [submodule "plugins/samharju/yeet.nvim"]
 	path = plugins/samharju/yeet.nvim
 	url = git@github.com:samharju/yeet.nvim.git
@@ -23,3 +19,6 @@
 [submodule "tooling/fzf"]
 	path = tooling/fzf
 	url = https://github.com/junegunn/fzf.git
+[submodule "tooling/pyenv"]
+	path = tooling/pyenv
+	url = https://github.com/pyenv/pyenv.git
