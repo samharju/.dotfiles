@@ -1,13 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 
 set -e
+hosts=$(rg '^[\w\-\.]+\s+(\S+)' -or "\$1" /etc/hosts | sort)
 
-sshconfigs=$(rg 'host ([\w+\-_\.]+)$' -or "\$1" ~/.ssh/config)
-etchosts=$(rg '^[\d\.]+\s+(\S+)' -or "\$1" /etc/hosts)
 
-hosts=$(echo -e "$sshconfigs\n$etchosts" | sort -u)
-
-target="$(echo "$hosts" | fzf --header "ssh" --header-first --info hidden --tmux)"
+target="$(echo "$hosts" | fzf --header "ssh to host" --header-first --info hidden --tmux || true)"
 if [[ -z "$target" ]]; then
     exit 0
 fi

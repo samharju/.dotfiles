@@ -3,9 +3,9 @@
 set -e
 
 if [[ "$1" == "git" ]]; then
-    project=$(gitprojectfind "$2")
+    project=$(gitprojectfind "$2" || true)
 else
-    project=$(folderfind "$1")
+    project=$(folderfind "$1" || true)
 fi
 
 if [ -z "$project" ]; then

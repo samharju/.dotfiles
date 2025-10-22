@@ -1,7 +1,7 @@
 
 createvenv ()
 {
-    version="$(pyenv versions --bare | fzf --height 10% --reverse --prompt "Select python version: " --query "$1")"
+    version="$(pyenv versions --bare | fzf --height 10% --reverse --prompt "Select python version: " --query "'$1")"
     if [ -z "$version" ]; then
         echo "No version selected"
         return 1

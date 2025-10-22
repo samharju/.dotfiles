@@ -58,7 +58,7 @@ cprint "$gray" "$title"
 
 git_dir="$(git rev-parse --git-dir 2>/dev/null)"
 if [[ $? -eq 0 ]]; then
-    cd $git_dir
+    cd "$git_dir" || return 1
 fi
 
 while [[ -z $venvpath ]]
@@ -74,10 +74,10 @@ do
     venvpath=$(fd -t f -I -H "activate$")
     if [[ -z $venvpath ]];
     then
-        cprint "$gray" "fd -t f -I -H \"activate\$\" $(pwd) -> nah"
+        # cprint "$gray" "fd -t f -I -H \"activate\$\" $(pwd) -> nah"
         cd ..
     else
-        cprint "$gray" "fd -t f -I -H \"activate\$\" $(pwd) -> oh"
+        # cprint "$gray" "fd -t f -I -H \"activate\$\" $(pwd) -> oh"
         if [[ $(echo "$venvpath" | wc -l) -gt 1  ]]; then
             cprint "$yellow" "found multiple possible venvs, wont source anything:"
             cprint "$gray" "$venvpath"
@@ -85,10 +85,17 @@ do
             break
         fi
         cprint "$gray" "found $venvpath"
+
+		cprint "$yellow" "ok? [Yn] "
+		read yn
+		[[ "$yn" == "n" ]] && cd "$rt" && return 1
+
         . "$venvpath"
         echo "${green}OK: ${nocolor}VIRTUAL_ENV=$VIRTUAL_ENV"
-        cprint "$yellow" "${$(which python)#$rt/}"
-        cprint "$yellow" "${$(which pip)#$rt/}"
+        pybin="$(which python)"
+        pipbin="$(which pip)"
+        cprint "$yellow" "${pybin#"$rt"/}"
+        cprint "$yellow" "${pipbin#"$rt"/}"
         cprint "$yellow" "$(python -V)"
         alias dea='[ -n "$VIRTUAL_ENV" ] && deactivate && unalias dea'
         cprint "$gray" "Run 'dea' to deactivate"

@@ -4,7 +4,6 @@ if [ -e /tmp/gitlabnotify ]; then
     exit 0
 fi
 
-
 res=$(~/bin/mergecheck --all --no-color --no-time --no-progress)
 if [[ $? != 0 ]]; then
     date

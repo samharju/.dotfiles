@@ -1,4 +1,4 @@
-#!/home/sami/.pyenv/shims/python3.11
+#!/home/sharju/.pyenv/shims/python3.13
 
 import argparse
 import logging

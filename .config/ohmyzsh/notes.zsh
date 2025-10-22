@@ -1,7 +1,7 @@
 
 notes ()
 {
-    choice=$(fd -E venv . ~/notes | fzf --preview='bat --color=always {}' --preview-window=right:60%)
+    choice=$(fd -E venv . ~/user/documents/notes | fzf --preview='bat --color=always {}' --preview-window=right:60%)
     if [ -n "$choice" ]; then
         if [ -d "$choice" ]; then
             cd "$choice"

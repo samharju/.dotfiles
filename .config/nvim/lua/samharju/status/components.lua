@@ -15,7 +15,7 @@ local function not_loaded(name) return package.loaded[name] == nil end
 function M.ollama()
     if os.time() - ctr > 10 then
         ctr = os.time()
-        vim.system({ "curl", "-s", "http://10.0.2.2:11434/api/ps" }, { text = true }, function(out)
+        vim.system({ "curl", "-s", "http://localhost:11434/api/ps" }, { text = true }, function(out)
             if out.code ~= 0 then return end
             local str = {}
             local d = vim.json.decode(out.stdout)

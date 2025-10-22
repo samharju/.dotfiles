@@ -1,6 +1,6 @@
 #!/usr/bin/zsh
 # check .oh-my-zsh/templates/zshrc.zsh-template for removed stuff
-export TERM=wezterm
+export TERM=xterm-256color
 #-path------------------------------------------------------------------------#
 # add existing binary folders to path if not present
 binpaths=(
@@ -71,7 +71,7 @@ export FZF_ALT_C_OPTS=" --walker-skip .git,venv,node_modules --preview 'tree -C 
 export FZF_COMPLETION_TRIGGER=ff
 
 #-pyenv-----------------------------------------------------------------------#
-export PYENV_ROOT="$HOME/.pyenv"
+export PYENV_ROOT="$HOME/tooling/pyenv"
 if ! [[ "$PATH" =~ "$PYENV_ROOT" ]]; then
     [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 fi
@@ -81,10 +81,10 @@ eval "$(pyenv init -)"
 export TZ='Europe/Helsinki'
 GPG_TTY=$(tty)
 export GPG_TTY
-export SUDO_EDITOR=/home/sami/.local/bin/nvim
-export EDITOR=/home/sami/.local/bin/nvim
-export PIPX_HOME=/data2/pipx
+export SUDO_EDITOR=$HOME/.local/bin/nvim
+export EDITOR=$HOME/.local/bin/nvim
 export BAT_THEME=OneHalfDark
+export MANPAGER='nvim +Man!'
 
 eval "$(direnv hook zsh)"
 
@@ -100,8 +100,9 @@ if ! ping -c 1 -W 0.5 "$proxy" &> /dev/null; then
 fi
 
 # dotfile sanity check
-if [[ -z $(fd --max-depth 1 --type f --hidden --changed-within=12hour .dotfilescheck ~/) ]]; then
+if [[ -z "$(fd --max-depth 1 --type f --hidden --changed-within=12hour .dotfilescheck ~/)" ]]; then
     GIT_DIR=$HOME/.dotfiles GIT_WORK_TREE=$HOME gitpullneeded
     touch ~/.dotfilescheck
 fi
 
+pidof picom > /dev/null || picom -b --config $XDG_CONFIG_HOME/picom.conf
