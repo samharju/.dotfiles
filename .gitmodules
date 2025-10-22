@@ -1,7 +1,3 @@
-[submodule ".fzf"]
-	path = .fzf
-	url = https://github.com/junegunn/fzf.git
-	branch = 0.46.1
 [submodule "plugins/samharju/synthweave.nvim"]
 	path = plugins/samharju/synthweave.nvim
 	url = git@github.com:samharju/synthweave.nvim.git
@@ -24,3 +20,6 @@
 [submodule ".config/ohmyzsh/plugins/zsh-histdb"]
 	path = .config/ohmyzsh/plugins/zsh-histdb
 	url = https://github.com/larkery/zsh-histdb
+[submodule "tooling/fzf"]
+	path = tooling/fzf
+	url = https://github.com/junegunn/fzf.git
