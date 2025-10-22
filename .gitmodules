@@ -22,3 +22,6 @@
 [submodule "tooling/pyenv"]
 	path = tooling/pyenv
 	url = https://github.com/pyenv/pyenv.git
+[submodule "tooling/tmux"]
+	path = tooling/tmux
+	url = https://github.com/tmux/tmux.git
