@@ -1,0 +1,175 @@
+#!/home/sharju/.pyenv/shims/python3.13
+
+import argparse
+import logging
+import os
+import re
+import subprocess
+import sys
+from datetime import timedelta
+
+import requests
+
+logging.basicConfig(level=logging.INFO, format="%(message)s")
+
+logger = logging.getLogger(__name__)
+
+
+GITLAB_HOST = os.getenv("GITLAB_HOST", "")
+TOKEN = os.getenv("GITLAB_TOKEN", "")
+
+
+trace_q = """
+query refpipeline($fullpath: ID!, $ref: String) {
+  project(fullPath: $fullpath) {
+    name
+    id
+    pipelines(ref: $ref, first: 1) {
+      nodes {
+        ref
+        commit {
+          title
+        }
+        status
+        jobs {
+          nodes {
+            id
+            status
+            name
+            duration
+            stage {
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+}
+"""
+
+
+def _parse_id(job):
+    return job.rsplit("/", 1)[1]
+
+
+def _remove_ansi(txt):
+    return re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])").sub("", txt)
+
+
+def icon(name):
+    reset = "\x1b[0m"
+    red = "\x1b[31m"
+    green = "\x1b[32m"
+    yellow = "\x1b[33m"
+    blue = "\x1b[34m"
+    icons = {
+        "CREATED": f"{blue} {reset}",
+        "RUNNING": f"{blue}󰪢 {reset}",
+        "SUCCESS": f"{green} {reset}",
+        "FAILED": f"{red}󰅙 {reset}",
+        "PENDING": f"{yellow}󱑍 {reset}",
+    }
+    return icons.get(name, "󰮔 ")
+
+
+def lastpipeline(project, branch):
+    res = requests.post(
+        GITLAB_HOST + "/api/graphql",
+        headers={"Authorization": "Bearer " + TOKEN},
+        json={
+            "query": trace_q,
+            "variables": {"fullpath": project, "ref": branch},
+        },
+    )
+
+    data = res.json()
+    logger.debug(data)
+
+    try:
+        project = data["data"]["project"]
+        pid = _parse_id(project["id"])
+    except Exception:
+        logger.exception("no data")
+        return
+
+    jobs = project["pipelines"]["nodes"][0]["jobs"]["nodes"]
+    jobs.reverse()
+    for job in jobs:
+        c = icon(job["status"])
+        duration = job.get("duration") or 0
+        h = f'{timedelta(seconds=duration)} {c} {job["stage"]["name"]} | {job["name"]:30}'
+
+        if job["status"] not in {"FAILED", "RUNNING"}:
+            print(h)
+        else:
+            id_ = job["id"].rsplit("/", 1)[1]
+            res = requests.get(
+                f"{GITLAB_HOST}/api/v4/projects/{pid}/jobs/{id_}/trace",
+                headers={"PRIVATE-TOKEN": TOKEN},
+            )
+            print("=============================================")
+            print(h)
+            print("=============================================")
+
+            txt = _remove_ansi(res.text)
+            lines = txt.split("\n")
+            linecount = 25
+            if len(lines) > linecount:
+                print("...")
+            for line in lines[-linecount:]:
+                line = re.sub(r"(section_(start|end):\d+:\w+)|\r", "", line)
+                if line.startswith("$"):
+                    print(f"\x1b[32m{line}\x1b[0m")
+                else:
+                    print(line)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--path")
+    parser.add_argument("--ref")
+    parser.add_argument("--debug", action="store_true")
+    args = parser.parse_args()
+
+    if args.debug:
+        logging.getLogger().setLevel(logging.DEBUG)
+
+    if args.path:
+        if not args.ref:
+            logger.error("need ref for path")
+        lastpipeline(args.path, args.ref)
+        return
+
+    remotecmd = subprocess.run(
+        ["git", "remote", "get-url", "origin"], text=True, capture_output=True
+    )
+    if remotecmd.returncode != 0:
+        logger.error("not a git repo")
+        return
+
+    remote = remotecmd.stdout.strip()
+    m = re.match(r".*:(.*).git", remote)
+    if m:
+        fullpath = m.group(1)
+    else:
+        logger.error("could not figure out path")
+        return
+
+    branch = args.ref
+    if not branch:
+        branch = subprocess.check_output(
+            ["git", "branch", "--show-current"], text=True
+        ).strip()
+
+    logger.info("%s: %s", fullpath, branch)
+
+    lastpipeline(fullpath, branch)
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as exc:
+        print(sys.argv[0] + ": " + str(exc))
+        logger.exception("Failed")

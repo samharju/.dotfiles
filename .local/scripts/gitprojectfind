@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
 
 fd --hidden --no-ignore "\.git$" \
-    "$HOME/.local/share" \
-    "$HOME/git" \
-    "$HOME/plugins" \
-    "$HOME/wt-dump" \
-    | sed -e 's|/.git/$||' \
-    | sed -e 's|/.git$||' \
+    "${@:2}" \
+    | sed -re 's|/.git/?$||' \
     | fzf \
     --prompt ' ...' \
     --bind 'load:change-prompt:> ' \

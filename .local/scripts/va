@@ -15,10 +15,10 @@ __     ___      _               _
 /_/   \_\___|\__|_| \_/ \__,_|\__\___/|_|
 
 
-Script searches for nearest venv/bin/activate and sources it.
-Usage:
-   . va
-   source va
+    Script searches for nearest venv/bin/activate and sources it.
+    Usage:
+        . va
+        source va
 EOF
     exit 0
 fi
@@ -34,7 +34,7 @@ yellow="\033[0;33m"
 nocolor="\033[0;0m"
 
 
-rt=$(pwd)
+runtime_dir=$(pwd)
 venvpath=""
 nok=0
 
@@ -54,28 +54,31 @@ __   _____ _ ____   __ | | ___   ___ | | ___   _ _ __
 EOF
 )
 
-cprint "$gray" "$title"
+[[ ! -e "venv/bin/activate" ]] && cprint "$gray" "$title" && echo
 
 git_dir="$(git rev-parse --git-dir 2>/dev/null)"
-if [[ $? -eq 0 ]]; then
-    cd "$git_dir" || return 1
+if ! [[ $? -eq 0 ]]; then
+    git_dir="$runtime_dir"
 fi
 
+current_path="${git_dir%.git}"
+if [[ -z $current_path ]]; then
+    current_path="."
+fi
 while [[ -z $venvpath ]]
 do
-    if [[ "$(pwd)" == ~ ]]; then
-            cprint "$gray" "Hit home root, abort"
-            break
-    elif [[ "$(pwd)" == / ]]; then
-            cprint "$gray" "Hit root, abort"
-            break
+    if [[ "$current_path" == ~ ]]; then
+        cprint "$gray" "Hit home root, abort"
+        break
+    elif [[ "$current_path" == / ]]; then
+        cprint "$gray" "Hit root, abort"
+        break
     fi
 
-    venvpath=$(fd -t f -I -H "activate$")
-    if [[ -z $venvpath ]];
-    then
-        # cprint "$gray" "fd -t f -I -H \"activate\$\" $(pwd) -> nah"
-        cd ..
+    venvpath=$(fd -t f -I -H "activate$" "$current_path")
+    if [[ -z $venvpath ]]; then
+        # cprint "$gray" "fd -t f -I -H \"activate\$\" $current_path -> nah"
+        current_path="$current_path/.."
     else
         # cprint "$gray" "fd -t f -I -H \"activate\$\" $(pwd) -> oh"
         if [[ $(echo "$venvpath" | wc -l) -gt 1  ]]; then
@@ -84,23 +87,25 @@ do
             nok=1
             break
         fi
-        cprint "$gray" "found $venvpath"
+        venvpath=$(realpath --relative-to="$runtime_dir" "$venvpath")
 
-		cprint "$yellow" "ok? [Yn] "
-		read yn
-		[[ "$yn" == "n" ]] && cd "$rt" && return 1
+        if [[ "$venvpath" != "venv/bin/activate" ]]; then
+            cprint "$gray" "found ${venvpath/$HOME/~}"
+            cprint "$gray" "ok? [Yn] "
+            read -r yn
+            [[ "$yn" == "n" ]] && return 1
+        fi
 
         . "$venvpath"
-        echo "${green}OK: ${nocolor}VIRTUAL_ENV=$VIRTUAL_ENV"
+        echo -n "${green}OK: ${nocolor}VIRTUAL_ENV=$VIRTUAL_ENV\t"
         pybin="$(which python)"
         pipbin="$(which pip)"
-        cprint "$yellow" "${pybin#"$rt"/}"
-        cprint "$yellow" "${pipbin#"$rt"/}"
-        cprint "$yellow" "$(python -V)"
+        cprint "$yellow" "{$(python -V)}"
+        cprint "$gray" "${pybin#"$runtime_dir"/}"
+        cprint "$gray" "${pipbin#"$runtime_dir"/}"
         alias dea='[ -n "$VIRTUAL_ENV" ] && deactivate && unalias dea'
         cprint "$gray" "Run 'dea' to deactivate"
     fi
 done
 
-cd "$rt" || return 1
 return $nok

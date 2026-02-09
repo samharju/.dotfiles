@@ -219,7 +219,7 @@ def merge_request_comments(
             n["msg"] = f'{n["msg"]} (closed: {note["resolvedBy"]["username"]})'
         if note.get("position"):
             n["file"] = note["position"]["newPath"]
-            n["line"] = note["position"]["newLine"]
+            n["line"] = note["position"]["newLine"] or 1
         elif not show_merge_comments:
             continue
         out["comments"].append(n)

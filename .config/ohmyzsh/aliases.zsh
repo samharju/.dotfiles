@@ -21,7 +21,7 @@ alias rgf="fd -t f | rg"
 # deactivate python virtual env
 alias dea='[ -n "$VIRTUAL_ENV" ] && deactivate'
 
-alias vim="nvim"
+alias vim="TERM=wezterm nvim"
 
 # use for single command, withdotfiles <cmd>
 alias withdotfiles='GIT_DIR=$HOME/.dotfiles GIT_WORK_TREE=$HOME'
@@ -62,5 +62,6 @@ alias cospagetchat='nvim -c "CospagetChat" -c "wincmd o"'
 
 alias forkpointdiff='git diff --name-only --diff-filter=d `git merge-base --fork-point origin/master`..HEAD'
 
-alias gbt='git branch --sort "authordate" --format "%(HEAD) %(align:width=12)%(authordate:short)%(end)%(if)%(HEAD)%(then)%(color:green)%(end)%(align:width=32)%(refname:short)%(end)%(color:reset) %(objectname:short) %(subject)"'
+alias gbt='git branch --sort "authordate" --format "%(HEAD) %(if)%(worktreepath)%(then)%(color:cyan)%(end)%(if)%(HEAD)%(then)%(color:green)%(end)%(align:width=12)%(authordate:short)%(end)%(align:width=32)%(refname:short)%(end) %(objectname:short) %(subject)%(color:reset) "'
+
 alias glom='git log --oneline --decorate `git merge-base --fork-point refs/remotes/origin/HEAD`..HEAD'

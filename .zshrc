@@ -38,6 +38,7 @@ plugins=(
     docker
     python
     golang
+    ollama
 )
 source $ZSH/oh-my-zsh.sh
 
@@ -90,17 +91,24 @@ eval "$(direnv hook zsh)"
 
 # make ansible print stuff readable by default
 export ANSIBLE_STDOUT_CALLBACK=unixy
+
 export ANSIBLE_VAULT_PASSWORD_FILE=.vaultpass
 
 # tokens and stuff from this guy
 [ -f ~/.secrets ] && source ~/.secrets
 
-if ! ping -c 1 -W 0.5 "$proxy" &> /dev/null; then
-    unset http_proxy https_proxy
+if [ ! -f /tmp/proxy_checked ];then
+    echo Check proxy
+    if ! ping -i 0.5 -w 1 "$proxy" &> /dev/null; then
+        unset http_proxy https_proxy
+    fi
+    echo https_proxy=$https_proxy
+    touch /tmp/proxy_checked
 fi
 
 # dotfile sanity check
-if [[ -z "$(fd --max-depth 1 --type f --hidden --changed-within=12hour .dotfilescheck ~/)" ]]; then
+if [[ -z "$(fd --max-depth 1 --type f --hidden --changed-within=168hour .dotfilescheck ~/)" ]]; then
+    echo Checking dotfiles
     GIT_DIR=$HOME/.dotfiles GIT_WORK_TREE=$HOME gitpullneeded
     touch ~/.dotfilescheck
 fi

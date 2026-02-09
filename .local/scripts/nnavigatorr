@@ -3,7 +3,12 @@
 set -e
 
 if [[ "$1" == "git" ]]; then
-    project=$(gitprojectfind "$2" || true)
+    project=$(
+        gitprojectfind "git" \
+        "$HOME/.local/share" \
+        "$HOME/git" \
+        "$HOME/plugins" \
+        || true )
 else
     project=$(folderfind "$1" || true)
 fi
