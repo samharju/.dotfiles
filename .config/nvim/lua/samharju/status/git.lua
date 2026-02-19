@@ -5,6 +5,10 @@ local M = {
         removed = 0,
         conflicts = 0,
     },
+    commit_status = {
+        ahead = 0,
+        behind = 0,
+    },
     per_file = true,
     diff_status_files = {},
     branch = "",
@@ -32,6 +36,14 @@ function M.update(curbuf)
     if M.branch == "" then return "", "" end
 
     local refresh = false
+    local branchst = M.branch
+    if M.commit_status.behind > 0 then
+        branchst = branchst .. string.format("%%#StatusLineComment# %s󱞣%%s", M.commit_status.behind)
+    end
+
+    if M.commit_status.ahead > 0 then
+        branchst = branchst .. string.format("%%#StatusLineComment# %s󱞿%%s", M.commit_status.ahead)
+    end
 
     if curbuf ~= nil then
         local ct = vim.api.nvim_buf_get_changedtick(curbuf)
@@ -45,9 +57,11 @@ function M.update(curbuf)
                 fname,
                 function() M.last_file_status[fname] = parse_diff_str(M.diff_status_files[fname]) end
             )
+            M.refresh_upstream_status()
+            M.parse_last_commit()
         end
 
-        return M.branch, M.last_file_status[fname]
+        return branchst, M.last_file_status[fname]
     end
 
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -60,9 +74,13 @@ function M.update(curbuf)
             end
         end
     end
-    if refresh then M.refresh_diff_stats(nil, function() M.last_status = parse_diff_str(M.diff_status) end) end
+    if refresh then
+        M.refresh_diff_stats(nil, function() M.last_status = parse_diff_str(M.diff_status) end)
+        M.refresh_upstream_status()
+        M.parse_last_commit()
+    end
 
-    return M.branch, M.last_status
+    return branchst, M.last_status
 end
 
 function M.check_branch()
@@ -121,4 +139,30 @@ function M.refresh_diff_stats(filename, callback)
     end)
 end
 
+function M.refresh_upstream_status()
+    local cmd = { "git", "-C", vim.uv.cwd(), "status", "-sb", "--porcelain=v1" }
+    vim.system(cmd, { text = true }, function(out)
+        local ahead = out.stdout:match("ahead (%d+)")
+        if ahead ~= nil then
+            M.commit_status.ahead = tonumber(ahead)
+        else
+            M.commit_status.ahead = 0
+        end
+
+        local behind = out.stdout:match("behind (%d+)")
+        if behind ~= nil then
+            M.commit_status.behind = tonumber(behind)
+        else
+            M.commit_status.behind = 0
+        end
+    end)
+end
+
+function M.parse_last_commit()
+    local cmd = { "git", "-C", vim.uv.cwd(), "log", "-1", "--format=%h %s" }
+    vim.system(cmd, { text = true }, function(out)
+        local sha, title = out.stdout:match("^(%w+) (.*)\n")
+        if sha then M.last_commit = string.format("%%#StatusLineWarn#%s%%* %s", sha, title) end
+    end)
+end
 return M

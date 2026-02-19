@@ -11,7 +11,8 @@ local M = {
 local winbars = function()
     for _, winid in ipairs(vim.api.nvim_list_wins()) do
         if vim.api.nvim_win_get_config(winid).relative == "" then
-            vim.wo[winid].winbar = require("samharju.status.winbar").update(winid)
+            local winb = require("samharju.status.winbar").update(winid)
+            if winb ~= nil then vim.wo[winid].winbar = winb end
         end
     end
 end

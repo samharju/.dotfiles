@@ -4,16 +4,15 @@ local M = {}
 
 function M.update(winid)
     local buf = vim.api.nvim_win_get_buf(winid)
-    -- if not vim.api.nvim_get_option_value("buflisted", { buf = buf }) then return "" end
+    if vim.bo[buf].filetype == "dap-view" then return end
+    if not vim.bo[buf].buflisted then return " " end
 
     local fname = vim.api.nvim_buf_get_name(buf)
-    if not fname then return "" end
-
-    local diag = c.diagnostics(buf)
+    if not fname then return " " end
 
     return c.join({
-        "%f",
-        diag,
+        vim.fn.fnamemodify(fname, ":."),
+        c.diagnostics(buf),
         c.lint_progress(buf),
     }, " ")
 end

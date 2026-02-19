@@ -23,7 +23,7 @@ function M.ollama()
                 table.insert(
                     str,
                     string.format(
-                        "%%#StatusLineComment#%s %s%%%% GPU (%smin)%%*",
+                        "%s %s%%%% GPU (%smin)",
                         model.name,
                         math.floor(model.size_vram * 100 / model.size),
                         ttl(model.expires_at)
@@ -35,7 +35,13 @@ function M.ollama()
         end)
     end
 
-    return ollama_str .. (vim.g.model_churning or "")
+    local spinner = { "󰮕", "󰵛", "󰦤", "󱠇" }
+    if ollama_str ~= "" then
+        local status = (vim.g.model_churning and spinner[math.random(4)] or "󰄴")
+        return string.format("%%#StatusLineComment#%s %s %%*", ollama_str, status)
+    end
+
+    return ollama_str
 end
 
 function M.python_version()
