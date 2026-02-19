@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+exec &>> /tmp/mysetup.log
+set -x
+
+date
+# keybs
+# setxkbmap -layout us,fi
+# setxkbmap -option 'grp:win_space_toggle'
+
+bash "$HOME/.local/scripts/cantseeshit"

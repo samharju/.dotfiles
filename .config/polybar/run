@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+killall -q polybar
+
+while IFS= read -r line
+do
+    {
+        echo "--- started ---";
+        monitor=$(echo "$line" | cut -d":" -f1)
+        bar=secondary
+
+        if echo "$line" | rg -q "primary"; then
+            bar=primary
+        fi
+
+        MONITOR="$monitor" polybar --reload "$bar" 2>&1;
+        echo "--- stopped ---";
+    } >> "/tmp/polybar_$monitor.log" & disown
+
+done < <(polybar -m)

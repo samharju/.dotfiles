@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+i3lock \
+	--nofork \
+    --verif-text="banana" \
+    --wrong-text="no banana" \
+	--keylayout 0 \
+	--clock \
+	--radius 200 \
+	--ring-width 20 \
+	--color 24244c \
+	--{inside,ring}-color=606090 \
+	--{inside,ring}wrong-color=ef626c \
+    --{inside,ring}ver-color=a0a0df \
+	--{key,bs}hl-color=4ba0a0 \
+	--{layout,time,date,greeter}-color=dadada
+
+

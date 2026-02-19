@@ -1,0 +1,50 @@
+#!/usr/bin/env sh
+
+
+fwmissing() {
+    echo "$1 󱈿"
+}
+fwok() {
+    echo "$1 󰂖"
+}
+
+checklabfw() {
+    if ! [ -f /tmp/lab_fw_ok ];then
+        if ! ping junkyard -W 1 -c 1 -q >/dev/null ;then
+            fwmissing "$1"
+            return 1
+        fi
+        touch /tmp/lab_fw_ok
+    fi
+    fwok "$1"
+    return 0
+}
+
+if [ -e /proc/sys/net/ipv4/conf/tun0 ]; then
+    checklabfw tun0 && return 0
+    return 1
+fi
+
+if nmcli device | rg -q 'wifi.*\bconnected.*NOKIA'; then
+    checklabfw office && return 0
+    return 1
+fi
+
+if [ -e /proc/sys/net/ipv4/conf/zcctun0 ]; then
+    checklabfw zcctun0 && return 0
+    return 1
+fi
+
+if [ -e /proc/sys/net/ipv4/conf/cscotun0 ]; then
+    checklabfw cscotun0 && return 0
+    return 1
+fi
+
+nmcli device | rg "(?<interface>^\S+).*\bconnected  " -or '$interface'
+
+if [ -f /tmp/lab_fw_ok ];then
+    rm /tmp/lab_fw_ok
+fi
+
+return 0
+

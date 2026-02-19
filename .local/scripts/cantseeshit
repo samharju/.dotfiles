@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+set -x
+
+if rg -q open /proc/acpi/button/lid/LID/state; then
+    xrandr --output eDP-1 --auto
+else
+    xrandr --output eDP-1 --off
+fi
+
+for mon in $(xrandr --listmonitors | rg "^ \d" | awk '{print $4}' | sort); do
+    if [[ -n "$prev" ]];then
+        xrandr --output "$mon" --left-of "$prev"
+    else
+        xrandr --output "$mon" --primary
+    fi
+    prev="$mon"
+done
+
+# bg
+feh --bg-fill ~/user/pictures/wallpapers/harri-p-_RMQRdBH1U4-unsplash.jpg
+
+# composer
+if ! pidof picom > /dev/null ;then
+    picom -b --config "$HOME/.config/picom.conf"
+fi
+
+# polybar
+$HOME/.config/polybar/run
