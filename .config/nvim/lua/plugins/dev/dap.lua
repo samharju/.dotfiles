@@ -15,8 +15,11 @@
 -- >lua
 --   vim.fn.sign_define('DapBreakpoint', {text='🛑', texthl='', linehl='', numhl=''})
 --
-vim.fn.sign_define("DapBreakpoint", { text = "B", texthl = "DiagnosticInfo", linehl = "", numhl = "DiagnosticInfo" })
-vim.fn.sign_define("DapStopped", { text = "→", texthl = "DiagnosticWarn", linehl = "", numhl = "DiagnosticWarn" })
+vim.fn.sign_define("DapBreakpoint", { text = "B", texthl = "DiagnosticWarn", linehl = "", numhl = "DiagnosticWarn" })
+vim.fn.sign_define(
+    "DapStopped",
+    { text = "→", texthl = "DiagnosticVirtualTextError", linehl = "", numhl = "DiagnosticError" }
+)
 vim.fn.sign_define(
     "DapBreakpointRejected",
     { text = "R", texthl = "DiagnosticError", linehl = "", numhl = "DiagnosticError" }
@@ -24,15 +27,43 @@ vim.fn.sign_define(
 return {
     {
         "mfussenegger/nvim-dap",
-        dependencies = { { "theHamsta/nvim-dap-virtual-text", opts = {} } },
+        version = false,
+        dependencies = {
+            {
+                "theHamsta/nvim-dap-virtual-text",
+                opts = { only_first_definition = false, highlight_new_as_changed = true },
+            },
+        },
         keys = {
-            { "<leader>bk", function() require("dap").continue() end },
-            { "<leader>bj", function() require("dap").step_over() end },
-            { "<leader>bl", function() require("dap").step_into() end },
-            { "<leader>bh", function() require("dap").step_out() end },
-            { "<leader>bb", function() require("dap").toggle_breakpoint() end },
-            { "<leader>br", function() require("dap").run_last() end },
-            { "<leader>bv", function() require("dap.ui.widgets").hover() end },
+            { "<leader>bk", function() require("dap").continue() end, { desc = "dap continue" } },
+            {
+                "<C-down>",
+                function()
+                    require("dap").step_over()
+                    vim.fn.feedkeys("zz")
+                end,
+                { desc = "dap step over" },
+            },
+            {
+                "<C-right>",
+                function()
+                    require("dap").step_into()
+                    vim.fn.feedkeys("zz")
+                end,
+                { desc = "dap step in" },
+            },
+            {
+                "<C-left>",
+                function()
+                    require("dap").step_out()
+                    vim.fn.feedkeys("zz")
+                end,
+                { desc = "dap step out" },
+            },
+            { "<leader>bb", function() require("dap").toggle_breakpoint() end, { desc = "dap toggle breakpoint" } },
+            { "<leader>br", function() require("dap").run_last() end, { desc = "dap rerun last" } },
+            { "<leader>bc", function() require("dap").close() end, { desc = "dap close" } },
+            { "<C-up>", function() require("dap.ui.widgets").hover() end, { desc = "dap hover" } },
         },
     },
     {
@@ -51,5 +82,9 @@ return {
         dependencies = { "mfussenegger/nvim-dap" },
         lazy = true,
         config = function() require("dap-go").setup() end,
+    },
+    {
+        "igorlfs/nvim-dap-view",
+        opts = {},
     },
 }
