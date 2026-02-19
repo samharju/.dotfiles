@@ -1,56 +1,82 @@
-local api = require("samharju.cospaget.api")
+local Session = require("samharju.cospaget.session")
 
-vim.keymap.set("i", "<c-f>", function() api.complete(true) end)
-vim.keymap.set("n", "<leader>co", function() api.chat() end)
-vim.api.nvim_create_user_command("CospagetChat", function() api.chat() end, {})
-vim.api.nvim_create_user_command("CospagetLastPrompt", function() vim.cmd.e(api.last_prompt_file) end, {})
-vim.api.nvim_create_user_command("CospagetModel", api.select_model, {})
-vim.api.nvim_create_user_command("CospagetThinkToggle", function()
-    api.params.think = not api.params.think
-    vim.notify(string.format("ollama thinks: %s", api.params.think))
-end, {})
+vim.keymap.set("n", "<leader>co", function() Session:new({ save = true }):start() end)
+vim.api.nvim_create_user_command("CospagetContinue", function() Session.load({ save = true }) end, {})
 
-api.prompt = "split"
+-- vim.keymap.set("i", "<c-f>", function() api.complete(true) end)
+-- vim.keymap.set("n", "<leader>co", function() api.generate() end)
 
-api.system = [[
-You are Cospaget, an amazing and efficient work assistant.
-You, Cospaget, are an assistant to me, a technical leader and an experienced senior developer named Sami.
-You, Cospaget, refer me as Mestari.
-
-I do not need explanation for every trivial detail, I'm usually only interested to
-get a concise response so that I can just move on with my tasks and clear the table.
-
-Do not hallusinate.
-
-]]
-
-api.prompts({
-    CospagetDocstring = {
-        prompt = [[
-Generate docstring for this function.
-Respond with format:
-
-```$filetype
-{content}
-```
-In which only content is the docstring.
-
-$function_def
-]],
-        use_system = false,
-    },
-    CospagetFixDiag = [[
-How to fix this error:
-
-$diag
-
-File content:
-
-$buffer
-]],
-    CospagetSummarize = [[
-Summarize this $filetype for me:
-
-$yank
-]],
-})
+-- vim.api.nvim_create_user_command("CospagetChat", function() api.generate() end, {})
+-- vim.api.nvim_create_user_command("CospagetChatNoSystem", function() api.generate({ use_system = false }) end, {})
+-- vim.api.nvim_create_user_command("CospagetLastPrompt", function() vim.cmd.e(api.last_prompt_file) end, {})
+-- vim.api.nvim_create_user_command("CospagetModel", api.select_model, {})
+-- vim.api.nvim_create_user_command("CospagetThinkToggle", function()
+--     api.params.think = not api.params.think
+--     vim.notify(string.format("ollama thinks: %s", api.params.think))
+-- end, {})
+--
+-- api.prompt = "split"
+--
+-- api.system = [[
+-- You are Cospaget, an amazing and efficient work assistant.
+-- You, Cospaget, are an assistant to me, a technical leader and an experienced senior developer named Sami.
+-- You, Cospaget, refer to me as Mestari.
+--
+-- I do not need explanation for every trivial detail, I'm usually only interested to
+-- get a concise response so that I can just move on with my tasks and clear the table.
+--
+-- ]]
+--
+-- api.prompts({
+--     CospagetDocstring = {
+--         model = "llama3.2:3b",
+--         use_system = false,
+--         think = false,
+--         callback = function(params)
+--             local text = table.concat(vim.api.nvim_buf_get_lines(params.output_buf, 0, -1, false), "\n")
+--             for m in string.gmatch(text, [[```%a+(.*)```]]) do
+--                 vim.fn.setreg("+", m, "l")
+--                 vim.notify("Generated docstring copied to clipboard")
+--                 return
+--             end
+--         end,
+--         prompt = [[
+-- Generate docstring for this function.
+-- Respond with format:
+--
+-- ```$filetype
+-- {content}
+-- ```
+-- In which only content is the docstring without the function declaration and wrapped in triple backticks.
+--
+-- $function_def
+-- ]],
+--     },
+--
+--     CospagetFixDiag = [[
+-- How to fix this error:
+--
+-- $diag
+--
+-- File content:
+--
+-- $buffer
+-- ]],
+--
+--     CospagetSummarize = [[
+-- Summarize this $filetype snippet for me:
+--
+-- $yank
+-- ]],
+--
+--     CospagetReleaseNote = {
+--         use_system = false,
+--         prompt = [[
+-- Summarize these changes for a tag description.
+--
+-- -----
+-- $yank
+-- -----
+-- ]],
+--     },
+-- })

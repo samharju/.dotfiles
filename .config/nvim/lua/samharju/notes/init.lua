@@ -1,3 +1,4 @@
+local notedir = vim.fn.expand("~/user/documents/notes/")
 vim.api.nvim_create_user_command(
     "Notes",
     function()
@@ -5,7 +6,7 @@ vim.api.nvim_create_user_command(
             no_ignore = true,
             hidden = true,
             prompt_title = "Notes",
-            cwd = "~/notes",
+            cwd = notedir,
         })
     end,
     {}
@@ -16,7 +17,7 @@ vim.api.nvim_create_user_command("NotesNew", function()
         prompt = "Note name: ",
         default = os.date("%Y-%m-%d") .. ".md",
     })
-    local p = vim.fn.expand("~/notes/" .. fname)
+    local p = notedir .. fname
     os.execute("mkdir -p " .. vim.fn.fnamemodify(p, ":p:h"))
     vim.cmd.e(p)
 end, {})
@@ -28,7 +29,7 @@ vim.api.nvim_create_user_command(
             no_ignore = true,
             hidden = true,
             prompt_title = "Notes",
-            cwd = "~/notes",
+            cwd = notedir,
         })
     end,
     {}

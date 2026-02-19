@@ -1,5 +1,3 @@
-vim.lsp.config("*", { capabilities = require("cmp_nvim_lsp").default_capabilities() })
-
 vim.lsp.enable({
     "lua_ls",
     "basedpyright",
@@ -9,4 +7,5 @@ vim.lsp.enable({
     "ansiblels",
     "bashls",
     "ts_ls",
+    "html",
 })

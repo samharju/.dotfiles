@@ -10,30 +10,33 @@ autocmd({ "VimEnter", "ColorScheme", "BufEnter" }, {
     group = grp,
     pattern = "*",
     callback = function()
-        vim.fn.matchadd("Todo", [[.*\(TODO\|FIXME\|\<FIX\>\|breakpoint(\?)\?\).*]], 100)
+        vim.api.nvim_set_hl(0, "BreakpointHL", { link = "DiagnosticVirtualTextError" })
+        vim.fn.matchadd("BreakpointHL", [[\(TODO\|FIXME\|\<FIX\>\).*\|breakpoint(.*)]], 100)
 
         vim.api.nvim_set_hl(0, "DiagnosticUnderlineError", { undercurl = true, sp = fg_from("DiagnosticError") })
         vim.api.nvim_set_hl(0, "DiagnosticUnderlineWarn", { undercurl = true, sp = fg_from("DiagnosticWarn") })
-        vim.api.nvim_set_hl(0, "DiagnosticUnderlineInfo", { undercurl = true, sp = fg_from("DiagnosticInfo") })
-        vim.api.nvim_set_hl(0, "DiagnosticUnderlineHint", { undercurl = true, sp = fg_from("DiagnosticHint") })
-        vim.api.nvim_set_hl(0, "DiagnosticUnderlineOk", { undercurl = true, sp = fg_from("DiagnosticOk") })
+        vim.api.nvim_set_hl(0, "DiagnosticUnderlineInfo", { undercurl = false, sp = fg_from("DiagnosticInfo") })
+        vim.api.nvim_set_hl(0, "DiagnosticUnderlineHint", { undercurl = false, sp = fg_from("DiagnosticHint") })
+        vim.api.nvim_set_hl(0, "DiagnosticUnderlineOk", { undercurl = false, sp = fg_from("DiagnosticOk") })
 
-        vim.api.nvim_set_hl(0, "CmpItemAbbrMatch", { link = "Keyword", default = true })
+        for k, v in pairs({
+            Class = "Type",
+            Method = "Function",
+            Keyword = "Keyword",
+            Constant = "Constant",
+            Function = "Function",
+            Operator = "Operator",
+            Variable = "Variable",
+            Text = "Comment",
+            Snippet = "Type",
+        }) do
+            vim.api.nvim_set_hl(0, string.format("BlinkCmpKind%s", k), { link = v })
+        end
 
-        vim.api.nvim_set_hl(0, "CmpItemKindClass", { link = "Type", default = true })
-        vim.api.nvim_set_hl(0, "CmpItemKindMethod", { link = "Function", default = true })
-        vim.api.nvim_set_hl(0, "CmpItemKindKeyword", { link = "Keyword", default = true })
-        vim.api.nvim_set_hl(0, "CmpItemKindConstant", { link = "Constant", default = true })
-        vim.api.nvim_set_hl(0, "CmpItemKindFunction", { link = "Function", default = true })
-        vim.api.nvim_set_hl(0, "CmpItemKindOperator", { link = "Operator", default = true })
-        vim.api.nvim_set_hl(0, "CmpItemKindVariable", { link = "Variable", default = true })
-        vim.api.nvim_set_hl(0, "CmpItemKindText", { link = "Comment", default = true })
-        vim.api.nvim_set_hl(0, "CmpItemKindSnippet", { link = "Type", default = true })
-
-        vim.api.nvim_set_hl(0, "fugitiveUntrackedModifier", { link = "Special", default = true })
-        vim.api.nvim_set_hl(0, "fugitiveUnstagedModifier", { link = "Changed", default = true })
-        vim.api.nvim_set_hl(0, "fugitiveStagedModifier", { link = "Added", default = true })
-        vim.api.nvim_set_hl(0, "fugitiveHunk", { link = "Comment", default = true })
+        vim.api.nvim_set_hl(0, "fugitiveUntrackedModifier", { link = "Special" })
+        vim.api.nvim_set_hl(0, "fugitiveUnstagedModifier", { link = "Changed" })
+        vim.api.nvim_set_hl(0, "fugitiveStagedModifier", { link = "Added" })
+        vim.api.nvim_set_hl(0, "fugitiveHunk", { link = "Comment" })
 
         vim.api.nvim_set_hl(0, "GitSignsCurrentLineBlame", { link = "Comment" })
         vim.api.nvim_set_hl(0, "GitSignsAddInline", { link = "added" })
@@ -67,26 +70,74 @@ autocmd("BufReadPre", {
     end,
 })
 
-local function trace()
-    local buf = vim.api.nvim_create_buf(false, true)
+local function runcmd(args, opt)
+    local opts = opt or {}
+    if opts.stdout ~= false then require("samharju.notify").big(table.concat(args, " ")) end
+    local c = nil
+    if opts.callback then c = vim.schedule_wrap(opts.callback) end
 
-    vim.cmd.split()
-    vim.api.nvim_set_current_buf(buf)
+    local stdout = nil
+    local stderr = nil
+    if opts.stdout ~= false then
+        stdout = vim.schedule_wrap(function(err, data) require("samharju.notify").big(data) end)
+    end
+    if opts.stderr ~= false then
+        stderr = vim.schedule_wrap(function(err, data) require("samharju.notify").big(data) end)
+    end
 
-    autocmd("LspProgress", {
-        group = grp,
-        callback = function(event) vim.api.nvim_buf_set_lines(buf, -1, -1, false, vim.split(vim.inspect(event), "\n")) end,
-    })
+    vim.system(args, {
+        text = true,
+        stdout = stdout,
+        stderr = stderr,
+    }, c)
 end
 
-local function proge()
-    autocmd("LspProgress", {
-        group = grp,
-        callback = function(event)
-            local e = event.data.params.value
-            local lsp = vim.lsp.get_client_by_id(event.data.client_id).name
-            if e.kind == "begin" then vim.print(string.format("[%s]: %s %s", lsp, e.title, e.message or "")) end
-        end,
-    })
-    vim.g.proge_created = 1
-end
+autocmd({ "User" }, {
+    group = grp,
+    pattern = "VeryLazy",
+    callback = function()
+        runcmd({ "git", "rev-parse", "HEAD" }, {
+            stdout = false,
+            stderr = false,
+            callback = function(out)
+                if out.code ~= 0 then return end
+                runcmd(
+                    { "git", "fetch", "--all" },
+                    { callback = function() runcmd({ "git", "status", "--short" }) end }
+                )
+            end,
+        })
+    end,
+})
+
+autocmd("BufEnter", {
+    callback = function()
+        local bufs = vim.fn.getbufinfo({ buflisted = 1 })
+        if #bufs <= 10 then return end
+
+        local wins = vim.api.nvim_list_wins()
+        local visible_bufs = {}
+        for _, win in ipairs(wins) do
+            local vbuf = vim.api.nvim_win_get_buf(win)
+            visible_bufs[tostring(vbuf)] = true
+        end
+
+        local to_delete = -1
+        local used = 0
+
+        local t = os.time()
+        for _, buf in ipairs(bufs) do
+            if visible_bufs[tostring(buf.bufnr)] == nil then
+                local since = t - buf.lastused
+                if since > used then
+                    used = since
+                    to_delete = buf.bufnr
+                end
+            end
+        end
+        if to_delete < 0 then return end
+
+        vim.notify("Dropped " .. vim.fn.fnamemodify(vim.api.nvim_buf_get_name(to_delete), ":t"))
+        vim.cmd("bdelete " .. to_delete)
+    end,
+})

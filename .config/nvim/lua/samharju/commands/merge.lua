@@ -1,4 +1,5 @@
 local cmd = vim.api.nvim_create_user_command
+local notify = require("samharju.notify").big
 
 cmd("MergeReviewDiffview", function()
     local c = { "git", "symbolic-ref", "refs/remotes/origin/HEAD" }
@@ -22,19 +23,19 @@ cmd("MergeReviewDiffview", function()
 end, {})
 
 cmd("MergeReviewSigns", function(args)
-    vim.print("Tampering gitsings base for reviewing current branch")
+    notify("Tampering gitsings base for reviewing current branch")
     local comp = args.args
 
     if comp == "" then
         local c = { "git", "symbolic-ref", "refs/remotes/origin/HEAD" }
-        vim.print(table.concat(c, " "))
+        notify(table.concat(c, " "))
 
         local out = vim.system(c, { text = true }):wait()
-        vim.print(out.stdout)
+        notify(out.stdout)
 
         if out.code ~= 0 then
-            vim.print(out.stderr, vim.log.levels.ERROR)
-            vim.print("Mergereview: Could not figure remote HEAD", vim.log.levels.ERROR)
+            notify(out.stderr, vim.log.levels.ERROR)
+            notify("Mergereview: Could not figure remote HEAD", vim.log.levels.ERROR)
         end
 
         comp = string.gsub(out.stdout, "\n", "")
@@ -48,13 +49,13 @@ cmd("MergeReviewSigns", function(args)
         "HEAD",
     }
 
-    vim.print(table.concat(c, " "))
+    notify(table.concat(c, " "))
     local out = vim.system(c, { text = true }):wait()
-    vim.print(out.stdout)
+    notify(out.stdout)
 
     if out.code ~= 0 then
-        vim.print(out.stderr, vim.log.levels.ERROR)
-        vim.print("Could not figure base", vim.log.levels.ERROR)
+        notify(out.stderr, vim.log.levels.ERROR)
+        notify("Could not figure base", vim.log.levels.ERROR)
         return
     end
 
@@ -63,29 +64,23 @@ cmd("MergeReviewSigns", function(args)
     require("gitsigns").change_base(forkpoint, true)
     require("gitsigns").toggle_linehl(true)
     require("gitsigns").toggle_word_diff(true)
-    vim.print("Gitsigns base set to " .. forkpoint)
+    notify("Gitsigns base set to " .. forkpoint)
 
     c = { "git", "diff", comp, "HEAD", "--name-only" }
-    vim.print(table.concat(c, " "))
+    notify(table.concat(c, " "))
     out = vim.system(c, { text = true }):wait()
-    vim.print(out.stdout)
+    notify(out.stdout)
 
-    for _, fname in ipairs(vim.split(out.stdout, "\n")) do
-        if fname ~= "" then vim.cmd.e(fname) end
-    end
-
-    vim.defer_fn(function() require("gitsigns").setqflist("attached") end, 2000)
+    vim.defer_fn(function() require("gitsigns").setqflist("all") end, 1000)
 end, { nargs = "?" })
 
 local ns = vim.api.nvim_create_namespace("mergestatus-diag")
 
 cmd("MergeStatus", function(args)
-    local cmdargs = { "gitlab-merge-status" }
-    for _, a in ipairs(vim.split(args.args, " ")) do
-        if a ~= "" then table.insert(cmdargs, a) end
-    end
+    ---@param out vim.SystemCompleted
     local callback = function(out)
-        vim.print(out.stderr)
+        notify(out.stderr)
+        if out.code ~= 0 then return end
         local d = vim.fn.getqflist({
             lines = vim.split(out.stdout, "\n"),
             efm = "%f:%l|%t|%m,%t|%m,%tRROR: %m,%tARNING: %m,%-G\\s%#",
@@ -120,6 +115,11 @@ cmd("MergeStatus", function(args)
         end
     end
 
+    local cmdargs = { "gitlab-merge-status" }
+    for _, a in ipairs(vim.split(args.args, " ")) do
+        if a ~= "" then table.insert(cmdargs, a) end
+    end
+    notify(table.concat(cmdargs, " "))
     vim.system(cmdargs, {
         text = true,
     }, vim.schedule_wrap(callback))
@@ -132,4 +132,10 @@ cmd("MergeConflicts", function(args)
     vim.cmd([[ grep! "<<<<\|>>>>" ]])
     vim.cmd([[copen]])
     vim.cmd([[wincmd p]])
+end, {})
+
+cmd("WatchPipeline", function()
+    require("samharju.terminal").float_terminal()
+    local chan = vim.bo.channel
+    vim.api.nvim_chan_send(chan, "watch -t gitlab-pipeline-status\n")
 end, {})

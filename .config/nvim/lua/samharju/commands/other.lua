@@ -71,7 +71,7 @@ cmd("GitLineHistory", function()
     local start = vim.fn.getpos("'<")
     local stop = vim.fn.getpos("'>")
 
-    vim.cmd(string.format("Git log -L %s,%s:%s", start[2], stop[2], vim.fn.expand("%")))
+    vim.cmd(string.format("Git log -L %s,%s:%s", start[2], stop[2], vim.fn.expand("%:p")))
 end, { range = 1 })
 
 cmd("Whatnow", function()
@@ -100,6 +100,6 @@ end, {})
 cmd("LastCommit", function()
     vim.system({ "git", "-C", vim.uv.cwd(), "log", "-1", "--pretty=%B" }, { text = true }, function(out)
         local b = out.stdout:match("([^\n]+)")
-        if b ~= nil then vim.print(b) end
+        if b ~= nil then vim.notify(b) end
     end)
 end, {})

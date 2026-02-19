@@ -25,7 +25,12 @@ vim.keymap.set("n", "<leader>P", '"+P')
 
 vim.keymap.set("n", "<leader>i", ":Inspect<CR>")
 
-local nustate = 2
+vim.keymap.set("n", "]q", ":cnext<CR>zz", { silent = true })
+vim.keymap.set("n", "[q", ":cprev<CR>zz", { silent = true })
+vim.keymap.set("n", "]c", ":lnext<CR>zz", { silent = true })
+vim.keymap.set("n", "[c", ":lprev<CR>zz", { silent = true })
+
+local nustate = 0
 vim.keymap.set("n", "<leader>'", function()
     nustate = nustate + 1
     if nustate > 2 then nustate = 0 end
@@ -45,9 +50,18 @@ end)
 -- back and forth
 vim.keymap.set("n", "<leader>;", "<C-^>", { desc = "alt buffer" })
 
-vim.keymap.set("n", "<leader>w", vim.diagnostic.open_float, { desc = "Open diagnostic" })
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setqflist, { desc = "Diagnostic qf" })
-vim.keymap.set("n", "<leader>d", vim.diagnostic.setloclist, { desc = "Diagnostic qf" })
+vim.keymap.set(
+    "n",
+    "<leader>q",
+    function() vim.diagnostic.setqflist({ severity = { min = vim.diagnostic.severity.WARN } }) end,
+    { desc = "Diagnostic qf" }
+)
+vim.keymap.set(
+    "n",
+    "<leader>d",
+    function() vim.diagnostic.setloclist({ severity = { min = vim.diagnostic.severity.WARN } }) end,
+    { desc = "Diagnostic loclist" }
+)
 
 -- lsp 0.11 ,appings:
 -- grn N vim.lsp.buf.rename()
@@ -61,8 +75,8 @@ vim.keymap.set("n", "gD", vim.lsp.buf.declaration)
 vim.keymap.set("n", "gd", vim.lsp.buf.definition)
 vim.keymap.set({ "n", "i", "s" }, "<C-k>", function() vim.lsp.buf.signature_help({ border = "rounded" }) end)
 
-local buf = vim.api.nvim_create_buf(false, true)
-local win = -1
+local crumb_buf = nil
+local crumb_win = -1
 
 local function crumbs(patterns)
     local n = vim.treesitter.get_node()
@@ -83,7 +97,8 @@ local function crumbs(patterns)
     local nodes = {}
     local len = 0
     for i, txt in ipairs(stack) do
-        local r = string.rep("  ", #stack - i) .. txt
+        local padding = string.rep(" ", vim.bo.shiftwidth)
+        local r = string.rep(padding, #stack - i) .. txt
         table.insert(nodes, 1, r)
         if #r > len then len = #r end
     end
@@ -93,11 +108,12 @@ end
 vim.api.nvim_create_autocmd("CursorMoved", {
     group = vim.api.nvim_create_augroup("asd", { clear = true }),
     callback = function(_)
-        if vim.api.nvim_win_is_valid(win) then vim.api.nvim_win_close(win, false) end
+        if vim.api.nvim_win_is_valid(crumb_win) then vim.api.nvim_win_close(crumb_win, false) end
     end,
 })
 
 vim.keymap.set("n", "<C-j>", function()
+    if vim.api.nvim_win_is_valid(crumb_win) then return end
     local lines, w = crumbs({
         "class",
         "method",
@@ -110,17 +126,20 @@ vim.keymap.set("n", "<C-j>", function()
         "call",
         "except_clause",
     })
+    if #lines == 0 then return end
 
-    vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-    vim.api.nvim_set_option_value("ft", vim.bo.filetype, { buf = buf })
-    vim.diagnostic.enable(false, { bufnr = buf })
+    if crumb_buf == nil then crumb_buf = vim.api.nvim_create_buf(false, true) end
+    vim.api.nvim_buf_set_lines(crumb_buf, 0, -1, false, lines)
+    vim.api.nvim_set_option_value("ft", vim.bo.filetype, { buf = crumb_buf })
+    vim.diagnostic.enable(false, { bufnr = crumb_buf })
 
-    win = vim.api.nvim_open_win(buf, false, {
+    local pos = vim.fn.getcharpos(".")
+    crumb_win = vim.api.nvim_open_win(crumb_buf, false, {
         relative = "cursor",
         width = w + 2,
         height = #lines,
         row = -2 - #lines,
-        col = 0,
+        col = -pos[3],
         border = "rounded",
         style = "minimal",
     })

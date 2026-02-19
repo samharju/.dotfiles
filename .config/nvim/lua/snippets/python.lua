@@ -50,7 +50,20 @@ return {
             "",
             "logging.basicConfig(",
             "\tlevel=logging.INFO,",
-            '\tformat="%(name)s:%(filename)s:%(lineno)s [%(levelname)s]: %(message)s"',
+            '\tformat="%(asctime)s %(name)s:%(filename)s:%(lineno)s [%(levelname)s]: %(message)s"',
+            ")",
+            "",
+            "logger = logging.getLogger(__name__)",
+        })
+    ),
+    s(
+        { trig = "simplelog", snippetType = "autosnippet" },
+        t({
+            "import logging",
+            "",
+            "logging.basicConfig(",
+            "\tlevel=logging.DEBUG,",
+            '\tformat="%(asctime)s %(filename)s:%(lineno)s:%(levelname)s: %(message)s"',
             ")",
             "",
             "logger = logging.getLogger(__name__)",

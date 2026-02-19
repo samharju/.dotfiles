@@ -12,3 +12,5 @@ require("samharju.custom.filetypes")
 require("samharju.lsp")
 
 vim.cmd.colorscheme("quitequiet-transparent")
+
+vim.notify = require("samharju.notify").small

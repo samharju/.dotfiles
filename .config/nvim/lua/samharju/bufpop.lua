@@ -7,7 +7,7 @@ local M = { opts = { auto = false } }
 
 local ns = vim.api.nvim_create_namespace("bufpop")
 
-local make_config = function(h, w, style, relative)
+local make_config = function(h, w, style, offset)
     local common = {
         focusable = false,
         style = "minimal",
@@ -16,48 +16,48 @@ local make_config = function(h, w, style, relative)
     }
 
     local win_configs = {
-        float = {
-            relative = "editor",
-            width = w + vim.o.sidescrolloff,
-            height = h,
-            row = vim.o.lines - vim.o.cmdheight - h - 3,
-            col = 0,
-            border = "rounded",
-        },
-        center = {
-            relative = "win",
-            width = w + vim.o.sidescrolloff,
-            height = h,
-            row = vim.api.nvim_win_get_height(0) / 2 - h / 2,
-            col = vim.api.nvim_win_get_width(0) / 2 - w / 2,
-            border = "single",
-        },
+        -- float = {
+        --     relative = "editor",
+        --     width = w + vim.o.sidescrolloff,
+        --     height = h,
+        --     row = vim.o.lines - vim.o.cmdheight - h - 3,
+        --     col = 0,
+        --     border = "rounded",
+        -- },
+        -- center = {
+        --     relative = "win",
+        --     width = w + vim.o.sidescrolloff,
+        --     height = h,
+        --     row = vim.api.nvim_win_get_height(0) / 2 - h / 2,
+        --     col = vim.api.nvim_win_get_width(0) / 2 - w / 2,
+        --     border = "single",
+        -- },
         cursor = {
             relative = "cursor",
             width = w + vim.o.sidescrolloff,
             height = h,
-            row = -1,
-            col = -3,
+            row = 0 - offset,
+            col = -1,
             border = "single",
         },
-        bottom = {
-            relative = "editor",
-            width = vim.o.columns,
-            height = h + 1,
-            row = vim.api.nvim_win_get_height(0) - h - 2,
-            col = 0,
-            style = "minimal",
-            border = { "─", "─", "─", "", "", "", "", " " },
-        },
-        top = {
-            relative = "win",
-            width = vim.api.nvim_win_get_width(0),
-            height = h,
-            row = 0,
-            col = 0,
-            style = "minimal",
-            border = { "", "", "", "", "─", "─", "─", "" },
-        },
+        -- bottom = {
+        --     relative = "editor",
+        --     width = vim.o.columns,
+        --     height = h + 1,
+        --     row = vim.api.nvim_win_get_height(0) - h - 2,
+        --     col = 0,
+        --     style = "minimal",
+        --     border = { "─", "─", "─", "", "", "", "", " " },
+        -- },
+        -- top = {
+        --     relative = "win",
+        --     width = vim.api.nvim_win_get_width(0),
+        --     height = h,
+        --     row = 0,
+        --     col = 0,
+        --     style = "minimal",
+        --     border = { "", "", "", "", "─", "─", "─", "" },
+        -- },
     }
 
     return vim.tbl_extend("force", common, win_configs[style])
@@ -70,9 +70,10 @@ end
 ---@param style string layout
 ---@param enter boolean
 ---@return integer
-local function open_popup(buffer, h, w, style, enter)
-    local cfg = make_config(h, w, style)
+local function open_popup(buffer, h, w, style, enter, offset)
+    local cfg = make_config(h, w, style, offset)
     local winid = vim.api.nvim_open_win(buffer, enter, cfg)
+    vim.api.nvim_win_set_cursor(winid, { offset, 0 })
     vim.wo[winid].winhl = "NormalFloat:Normal"
     return winid
 end
@@ -83,6 +84,7 @@ local buffers = {}
 ---Populate given buffer with open buffer names.
 ---Returns two numbers, line count and columns on longest line.
 ---@param buffer integer
+---@return integer
 ---@return integer
 ---@return integer
 local function populate_buffer(buffer)
@@ -125,7 +127,7 @@ local function populate_buffer(buffer)
         vim.api.nvim_buf_set_extmark(buffer, ns, i - 1, 0, { sign_hl_group = "Type", sign_text = b.label })
     end
 
-    return #buffers, w
+    return #buffers, w, hi
 end
 
 local popup_buf = nil
@@ -146,10 +148,10 @@ local function bufpopup(opts)
     local cbuf = vim.api.nvim_get_current_buf()
     if cbuf == popup_buf then return end
 
-    local h, w = populate_buffer(popup_buf)
+    local h, w, cl = populate_buffer(popup_buf)
     if h == 0 then return end
 
-    local winid = open_popup(popup_buf, h, w, opts.style, opts.enter)
+    local winid = open_popup(popup_buf, h, w, opts.style, opts.enter, cl)
 
     if popup_win ~= nil and vim.api.nvim_win_is_valid(popup_win) then vim.api.nvim_win_hide(popup_win) end
 
