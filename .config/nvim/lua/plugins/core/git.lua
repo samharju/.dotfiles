@@ -1,3 +1,9 @@
+local function test_git()
+    local out = vim.system({ "git", "symbolic-ref", "--short", "HEAD" }):wait()
+    if out.code ~= 0 then vim.print("not a git repo") end
+    return out.code == 0
+end
+
 return {
     {
         "tpope/vim-fugitive",
@@ -6,16 +12,23 @@ return {
             {
                 "<leader>gs",
                 function()
+                    if not test_git() then return end
                     if vim.api.nvim_get_option_value("filetype", { buf = 0 }) == "fugitive" then return end
+                    local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":.")
                     vim.cmd("vert Git")
                     vim.cmd("wincmd H")
                     vim.cmd("vert res 69")
+                    if fname ~= "" then
+                        vim.fn.search(fname)
+                        vim.fn.feedkeys("0>zz")
+                    end
                 end,
                 desc = "git fugitive",
             },
             {
                 "<leader>gg",
                 function()
+                    if not test_git() then return end
                     local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":.")
                     for _, t in ipairs(vim.api.nvim_list_tabpages()) do
                         if vim.t[t].git_page == 1 then
@@ -55,7 +68,7 @@ return {
         event = "VeryLazy",
         opts = {
             current_line_blame_opts = {
-                delay = 1000,
+                delay = 250,
                 virt_text_pos = "eol",
             },
             signs = {
@@ -72,6 +85,11 @@ return {
                 "<leader>hs",
                 function() require("gitsigns").stage_hunk() end,
                 desc = "git hunk stage",
+            },
+            {
+                "<leader>hq",
+                function() require("gitsigns").setqflist("all") end,
+                desc = "git hunk qf",
             },
             {
                 "<leader>hu",

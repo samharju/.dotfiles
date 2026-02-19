@@ -88,17 +88,19 @@ return {
         {
             "<leader>fg",
             function()
-                require("telescope.builtin").git_status({
-                    attach_mappings = function(_, map)
-                        map("i", "<cr>", function(prompt_bufnr)
-                            local entry = require("telescope.actions.state").get_selected_entry()
-                            require("telescope.actions").close(prompt_bufnr)
-                            vim.cmd.e(entry.value)
-                            vim.defer_fn(function() require("gitsigns").nav_hunk('first') end, 500)
-                        end)
-                        return true
-                    end,
-                })
+                pcall(function()
+                    require("telescope.builtin").git_status({
+                        attach_mappings = function(_, map)
+                            map("i", "<cr>", function(prompt_bufnr)
+                                local entry = require("telescope.actions.state").get_selected_entry()
+                                require("telescope.actions").close(prompt_bufnr)
+                                vim.cmd.e(entry.value)
+                                vim.defer_fn(function() require("gitsigns").nav_hunk("first") end, 500)
+                            end)
+                            return true
+                        end,
+                    })
+                end)
             end,
             desc = "tele git_status",
         },
@@ -109,7 +111,35 @@ return {
         },
         {
             "<leader>fv",
-            function() require("telescope.builtin").git_files() end,
+            function()
+                pcall(function() require("telescope.builtin").git_files() end)
+            end,
+            desc = "tele git files",
+        },
+        {
+            "<leader>fm",
+            function()
+                pcall(function()
+                    local out = vim.system({
+                        "git",
+                        "merge-base",
+                        "--fork-point",
+                        "refs/remotes/origin/HEAD",
+                        "HEAD",
+                    }, { text = true }):wait()
+
+                    if out.code ~= 0 then
+                        vim.print("git merge-base --fork-point refs/remotes/origin/HEAD HEAD\n" .. out.stderr)
+                        return
+                    end
+
+                    local sha = string.gsub(out.stdout, "\n", "")
+
+                    require("telescope.builtin").git_files({
+                        git_command = { "git", "diff", sha, "HEAD", "--name-only" },
+                    })
+                end)
+            end,
             desc = "tele git files",
         },
         {
@@ -118,13 +148,21 @@ return {
             desc = "tele live_grep",
         },
         {
+            "<leader>fk",
+            function() require("telescope.builtin").treesitter({ ignore_symbols = { "var", "parameter" } }) end,
+            desc = "tele treesitter",
+        },
+        {
             "<leader>fs",
             function() require("telescope.builtin").grep_string() end,
             desc = "tele grep_string",
         },
         {
             "<leader>fb",
-            function() require("telescope.builtin").git_branches() end,
+            function()
+                pcall(function() require("telescope.builtin").git_branches() end)
+            end,
+
             desc = "tele git_branches",
         },
         {
@@ -153,24 +191,6 @@ return {
             desc = "tele resume last search",
         },
         {
-            "<leader>fk",
-            function()
-                require("telescope.builtin").find_files({
-                    hidden = false,
-                    find_command = { "fd", "--type", "d", "--color", "never", "-d", "4" },
-                    attach_mappings = function(_, map)
-                        map("i", "<CR>", function(prompt_bufnr)
-                            local entry = require("telescope.actions.state").get_selected_entry()
-                            require("telescope.actions").close(prompt_bufnr)
-                            vim.cmd("e " .. entry[1])
-                        end)
-                        return true
-                    end,
-                })
-            end,
-            desc = "tele folders",
-        },
-        {
             "<leader>fj",
             function()
                 local pickers = require("telescope.pickers")
@@ -183,31 +203,22 @@ return {
                     command_generator = function(prompt)
                         if not prompt or prompt == "" then return nil end
 
-                        local prompt_args = vim.split(prompt, ":", { trimempty = true })
-                        local args = { "rg" }
-                        if #prompt_args == 2 then
-                            table.insert(args, "-g")
-                            table.insert(args, prompt_args[1])
+                        local glob, pattern = string.match(prompt, "(.-) (.*)")
+                        if not glob or not pattern then return end
 
-                            table.insert(args, "-e")
-                            table.insert(args, prompt_args[2])
-                        else
-                            return nil
-                        end
-
-                        return vim.iter({
-                            args,
-                            {
-                                "--color=never",
-                                "--no-heading",
-                                "--with-filename",
-                                "--line-number",
-                                "--column",
-                                "--smart-case",
-                            },
-                        })
-                            :flatten()
-                            :totable()
+                        return {
+                            "rg",
+                            "-g",
+                            glob .. "*",
+                            "-e",
+                            pattern,
+                            "--color=never",
+                            "--no-heading",
+                            "--with-filename",
+                            "--line-number",
+                            "--column",
+                            "--smart-case",
+                        }
                     end,
                     entry_maker = make_entry.gen_from_vimgrep(opts),
                     cwd = opts.cwd,
@@ -216,7 +227,7 @@ return {
                 pickers
                     .new(opts, {
                         debounce = 100,
-                        prompt_title = "Grep <glob>:<pattern>",
+                        prompt_title = "Grep <glob><space><pattern>",
                         finder = finder,
                         previewer = conf.grep_previewer(opts),
                         sorter = require("telescope.sorters").empty(),

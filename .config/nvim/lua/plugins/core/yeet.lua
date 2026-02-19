@@ -41,7 +41,7 @@ return {
     {
         "samharju/yeet.nvim",
         opts = {
-            clear_before_yeet = true,
+            clear_before_yeet = false,
             retry_last_target_on_failure = true,
             custom_eval = custom_eval,
         },
@@ -64,8 +64,8 @@ return {
                 "<leader>\\",
                 function()
                     require("yeet").execute(nil, {
-                        interrupt_before_yeet = false,
-                        clear_before_yeet = false,
+                        interrupt_before_yeet = true,
+                        clear_before_yeet = true,
                     })
                 end,
                 mode = { "n" },
@@ -74,8 +74,8 @@ return {
                 "<leader>\\",
                 function()
                     require("yeet").execute_selection({
-                        interrupt_before_yeet = false,
-                        clear_before_yeet = false,
+                        interrupt_before_yeet = true,
+                        clear_before_yeet = true,
                     })
                 end,
                 mode = { "v" },
