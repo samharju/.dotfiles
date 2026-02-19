@@ -124,7 +124,7 @@ def command_failed_pipeline_logs(project, branch, color=False):
         mr = project["mergeRequests"]["nodes"][0]
     except Exception:
         logger.exception("no data")
-        return
+        return 1
 
     head = mr["headPipeline"]
 
@@ -149,6 +149,7 @@ def command_failed_pipeline_logs(project, branch, color=False):
             for line in lines:
                 line = re.sub(r"(section_(start|end):\d+:\w+)|\r", "", line)
                 print(re.sub(r"^\$", "i|$", line))
+    return 0
 
 
 def merge_request_comments(
@@ -173,7 +174,7 @@ def merge_request_comments(
     mergerequests = projects[0]["mergeRequests"]["nodes"]
 
     if not mergerequests:
-        logger.info("merge requests not found")
+        logger.info("merge requests not found with state %s", state)
         return {}
 
     mr = mergerequests[0]
@@ -235,12 +236,14 @@ def command_comments(fullpath, branch, show_resolved, no_merge_comments, merged)
         show_merge_comments=no_merge_comments,
         state="merged" if merged else "opened",
     )
-    if not mr and not merged:
-        if not command_comments(
-            fullpath, branch, show_resolved, no_merge_comments, True
-        ):
+    if not mr:
+        if not merged:
+            return command_comments(
+                fullpath, branch, show_resolved, no_merge_comments, True
+            )
+        else:
             print("nothing to show")
-        return False
+        return 1
 
     st = "i"
     if "CANNOT" in mr["status"] or mr["pipeline"] == "FAILED":
@@ -252,7 +255,7 @@ def command_comments(fullpath, branch, show_resolved, no_merge_comments, merged)
         print(f"i|{thumb}")
     if mr["state"] == "merged":
         print(f'merged at: {mr["mergedAt"]}')
-        return True
+        return 0
     else:
         print(f'{st}|[status] {mr["status"]} [pipeline] {mr["pipeline"]}')
 
@@ -263,9 +266,10 @@ def command_comments(fullpath, branch, show_resolved, no_merge_comments, merged)
         else:
             line = f'{c["type"]}|[{c["author"]}] {c["msg"]}'
         print(line)
+    return 0
 
 
-def main():
+def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--resolved", action="store_true", help="show resolved comments"
@@ -290,7 +294,7 @@ def main():
     )
     if remotecmd.returncode != 0:
         print("not a git repo")
-        return
+        return 1
 
     remote = remotecmd.stdout.strip()
     m = re.match(r".*:(.*).git", remote)
@@ -298,7 +302,7 @@ def main():
         fullpath = m.group(1)
     else:
         logger.error("could not figure out path")
-        return
+        return 1
 
     branch = subprocess.check_output(
         ["git", "branch", "--show-current"], text=True
@@ -307,16 +311,16 @@ def main():
     logger.info("using path: %s, branch: %s", fullpath, branch)
 
     if args.pipeline:
-        command_failed_pipeline_logs(fullpath, branch, args.color)
+        return command_failed_pipeline_logs(fullpath, branch, args.color)
     else:
-        command_comments(
+        return command_comments(
             fullpath, branch, args.resolved, args.no_merge_comments, args.merged
         )
 
 
 if __name__ == "__main__":
     try:
-        main()
+        sys.exit(main())
     except Exception as exc:
         print(sys.argv[0] + ": " + str(exc))
         logger.exception("Failed")

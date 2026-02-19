@@ -24,7 +24,7 @@ ZSH_THEME_GIT_PROMPT_STASHED="${cyan} ${reset}"
 ZSH_THEME_GIT_PROMPT_UNMERGED="$red↯$reset"
 ZSH_THEME_GIT_PROMPT_UNTRACKED="${red}_${reset}"
 
-from_git_root () {
+from_git_root() {
     local git_root
     git_root=$(git rev-parse --show-toplevel 2> /dev/null)
     if [[ $? -eq 0 ]]; then
@@ -35,17 +35,31 @@ from_git_root () {
     fi
 }
 
-wip () {
+project() {
+    git_root=$(git rev-parse --show-toplevel 2> /dev/null)
+    if [[ $? -eq 0 ]]; then
+        echo " ${cyan}$(basename $git_root)"
+    fi
+}
+
+wip() {
     if git log -1 --pretty=%B 2> /dev/null | rg -qi wip; then
         echo "${green}-󰲼 "
     fi
 }
 
-local pwd='$(from_git_root)'
+noprojectroot() {
+    git_root=$(git rev-parse --show-toplevel 2> /dev/null)
+    if [[ "$git_root" != "$PWD" ]] ; then
+        echo " $green%1~$reset"
+    fi
+}
+
 local prevcmd="%(?.$green➜.$red%?)$reset"
 local jobs="%1(j.$magenta%j$reset .)"
 local timee="$grey%*$reset"
-local git='$(git_prompt_info)$(git_prompt_status)$(wip)$reset'
+local git='$(project)$(git_prompt_info)$(git_prompt_status)$(wip)$reset'
+local pwd='$(noprojectroot)'
 
-PROMPT="$prevcmd${git} $green${pwd}$reset ${jobs}$grey\$$reset "
+PROMPT="$prevcmd${git}$pwd ${jobs}$grey\$$reset "
 RPROMPT=''

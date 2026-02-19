@@ -86,6 +86,7 @@ export SUDO_EDITOR=$HOME/.local/bin/nvim
 export EDITOR=$HOME/.local/bin/nvim
 export BAT_THEME=OneHalfDark
 export MANPAGER='nvim +Man!'
+export PYTEST_ADDOPTS="--tb=short -q"
 
 eval "$(direnv hook zsh)"
 
