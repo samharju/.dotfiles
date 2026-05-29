@@ -19,10 +19,10 @@ local custom_eval = function(cmd_string)
                         vim.hl.range(
                             0,
                             vim.api.nvim_create_namespace(""),
-                            "Visual",
+                            "Substitute",
                             { sl, sc },
                             { el, ec },
-                            { timeout = 150 }
+                            { timeout = 500 }
                         )
                         return vim.treesitter.get_node_text(v, 0)
                     end
@@ -44,6 +44,20 @@ return {
             clear_before_yeet = false,
             retry_last_target_on_failure = true,
             custom_eval = custom_eval,
+            cache_window_opts = function()
+                local width = math.min(math.ceil(0.6 * vim.o.columns), 120)
+                local height = math.min(25, vim.o.lines - 4)
+
+                return {
+                    relative = "editor",
+                    row = (vim.o.lines - height) * 0.5,
+                    col = (vim.o.columns - width) * 0.5,
+                    width = width,
+                    height = height,
+                    border = "single",
+                    title = "Yeet",
+                }
+            end,
         },
         dev = true,
         keys = {

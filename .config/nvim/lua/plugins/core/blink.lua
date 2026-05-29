@@ -49,6 +49,7 @@ return {
                 },
                 path = {
                     score_offset = 1,
+                    opts = { get_cwd = function() return vim.uv.cwd() end },
                 },
                 buffer = {
                     score_offset = 0,

@@ -28,7 +28,7 @@ local isort = {
         if output == "" then return {} end
         return {
             {
-                lnum = 0,
+                lnum = 1,
                 col = 0,
                 severity = vim.diagnostic.severity.HINT,
                 source = "isort",

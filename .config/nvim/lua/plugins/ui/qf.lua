@@ -4,6 +4,15 @@ return {
     ---@module "quicker"
     ---@type quicker.SetupOptions
     opts = {
+        -- opts = { wrap = true },
+        type_icons = {
+            E = "󰚌 ",
+            W = "󰯈 ",
+            I = "󰋼 ",
+            N = "󰩔 ",
+            H = "󰩔 ",
+        },
+        max_filename_width = function() return math.floor(math.max(25, vim.o.columns / 4)) end,
         keys = {
             {
                 ">",

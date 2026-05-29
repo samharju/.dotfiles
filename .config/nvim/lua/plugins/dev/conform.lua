@@ -27,6 +27,9 @@ return {
                 lua = { "stylua" },
                 go = { "goimports" },
                 python = { "isort", "black" },
+                bash = { "shfmt" },
+                sh = { "shfmt" },
+                zsh = { "shfmt" },
             },
         })
 
