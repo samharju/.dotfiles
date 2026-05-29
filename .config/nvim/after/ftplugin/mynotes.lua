@@ -1,6 +1,4 @@
-if vim.b.did_custom_ftplugin then
-    return
-end
+if vim.b.did_custom_ftplugin then return end
 vim.b.did_custom_ftplugin = 1
 
 vim.fn.matchadd("DiagnosticOk", [[\v.*<OK>.*]], 100)
@@ -12,7 +10,7 @@ cmd("JiraFromFormat", function()
     local content = vim.api.nvim_buf_get_text(0, 0, 0, -1, -1, {})
     local output = {}
     for _, l in ipairs(content) do
-        if string.match(l, "^*.*") then
+        if string.match(l, "^*.*%*$") then
             table.insert(output, "### " .. l)
         else
             l = string.gsub(l, "^%s", "")
@@ -63,18 +61,30 @@ cmd("JiraToFormat", function()
 end, {})
 
 cmd("JiraGetDesc", function()
-    local key = string.match(vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":~"), "FCA_RSP%-%d+")
+    local tickets = {}
+    for i in string.gmatch(vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":~"), "FCA_RSP%-%d+") do
+        table.insert(tickets, i)
+    end
 
-    vim.system({ "jirahero", "get", key }, { text = true }, function(out)
-        vim.schedule(function()
-            local buf = vim.api.nvim_create_buf(false, true)
-            vim.api.nvim_buf_set_lines(buf, 0, -1, false, vim.split(out.stdout, "\n"))
-            vim.cmd.vsplit()
-            vim.api.nvim_set_current_buf(buf)
-            vim.bo[buf].filetype = "markdown"
-            vim.cmd([[JiraFromFormat]])
-        end)
+    local handle = vim.schedule_wrap(function(out)
+        local buf = vim.api.nvim_create_buf(false, true)
+        vim.api.nvim_buf_set_lines(buf, 0, -1, false, vim.split(out.stdout, "\n"))
+        vim.cmd.vsplit()
+        vim.api.nvim_set_current_buf(buf)
+        vim.bo[buf].filetype = "markdown"
+        vim.cmd([[JiraFromFormat]])
     end)
+
+    if #tickets == 1 then
+        vim.system({ "jirahero", "get", tickets[1] }, { text = true }, handle)
+        return
+    end
+
+    vim.ui.select(
+        tickets,
+        { prompt = "Select ticket" },
+        function(item, _) vim.system({ "jirahero", "get", item }, { text = true }, handle) end
+    )
 end, {})
 
 cmd("JiraUpdateDesc", function()

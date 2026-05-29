@@ -1,16 +1,40 @@
 vim.keymap.set("n", "<leader>bm", function() require("dap-python").test_method() end)
 
 vim.opt_local.errorformat = {
+    ' %#File "%f"\\, line %l\\, %m',
+    ' %#File "%f"\\, line %l',
+    "%f:%l:%c: %m",
     "%f:%l: %m",
     "%f:%l:",
-    '  File "%f"\\, line %l\\, %m',
-    "E%m",
-
-    "^[\\ ]%.%#%trror%m",
+    "%+GERROR: %m",
+    "%+GFAIL: %m",
+    "E %#%m",
+    "%+G%.%#%trror%m",
+    "%+GFAILED %m",
     "%+GTraceback%m",
-    '%+G  File "%f"\\, line %l\\, %m',
     "%-G%.%#",
 }
+
+vim.api.nvim_create_autocmd("QuickFixCmdPost", {
+    group = vim.api.nvim_create_augroup("custom_ft_python", { clear = true }),
+    callback = function()
+        local qf = vim.fn.getqflist()
+
+        for _, value in ipairs(qf) do
+            if value.bufnr ~= 0 then
+                local fname = vim.api.nvim_buf_get_name(value.bufnr)
+                if string.match(fname, "^/api") then
+                    value.bufnr = nil
+                    value.filename = fname.sub(fname, 2)
+                elseif string.match(fname, "^/opt/venv") then
+                    value.bufnr = nil
+                    value.filename = fname.sub(fname, 6)
+                end
+            end
+        end
+        vim.fn.setqflist(qf)
+    end,
+})
 
 vim.api.nvim_create_user_command("RefreshEfm", function()
     vim.cmd([[ so ~/.config/nvim/after/ftplugin/python.lua ]])
