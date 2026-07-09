@@ -12,7 +12,8 @@ alias lsa='ls -lah --group-directories-first'
 # tmux shortcuts
 alias tm='tmux a'
 alias tmn='tmux new -s'
-alias tmhere='name="$(basename $(pwd))" && tmux new -s "${name//./-}"'
+alias tmhere='tmux new -s "$(realpath --relative-to="$HOME" .)"'
+
 alias tss='tmux switch-client -t $(tmux list-sessions -F "#{session_name}" | fzf --height=~5 --layout=reverse-list)'
 
 # rg file names
@@ -64,4 +65,8 @@ alias forkpointdiff='git diff --name-only --diff-filter=d `git merge-base --fork
 
 alias gbt='git branch --sort "authordate" --format "%(HEAD) %(if)%(worktreepath)%(then)%(color:cyan)%(end)%(if)%(HEAD)%(then)%(color:green)%(end)%(align:width=12)%(authordate:short)%(end)%(align:width=32)%(refname:short)%(end) %(objectname:short) %(subject)%(color:reset) "'
 
-alias glom='git log --oneline --decorate `git merge-base --fork-point refs/remotes/origin/HEAD`..HEAD'
+alias glom='git log --oneline refs/remotes/origin/HEAD...HEAD'
+
+alias gdesc='git describe'
+
+alias stow='stow --verbose=2'
