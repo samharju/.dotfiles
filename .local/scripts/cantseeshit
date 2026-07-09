@@ -8,22 +8,15 @@ else
     xrandr --output eDP-1 --off
 fi
 
+cmd="xrandr"
 for mon in $(xrandr --listmonitors | rg "^ \d" | awk '{print $4}' | sort); do
     if [[ -n "$prev" ]];then
-        xrandr --output "$mon" --left-of "$prev"
+        cmd+=" --output $mon --auto --left-of $prev"
     else
-        xrandr --output "$mon" --primary
+        cmd+=" --output $mon --auto --primary"
     fi
     prev="$mon"
 done
 
-# bg
-feh --bg-fill ~/user/pictures/wallpapers/harri-p-_RMQRdBH1U4-unsplash.jpg
-
-# composer
-if ! pidof picom > /dev/null ;then
-    picom -b --config "$HOME/.config/picom.conf"
-fi
-
-# polybar
-$HOME/.config/polybar/run
+$cmd
+/home/sharju/.local/scripts/fixbackground

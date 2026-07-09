@@ -80,16 +80,17 @@ do
         # cprint "$gray" "fd -t f -I -H \"activate\$\" $current_path -> nah"
         current_path="$current_path/.."
     else
+        chosen=""
         # cprint "$gray" "fd -t f -I -H \"activate\$\" $(pwd) -> oh"
         if [[ $(echo "$venvpath" | wc -l) -gt 1  ]]; then
-            cprint "$yellow" "found multiple possible venvs, wont source anything:"
-            cprint "$gray" "$venvpath"
-            nok=1
-            break
+            cprint "$yellow" "found multiple possible venvs:"
+            venvpath="$(echo "$venvpath" | fzf --layout=reverse --info=hidden --height=10)"
+            [[ -z "$venvpath" ]] && break
+            chosen="$venvpath"
         fi
         venvpath=$(realpath --relative-to="$runtime_dir" "$venvpath")
 
-        if [[ "$venvpath" != "venv/bin/activate" ]]; then
+        if [[ -z "$chosen" && "$venvpath" != "venv/bin/activate" ]]; then
             cprint "$gray" "found ${venvpath/$HOME/~}"
             cprint "$gray" "ok? [Yn] "
             read -r yn

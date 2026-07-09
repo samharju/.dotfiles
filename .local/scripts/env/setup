@@ -8,4 +8,4 @@ date
 # setxkbmap -layout us,fi
 # setxkbmap -option 'grp:win_space_toggle'
 
-bash "$HOME/.local/scripts/cantseeshit"
+$HOME/.local/scripts/cantseeshit2

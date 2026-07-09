@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+git add -A
+git rm "$(git ls-files -d)" 2> /dev/null
+
+m="--wip--"
+if [[ -n "$1" ]]; then
+    m="--wip--: $1"
+fi
+git commit -n -m "$m"

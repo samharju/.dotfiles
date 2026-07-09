@@ -1,0 +1,119 @@
+#!/usr/bin/env python3
+
+import re
+import shutil
+from pathlib import Path
+from subprocess import PIPE, run
+
+STATE = re.compile(
+    r"^.*(tokens|Grepping|Working|Thinking|Running|Composing).*$",
+    flags=re.MULTILINE,
+)
+BLOCKED = re.compile(
+    r"^.*Run this command\?.*$",
+    flags=re.MULTILINE,
+)
+
+ACTIONS = re.compile(
+    r".*(Grepped|Globbed|Read|Edited|Changed|command|\$)(\s+|,).*", flags=re.MULTILINE
+)
+
+
+sz = shutil.get_terminal_size()
+
+
+def map(value):
+    return {
+        "Idle": "just breathing",
+        "agent": "starting",
+        "Cursor Agent": "useless clanker",
+        "Done": "Done",
+    }.get(value, value)
+
+
+class Agent:
+    def __init__(self, id, path, title) -> None:
+        self.id = id
+        self.path = Path(path).relative_to(Path("~").expanduser())
+        if str(self.path) == ".":
+            self.path = " "
+        self.title = title
+        self.status = "Idle"
+        self.state = ""
+        self.actions = []
+
+    def update(self):
+        p = run(["tmux", "capture-pane", "-t", self.id, "-p"], text=True, stdout=PIPE)
+
+        lines = [ln for ln in p.stdout.splitlines() if ln.strip()][-10:]
+
+        status_set = False
+        for line in reversed(lines):
+            if not status_set:
+                if s := BLOCKED.search(line):
+                    self.status = s.group().strip().upper()
+                    status_set = True
+                elif s := STATE.search(line):
+                    self.status = s.group().strip()
+                    status_set = True
+            if a := ACTIONS.search(line):
+                self.actions.insert(0, a.group().strip())
+            elif self.actions:
+                return
+
+        if not status_set and "Add a follow-up" in p.stdout:
+            self.status = "Done"
+            return
+
+    def display(self):
+        lines = [
+            map(self.title),
+            f"├─ at {self.path}",
+        ]
+        if self.status not in {"Idle", "Done"} and self.actions:
+            for a in self.actions:
+                lines.append(f"├─── {a}")
+
+        lines.append(f"╰─ {map(self.status)}")
+
+        print(
+            "\n".join(
+                [
+                    line[: sz.columns - 3] + (line[sz.columns - 3 :] and "...")
+                    for line in lines
+                ]
+            )
+        )
+        print()
+
+
+def main():
+    cp = run(
+        [
+            "tmux",
+            "list-panes",
+            "-aF",
+            "#{pane_id}:#{pane_current_path}:#{pane_title}:#{pane_current_command}",
+        ],
+        text=True,
+        stdout=PIPE,
+    )
+    if cp.returncode != 0:
+        return
+
+    panes = [
+        Agent(*line.split(":")[:3])
+        for line in cp.stdout.splitlines()
+        if line.endswith("agent")
+    ]
+
+    for pane in panes:
+        pane.update()
+        pane.display()
+
+    if not panes:
+        print("No clankers found")
+
+
+if __name__ == "__main__":
+    main()

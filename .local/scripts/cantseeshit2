@@ -1,0 +1,84 @@
+#!/usr/bin/env python3
+
+import sys
+from argparse import ArgumentParser
+from pathlib import Path
+from subprocess import CalledProcessError, run
+
+
+def _run(cmd):
+    if DEBUG:
+        print(cmd)
+        return
+
+    rc = run(cmd, shell=True)
+    if rc.returncode != 0:
+        sys.exit(rc.returncode)
+
+
+class Conf:
+    def __init__(self, mirror=False) -> None:
+        self.data = []
+        self.lid_open = False
+        self.monitors = []
+        self.mirror = mirror
+
+    def read_xrandr(self):
+        rc = run("xrandr", text=True, capture_output=True)
+        rc.check_returncode()
+        self.data = rc.stdout.splitlines()
+
+    def connected(self):
+        self.lid()
+        for line in self.data:
+            if " connected" in line and "eDP-1" not in line:
+                self.monitors.append(line.split(" ")[0])
+
+        self.monitors = sorted(self.monitors, reverse=self.mirror)
+
+    def lid(self):
+        f = Path("/proc/acpi/button/lid/LID/state")
+        d = f.read_text()
+        self.lid_open = "open" in d
+
+    def organize(self):
+        subcmds = ["xrandr"]
+
+        if self.lid_open:
+            # subcmds.append("--output eDP-1 --auto")
+            self.monitors.append("eDP-1")
+        else:
+            subcmds.append("--output eDP-1 --off")
+
+        prev = None
+        for mon in self.monitors:
+            cmd = "--output " + mon + " --auto"
+            if prev:
+                cmd += " --left-of " + prev
+            else:
+                cmd += " --primary"
+            subcmds.append(cmd)
+            prev = mon
+
+        ex = " ".join(subcmds)
+        _run(ex)
+        _run("$HOME/.fehbg")
+        _run(
+            'if ! pidof picom > /dev/null; then picom -b --config "$HOME/.config/picom.conf"; fi'
+        )
+        _run("$HOME/.config/polybar/run")
+
+    def execute(self):
+        self.read_xrandr()
+        self.connected()
+        self.organize()
+
+
+if __name__ == "__main__":
+    parser = ArgumentParser()
+    parser.add_argument("-m", "--mirror", action="store_true")
+    parser.add_argument("-d", "--debug", action="store_true")
+
+    args = parser.parse_args()
+    DEBUG = args.debug
+    Conf(mirror=args.mirror).execute()

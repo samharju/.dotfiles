@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+
+if [ "$1" == "status" ]; then
+	fd -u ".git$" ~/git/ | sed -re 's|/.git/?$||' | xargs -Ix \
+	zsh -c 'cd x; echo x; git status --porcelain -sb'
+
+	exit 0
+elif [ "$1" == "update" ]; then
+	fd -u ".git$" ~/git/ | sed -re 's|/.git/?$||' | xargs -P 4 -Ix \
+		zsh -c 'cd x; echo x; git fetch -a -q 2>/dev/null; git status --porcelain -sb; asd=$(git status --porcelain -sb | rg behind); [ -n "$asd" ] && git pull || echo no can do'
+else
+	echo "$0 <status|update>"
+fi
+

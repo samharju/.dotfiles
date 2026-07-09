@@ -10,4 +10,6 @@ fd --hidden --no-ignore "\.git$" \
     --header='git projects' \
     --header-first \
     --tmux \
-    --info=hidden
+    --info=hidden \
+    --preview 'cd {}; git branch --color=always' \
+    --preview-window 'right,40%'

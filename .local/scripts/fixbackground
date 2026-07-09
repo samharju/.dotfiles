@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# bg
+$HOME/.fehbg
+
+# composer
+if ! pidof picom >/dev/null; then
+    picom -b --config "$HOME/.config/picom.conf"
+fi
+
+# polybar
+$HOME/.config/polybar/run

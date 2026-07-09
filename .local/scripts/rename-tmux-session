@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
 if [ -z "$1" ]; then
-    neww=$(basename "$(pwd)")
+    neww="$(realpath --relative-to="$HOME" .)"
+    if [[ "$neww" == "." ]]; then
+        neww=" "
+    fi
 else
     neww="$1"
 fi
-tmux rename-session "${neww//./-}"
+tmux rename-session "$neww"

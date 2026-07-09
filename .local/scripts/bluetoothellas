@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+bluetoothctl devices
+bluetoothctl connect 5C:EB:68:42:37:8C
+bluetoothctl devices Connected

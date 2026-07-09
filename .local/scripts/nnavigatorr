@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 
-set -e
+set -ex
 
 if [[ "$1" == "git" ]]; then
     project=$(
         gitprojectfind "git" \
-        "$HOME/.local/share" \
-        "$HOME/git" \
-        "$HOME/plugins" \
-        || true )
+            "$HOME/.local/share" \
+            "$HOME/git" \
+            "$HOME/plugins" ||
+            true
+    )
 else
     project=$(folderfind "$1" || true)
 fi
@@ -17,9 +18,10 @@ if [ -z "$project" ]; then
     exit 0
 fi
 
-sessari="$(basename "$project")"
-sessari="${sessari//./-}"
-if ! tmux has-session -t="$sessari" 2> /dev/null; then
+sessari=$(realpath --relative-to="$HOME" "$project")
+sessari=${sessari//./_}
+
+if ! tmux has-session -t="$sessari" 2>/dev/null; then
     tmux new-session -ds "$sessari" -c "$project"
 fi
 

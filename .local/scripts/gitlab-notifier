@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-if [[ -e /tmp/gitlabnotify ]]; then
-    echo " "
-fi

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+if [[ "$1" == "f" ]];then
+    data=$(git log --oneline -S"$2")
+else
+    data=$(git log --oneline --grep="$1")
+fi
+
+c="$(echo "$data" | fzf \
+    -d " " \
+    --accept-nth 1 \
+    --preview="git show --color {1}" \
+    --preview-window=right,60%
+    )"
+
+git show "$c"

@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+tmux splitw -hl 40 watch -t cursor-pane
