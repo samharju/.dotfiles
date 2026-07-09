@@ -63,7 +63,7 @@ return {
             },
         },
         filters = {
-            git_ignored = false,
+            git_ignored = true,
             custom = {
                 "\\.git$",
                 -- "\\.mypy_cache",
@@ -82,6 +82,9 @@ return {
             end
             vim.keymap.set("n", "l", api.node.open.edit, opts("Open"))
             vim.keymap.set("n", "h", api.node.navigate.parent_close, opts("Close Directory"))
+            vim.keymap.set("n", "w", api.node.navigate.sibling.next, opts("Next sibling"))
+            vim.keymap.set("n", "b", api.node.navigate.sibling.prev, opts("Prev sibling"))
+
         end,
     },
 }

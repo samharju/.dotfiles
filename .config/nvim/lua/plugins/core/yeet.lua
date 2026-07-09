@@ -22,7 +22,7 @@ local custom_eval = function(cmd_string)
                             "Substitute",
                             { sl, sc },
                             { el, ec },
-                            { timeout = 500 }
+                            { timeout = 150 }
                         )
                         return vim.treesitter.get_node_text(v, 0)
                     end

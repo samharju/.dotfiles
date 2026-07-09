@@ -1,6 +1,6 @@
 local function test_git()
-    local out = vim.system({ "git", "symbolic-ref", "--short", "HEAD" }):wait()
-    if out.code ~= 0 then vim.print("not a git repo") end
+    local out = vim.system({ "git", "rev-parse", "HEAD" }):wait()
+    if out.code ~= 0 then vim.print(out.stderr) end
     return out.code == 0
 end
 
@@ -61,6 +61,9 @@ return {
             },
             { "<leader>gv", ":Gvdiffsplit HEAD<CR>", desc = "git diff split" },
             { "<leader>gb", ":Git blame<CR>", desc = "git blame" },
+            { "<leader>gl", ":Git log --oneline --graph<CR>", desc = "git log oneline HEAD" },
+            { "<leader>ga", ":Git log --oneline --all --graph<CR>", desc = "git log oneline all" },
+            { "<leader>gf", ":Git log --oneline origin/HEAD..HEAD<CR>", desc = "git log branch" },
         },
     },
     {
