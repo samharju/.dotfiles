@@ -9,6 +9,7 @@ binpaths=(
     "/usr/local/bin"
     "$HOME/go/bin"
     "$HOME/.local/scripts"
+    "$HOME/.local/work"
     "$HOME/.local/bin"
     "$HOME/bin"
     "$HOME/.local/share/zig"
@@ -46,20 +47,20 @@ autoload -Uz compinit
 zstyle ':completion:*' menu select
 fpath+=~/.zfunc
 
-source $ZSH_CUSTOM/plugins/zsh-histdb/sqlite-history.zsh
-autoload -Uz add-zsh-hook
-
-_zsh_autosuggest_strategy_histdb_top_here() {
-    local query="select commands.argv from
-history left join commands on history.command_id = commands.rowid
-left join places on history.place_id = places.rowid
-where places.dir LIKE '$(sql_escape $PWD)%'
-and commands.argv LIKE '$(sql_escape $1)%'
-group by commands.argv order by count(*) desc limit 1"
-    suggestion=$(_histdb_query "$query")
-}
-
-ZSH_AUTOSUGGEST_STRATEGY=histdb_top_here
+# source $ZSH_CUSTOM/plugins/zsh-histdb/sqlite-history.zsh
+# autoload -Uz add-zsh-hook
+#
+# _zsh_autosuggest_strategy_histdb_top_here() {
+#     local query="select commands.argv from
+# history left join commands on history.command_id = commands.rowid
+# left join places on history.place_id = places.rowid
+# where places.dir LIKE '$(sql_escape $PWD)%'
+# and commands.argv LIKE '$(sql_escape $1)%'
+# group by commands.argv order by count(*) desc limit 1"
+#     suggestion=$(_histdb_query "$query")
+# }
+#
+# ZSH_AUTOSUGGEST_STRATEGY=histdb_top_here
 
 #-nvm-------------------------------------------------------------------------#
 export NVM_DIR="$HOME/.nvm"

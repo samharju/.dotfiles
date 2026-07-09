@@ -26,13 +26,14 @@
 [mergetool "diffview"]
 	cmd = nvim -n -c "DiffviewOpen" "$MERGE"
 [alias]
-	wip = "!git add -A; git rm $(git ls-files --deleted) 2> /dev/null; git commit --no-verify --no-gpg-sign --message \"--wip--\""
-	unwip = "!git rev-list --max-count=1 --format=\"%s\" HEAD | grep -q \"\\--wip--\" && git reset HEAD~1"
+	wip = "!gitcommitwip"
+	unwip = "!git rev-list --max-count=1 --format=\"%s\" HEAD | grep -q \"wip\" && git reset HEAD~1"
 	stashlist = "stash list --pretty=\"%s %Cgreen(%ar)\""
 	fix-commit = "!git commit --edit --file=$GIT_DIR/COMMIT_EDITMSG"
 	amend = "commit --amend --no-edit"
 	garbagefiles = "!fd -uu -t f | rg -v \"venv|\\.git\\b|\\.env|node_modules\" | git check-ignore --stdin"
 	garbagedirs = "!fd -uu -t d | rg -v \"venv|\\.git\\b|\\.env|node_modules\" | git check-ignore --stdin"
+	unstage = 'reset HEAD --'
 [log]
 	decorate = full
 [gpg]

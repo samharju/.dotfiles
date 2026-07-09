@@ -18,6 +18,11 @@ terminfo:
 
 nvim: .local/bin/nvim
 
+
+i3:
+	@figlet i3
+	sudo apt-get install -y i3 polybar picom feh
+
 .ONESHELL:
 .local/bin/nvim:
 	figlet nvim $(nvim_version)
@@ -234,7 +239,7 @@ lsps: basedpyright bashls gopls luals dockerls composels treesittercli ansiblels
 
 basedpyright: pipx
 	@figlet basedpyright
-	pipx install --force basedpyright==1.37.1
+	pipx install --force basedpyright==1.39.0
 
 bashls:
 	@figlet bashls
