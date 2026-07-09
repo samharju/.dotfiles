@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if [[ -e /tmp/gitlabnotify ]]; then
+    echo " $(cat /tmp/gitlabnotify)"
+else
+    exit 1
+fi

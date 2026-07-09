@@ -20,10 +20,6 @@ checklabfw() {
     return 0
 }
 
-if [ -e /proc/sys/net/ipv4/conf/tun0 ]; then
-    checklabfw tun0 && return 0
-    return 1
-fi
 
 if nmcli device | rg -q 'wifi.*\bconnected.*NOKIA'; then
     checklabfw office && return 0
@@ -32,11 +28,6 @@ fi
 
 if [ -e /proc/sys/net/ipv4/conf/zcctun0 ]; then
     checklabfw zcctun0 && return 0
-    return 1
-fi
-
-if [ -e /proc/sys/net/ipv4/conf/cscotun0 ]; then
-    checklabfw cscotun0 && return 0
     return 1
 fi
 

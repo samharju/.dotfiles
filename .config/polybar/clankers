@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+set -e
+panes=$(tmux list-panes -aF '#{pane_id} #{pane_current_command}' 2>/dev/null | rg agent | awk '{print $1}')
+if [ -z "$panes" ]; then
+    echo
+    exit 0
+fi
+
+n="$(echo "$panes" | wc -l)"
+
+checkpane() {
+    tmux capture-pane -t $1 -p | sed '/^$/d' | tail -10 | rg -qi 'Run this command\?|allowlist\?|\(y\)|\(tab\)|\(esc or n\)'
+}
+
+waiting=""
+waiting_n=0
+for pane in $panes; do
+    if checkpane "$pane"; then
+        waiting="󱜹 "
+        waiting_n=$((waiting_n + 1))
+    fi
+done
+
+if [[ -n $waiting ]]; then
+    echo "$waiting_n $waiting"
+    exit 1
+fi
+echo "$n"

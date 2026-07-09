@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -x
+
 killall -q polybar
 
 while IFS= read -r line

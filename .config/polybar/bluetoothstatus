@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-if echo info | bluetoothctl | grep -iq 'connected:.*yes'; then
-    echo " "
-    exit 0
-fi
-exit 1
+
+connected="$(bluetoothctl devices Connected)"
+[[ -z "$connected" ]] && exit 1
+
+device="$(echo "$connected" | rg -o '\w+$')"
+echo " $device"

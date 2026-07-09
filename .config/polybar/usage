@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+echo -n "│"
+ps -eo comm,pcpu --sort pcpu --no-heading | rg -v '\bps\b' | tail -6 \
+    | awk '{printf " %-15s% 4d │", $1, $2}'

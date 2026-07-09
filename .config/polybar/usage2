@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+
+import os
+import time
+
+import psutil
+
+
+def proc_lifetime_avg(proc: psutil.Process):
+    try:
+        with proc.oneshot():
+            ct = proc.cpu_times()
+            created = proc.create_time()
+    except Exception:
+        return None
+    wall_s = time.time() - created
+    if wall_s <= 0:
+        return 0.0
+    return 100.0 * (ct.user + ct.system) / wall_s
+
+
+def _fg(hex_color: str, text: str) -> str:
+    # lemonbar tagging
+    return f"%{{F{hex_color}}}{text}%{{F-}}"
+
+
+def purple(text: str):
+    return _fg("#a0a0df", text)
+
+
+def main() -> None:
+    pid = os.getpid()
+    rows: list[tuple[str, float]] = []
+    for p in psutil.process_iter(attrs=["name", "cpu_times", "create_time"]):
+        if p.pid == pid:
+            continue
+        name = p.info["name"] or ""
+        pct = proc_lifetime_avg(p)
+        if pct is None:
+            continue
+        rows.append((name, pct))
+    rows.sort(key=lambda r: r[1])
+    out = []
+    for name, pct in rows[-6:]:
+        out.append(f"{name[:15]:16}{int(round(pct)):3d}")
+    print(f"{purple(' | ')}".join(out), end="")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,20 +1,25 @@
 #!/usr/bin/env python3
 
-
 import sys
 from datetime import datetime, timedelta
 
-cycle_minutes = 30
+
+sit_after = 20
+
+def main():
+    t = datetime.now()
+    target = datetime(t.year, t.month, t.day, t.hour)
+    if t.minute < sit_after:
+        target += timedelta(minutes=sit_after)
+    else:
+        target += timedelta(minutes=60)
+    stance = "󰒂" if t.minute >= sit_after else "󰙍"
+    until = int((target - t).total_seconds())
+    print(f"{stance} {until//60}:{until%60:02}")
+
+    if until < 60:
+        sys.exit(1)
 
 
-def interval(ts: datetime) -> timedelta:
-    return ts - datetime(
-        ts.year, ts.month, ts.day, ts.hour, (ts.minute // cycle_minutes) * cycle_minutes
-    )
-
-
-until = timedelta(minutes=cycle_minutes) - interval(datetime.now())
-print(f"{until.seconds//60}:{until.seconds%60:02}")
-
-if until.seconds < 180:
-    sys.exit(1)
+if __name__ == "__main__":
+    main()
