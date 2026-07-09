@@ -12,6 +12,7 @@ vim.g.cospaget_debug = false
 ---@field model string
 ---@field save boolean
 ---@field session_storage string
+---@field system string?
 
 ---@class SessionInstance
 ---@field options SessionOpts
@@ -36,7 +37,6 @@ local Session = {
     options = {
         host = "http://localhost:11434",
         model = "mistral:7b",
-        -- model = "llama3.2:latest",
         save = false,
         session_storage = vim.fn.fnamemodify("~/.cache/nvim/cospaget/", ":p"),
     },
@@ -52,6 +52,7 @@ function Session:new(opts)
         messages = {},
     }, { __index = Session })
     if opts then session.options = vim.tbl_extend("force", session.options, opts) end
+    if opts.system then table.insert(session.messages, { role = "system", content = opts.system }) end
     return session
 end
 
@@ -60,7 +61,10 @@ function Session:save()
     local body = {
         stream = false,
         model = self.options.model,
-        prompt = string.format("Give a short, oneline title to this conversation without wrapping quotes:\n%s", vim.inspect(self.messages)),
+        prompt = string.format(
+            "Give a short, oneline title to this conversation without wrapping quotes:\n%s",
+            vim.inspect(self.messages)
+        ),
     }
     if self.title == "" then
         vim.system({

@@ -6,12 +6,19 @@ local fg_from = function(group)
     return hl.fg
 end
 
+autocmd("BufEnter", {
+    group = grp,
+    pattern = "todos.md",
+    callback = function() vim.fn.matchadd("DiagnosticVirtualTextOk", [[.*DONE.*]], 100) end,
+})
+
 autocmd({ "VimEnter", "ColorScheme", "BufEnter" }, {
     group = grp,
     pattern = "*",
     callback = function()
         vim.api.nvim_set_hl(0, "BreakpointHL", { link = "DiagnosticVirtualTextError" })
-        vim.fn.matchadd("BreakpointHL", [[\(TODO\|FIXME\|\<FIX\>\).*\|breakpoint(.*)]], 100)
+        vim.fn.matchadd("DiagnosticVirtualTextWarn", [[^\s*\zs.*\(TODO\|FIXME\|\<FIX\>\).*\|breakpoint(.*)]], 100)
+        vim.fn.matchadd("DiagnosticVirtualTextWarn", [[^\(<<<<<<<\|>>>>>>>\|=======\).*]], 100)
 
         vim.api.nvim_set_hl(0, "DiagnosticUnderlineError", { undercurl = true, sp = fg_from("DiagnosticError") })
         vim.api.nvim_set_hl(0, "DiagnosticUnderlineWarn", { undercurl = true, sp = fg_from("DiagnosticWarn") })
@@ -33,15 +40,17 @@ autocmd({ "VimEnter", "ColorScheme", "BufEnter" }, {
             vim.api.nvim_set_hl(0, string.format("BlinkCmpKind%s", k), { link = v })
         end
 
-        vim.api.nvim_set_hl(0, "fugitiveUntrackedModifier", { link = "Special" })
-        vim.api.nvim_set_hl(0, "fugitiveUnstagedModifier", { link = "Changed" })
-        vim.api.nvim_set_hl(0, "fugitiveStagedModifier", { link = "Added" })
-        vim.api.nvim_set_hl(0, "fugitiveHunk", { link = "Comment" })
+        vim.api.nvim_set_hl(0, "fugitiveUntrackedModifier", { link = "Special", default = true })
+        vim.api.nvim_set_hl(0, "fugitiveUnstagedModifier", { link = "Changed", default = true })
+        vim.api.nvim_set_hl(0, "fugitiveStagedModifier", { link = "Added", default = true })
+        vim.api.nvim_set_hl(0, "fugitiveHunk", { link = "Comment", default = true })
 
-        vim.api.nvim_set_hl(0, "GitSignsCurrentLineBlame", { link = "Comment" })
-        vim.api.nvim_set_hl(0, "GitSignsAddInline", { link = "added" })
-        vim.api.nvim_set_hl(0, "GitSignsDeleteInline", { link = "removed" })
-        vim.api.nvim_set_hl(0, "GitSignsChangeInline", { link = "changed" })
+        vim.api.nvim_set_hl(0, "GitSignsCurrentLineBlame", { link = "Comment", default = true })
+        vim.api.nvim_set_hl(0, "GitSignsAddInline", { link = "added", default = true })
+        vim.api.nvim_set_hl(0, "GitSignsDeleteInline", { link = "removed", default = true })
+        vim.api.nvim_set_hl(0, "GitSignsChangeInline", { link = "changed", default = true })
+
+        vim.api.nvim_set_hl(0, "NvimTreeGitFileIgnoredHL", { fg = fg_from("Comment"), italic = true })
 
         vim.api.nvim_set_hl(0, "TelescopeNormal", { link = "NormalFloat" })
 
@@ -110,9 +119,9 @@ autocmd({ "User" }, {
     end,
 })
 
-autocmd("BufEnter", {
+autocmd("BufNew", {
     callback = function()
-        local bufs = vim.fn.getbufinfo({ buflisted = 1 })
+        local bufs = vim.fn.getbufinfo({ buflisted = 1, bufloaded = 1 })
         if #bufs <= 10 then return end
 
         local wins = vim.api.nvim_list_wins()
@@ -135,7 +144,7 @@ autocmd("BufEnter", {
                 end
             end
         end
-        if to_delete < 0 then return end
+        if to_delete <= 0 then return end
 
         vim.notify("Dropped " .. vim.fn.fnamemodify(vim.api.nvim_buf_get_name(to_delete), ":t"))
         vim.cmd("bdelete " .. to_delete)

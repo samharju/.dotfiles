@@ -16,48 +16,32 @@ local make_config = function(h, w, style, offset)
     }
 
     local win_configs = {
-        -- float = {
-        --     relative = "editor",
-        --     width = w + vim.o.sidescrolloff,
-        --     height = h,
-        --     row = vim.o.lines - vim.o.cmdheight - h - 3,
-        --     col = 0,
-        --     border = "rounded",
-        -- },
-        -- center = {
-        --     relative = "win",
-        --     width = w + vim.o.sidescrolloff,
-        --     height = h,
-        --     row = vim.api.nvim_win_get_height(0) / 2 - h / 2,
-        --     col = vim.api.nvim_win_get_width(0) / 2 - w / 2,
-        --     border = "single",
-        -- },
-        cursor = {
-            relative = "cursor",
+        center = {
+            relative = "win",
             width = w + vim.o.sidescrolloff,
             height = h,
-            row = 0 - offset,
-            col = -1,
-            border = "single",
+            row = vim.api.nvim_win_get_height(0) / 2 - h / 2,
+            col = vim.api.nvim_win_get_width(0) / 2 - w / 2,
+            border = "rounded",
         },
-        -- bottom = {
-        --     relative = "editor",
-        --     width = vim.o.columns,
-        --     height = h + 1,
-        --     row = vim.api.nvim_win_get_height(0) - h - 2,
-        --     col = 0,
-        --     style = "minimal",
-        --     border = { "─", "─", "─", "", "", "", "", " " },
-        -- },
-        -- top = {
-        --     relative = "win",
-        --     width = vim.api.nvim_win_get_width(0),
-        --     height = h,
-        --     row = 0,
-        --     col = 0,
-        --     style = "minimal",
-        --     border = { "", "", "", "", "─", "─", "─", "" },
-        -- },
+        bottom = {
+            relative = "editor",
+            width = vim.o.columns,
+            height = h + 1,
+            row = vim.api.nvim_win_get_height(0) - h - 1,
+            col = 0,
+            style = "minimal",
+            border = { "─", "─", "─", "", "", "", "", " " },
+        },
+        top = {
+            relative = "win",
+            width = vim.api.nvim_win_get_width(0),
+            height = h,
+            row = 0,
+            col = 0,
+            style = "minimal",
+            border = { "", "", "", "", "─", "─", "─", "" },
+        },
     }
 
     return vim.tbl_extend("force", common, win_configs[style])
@@ -143,10 +127,11 @@ local popup_win = nil
 local function bufpopup(opts)
     if popup_buf == nil then
         popup_buf = vim.api.nvim_create_buf(false, true)
-        vim.api.nvim_buf_set_name(popup_buf, "bufpop.nvim")
+        -- vim.api.nvim_buf_set_name(popup_buf, "bufpop.nvim")
     end
     local cbuf = vim.api.nvim_get_current_buf()
     if cbuf == popup_buf then return end
+    local cwin = vim.api.nvim_get_current_win()
 
     local h, w, cl = populate_buffer(popup_buf)
     if h == 0 then return end
@@ -167,7 +152,8 @@ local function bufpopup(opts)
         local l = M.opts.labels:sub(i, i)
         if l ~= "" then
             vim.keymap.set("n", l, function()
-                vim.cmd.wincmd("p")
+                -- vim.cmd.wincmd("p")
+                vim.api.nvim_set_current_win(cwin)
                 vim.api.nvim_set_current_buf(buffers[i].buffer)
                 vim.api.nvim_win_close(popup_win, true)
             end, { buffer = popup_buf })
@@ -176,23 +162,24 @@ local function bufpopup(opts)
 
     vim.keymap.set("n", "<CR>", function()
         local pos = vim.fn.getpos(".")
-        vim.cmd.wincmd("p")
+        vim.api.nvim_set_current_win(cwin)
         vim.api.nvim_set_current_buf(buffers[pos[2]].buffer)
         vim.api.nvim_win_close(popup_win, true)
     end, { buffer = popup_buf })
 
     vim.keymap.set("n", "<C-x>", function()
         local pos = vim.fn.getpos(".")
-        vim.cmd.wincmd("p")
+        vim.api.nvim_set_current_win(cwin)
         vim.api.nvim_buf_delete(buffers[pos[2]].buffer, {})
         bufpopup(opts)
     end, { buffer = popup_buf })
 
     vim.keymap.set("n", "<C-v>", function()
-        local _, i, _, _ = vim.fn.getpos(".")
-        vim.cmd.wincmd("p")
+        local pos = vim.fn.getpos(".")
+        -- vim.cmd.wincmd("p")
+        vim.api.nvim_set_current_win(cwin)
         vim.cmd.vsplit()
-        vim.cmd.e(buffers[i].name)
+        vim.cmd.e(buffers[pos[2]].name)
         vim.api.nvim_win_close(popup_win, true)
     end, { buffer = popup_buf })
 
@@ -223,12 +210,11 @@ function M.setup(opts)
                 if not vim.api.nvim_get_option_value("buflisted", { buf = ev.buffer }) then return end
                 bufpopup({ style = "bottom", auto = true, enter = false })
             end,
-            -1,
         })
     end
 end
 
 M.setup({ auto = false, labels = "asdfhjkl" })
-vim.keymap.set("n", "<leader>m", function() bufpopup({ style = "cursor", auto = false, enter = true }) end)
+vim.keymap.set("n", "<leader>m", function() bufpopup({ style = "center", auto = false, enter = true }) end)
 
 return M

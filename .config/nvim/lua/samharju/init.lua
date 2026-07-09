@@ -10,7 +10,8 @@ require("samharju.bufpop")
 require("samharju.cospaget")
 require("samharju.custom.filetypes")
 require("samharju.lsp")
+require("samharju.cursor")
 
 vim.cmd.colorscheme("quitequiet-transparent")
 
-vim.notify = require("samharju.notify").small
+-- vim.notify = require("samharju.notify").small

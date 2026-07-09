@@ -3,6 +3,16 @@ local cmd = vim.api.nvim_create_user_command
 -- cmon not an editor command: W
 cmd("W", "w", {})
 
+cmd("CreateUuid", function()
+    local rc = vim.system({ "python", "-c", "import uuid; print(uuid.uuid4())" }, { text = true }):wait()
+    if rc.code ~= 0 then
+        vim.notify(rc.stderr)
+        return
+    end
+    local t = string.match(rc.stdout, "[^\n]+")
+    vim.api.nvim_put({ t }, "c", false, true)
+end, {})
+
 cmd("Scratch", function(args)
     vim.cmd([[ vert new ]])
     vim.bo.buftype = "nofile"
@@ -26,7 +36,14 @@ cmd("JQNIZE", function()
     }):wait()
 
     local buf = vim.api.nvim_create_buf(false, true)
-    vim.keymap.set("n", "<CR>", "ggyG", { buffer = buf })
+    vim.keymap.set("n", "<CR>", function()
+        local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+
+        txt = table.concat(lines, "\n")
+        txt = txt:gsub("^'", "")
+        txt = txt:gsub("'$", "")
+        vim.fn.setreg("", txt)
+    end, { buffer = buf })
     vim.keymap.set("n", "q", function() vim.api.nvim_buf_delete(buf, {}) end, { buffer = buf })
 
     local output = vim.split("'\n" .. res.stdout .. "'", "\n")
@@ -102,4 +119,14 @@ cmd("LastCommit", function()
         local b = out.stdout:match("([^\n]+)")
         if b ~= nil then vim.notify(b) end
     end)
+end, {})
+
+cmd("QuickFixClean", function()
+    local qf = vim.fn.getqflist()
+
+    local buf_exists = {}
+    for _, value in ipairs(qf) do
+        if value.bufnr ~= 0 then table.insert(buf_exists, value) end
+    end
+    vim.fn.setqflist(buf_exists)
 end, {})

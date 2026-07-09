@@ -21,7 +21,7 @@ local Chat = {
 function Chat:new(name)
     local buf = vim.api.nvim_create_buf(true, true)
     vim.api.nvim_buf_set_name(buf, name)
-    vim.cmd("split")
+    vim.cmd("vsplit")
     vim.api.nvim_set_current_buf(buf)
     vim.api.nvim_set_option_value("filetype", "markdown", { buf = buf })
 

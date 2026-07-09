@@ -33,36 +33,20 @@ local function notify_win_timer()
     )
 end
 
-local function create_win()
-    if not vim.api.nvim_win_is_valid(notif_win) then
-        local w = math.max(math.floor(vim.o.columns / 4), 20)
-        local offset = 2
-        notif_win = vim.api.nvim_open_win(notify_buf, false, {
-            relative = "editor",
-            style = "minimal",
-            border = "rounded",
-            row = offset,
-            col = vim.o.columns - 1 - w,
-            width = w,
-            height = vim.o.lines - 1 - 3 - offset,
-        })
-        vim.wo[notif_win].winhighlight = "NormalFloat:Comment,FloatBorder:Comment"
-        vim.wo[notif_win].wrap = false
-        notify_win_timer()
-    end
-end
+local function create_win(opts)
+    local winopts = {
+        relative = "editor",
+        style = "minimal",
+        border = "rounded",
+        row = 2,
+        col = math.floor(vim.o.columns * 2 / 3),
+        width = math.floor(vim.o.columns / 3) - 2,
+        height = 1,
+    }
+    local o = vim.tbl_extend("force", winopts, opts or {})
 
-local function create_small_win()
     if not vim.api.nvim_win_is_valid(notif_win) then
-        notif_win = vim.api.nvim_open_win(notify_buf, false, {
-            relative = "editor",
-            style = "minimal",
-            border = "rounded",
-            row = vim.o.lines - 5,
-            col = math.floor(vim.o.columns / 3),
-            width = math.floor(vim.o.columns / 3) - 2,
-            height = 1,
-        })
+        notif_win = vim.api.nvim_open_win(notify_buf, false, o)
         vim.wo[notif_win].winhighlight = "NormalFloat:Comment,FloatBorder:Comment"
         vim.wo[notif_win].wrap = false
         notify_win_timer()
@@ -70,6 +54,7 @@ local function create_small_win()
 end
 
 local function notif(msg, level, opts)
+    opts = opts or {}
     if msg == nil then return end
 
     if type(msg) ~= "string" then msg = vim.inspect(msg) end
@@ -80,13 +65,25 @@ local function notif(msg, level, opts)
     if opts ~= nil and type(opts) ~= "table" then error("opts: expected table, got " .. type(opts)) end
 
     if opts and opts.small then
-        create_small_win()
+        create_win({
+            row = vim.o.lines - 6,
+            col = math.floor(vim.o.columns / 3),
+            width = math.floor(vim.o.columns / 3) - 2,
+            height = 1,
+        })
     else
         create_win()
     end
 
-    vim.api.nvim_buf_set_lines(notify_buf, -1, -1, false, vim.split(msg, "\n"))
+    local lines = {}
+    for _, line in ipairs(vim.split(msg, "\n")) do
+        if line ~= "" then table.insert(lines, line) end
+    end
+    vim.api.nvim_buf_set_lines(notify_buf, -1, -1, false, lines)
     local r = #vim.api.nvim_buf_get_lines(notify_buf, 0, -1, false)
+    if not opts.small and vim.api.nvim_win_get_height(notif_win) < r then
+        vim.api.nvim_win_set_height(notif_win, math.min(r, 5))
+    end
     vim.api.nvim_win_set_cursor(notif_win, { r, 0 })
     vim.uv.timer_stop(notif_timer)
     notify_win_timer()

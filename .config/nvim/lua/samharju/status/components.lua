@@ -56,14 +56,6 @@ function M.python_version()
     return pyv
 end
 
-local function split(path)
-    local parts = {}
-    for part in string.gmatch(path, "[^/]+") do
-        table.insert(parts, part)
-    end
-    return parts
-end
-
 local function expand(paths)
     local counts = {}
     for _, name in ipairs(paths) do
@@ -73,12 +65,8 @@ local function expand(paths)
 
     local val = {}
     for _, path in ipairs(paths) do
-        local item = { display = path.basename, fname = path.fname }
-        if counts[path.basename] > 1 then
-            -- use last 2 parts of the path
-            local parts = split(path.fname)
-            item.display = parts[#parts - 1] .. "/" .. parts[#parts]
-        end
+        local item = { display = vim.fn.fnamemodify(path.fname, ":."), fname = path.fname }
+        if counts[path.basename] <= 1 then item.display = vim.fn.pathshorten(item.display) end
         table.insert(val, item)
     end
 
@@ -180,11 +168,11 @@ end
 function M.diagnostics(buf)
     if buf == nil then buf = 0 end
     local errors = vim.diagnostic.get(buf, { severity = vim.diagnostic.severity.ERROR })
-    if #errors > 0 then return string.format("%%#StatusLineError# %s%%*", #errors) end
+    if #errors > 0 then return string.format("%%#StatusLineError#󰚌 %s%%*", #errors) end
     local warnings = vim.diagnostic.get(buf, { severity = vim.diagnostic.severity.WARN })
-    if #warnings > 0 then return string.format("%%#StatusLineWarn# %s%%*", #warnings) end
+    if #warnings > 0 then return string.format("%%#StatusLineWarn#󰯈 %s%%*", #warnings) end
     local rest = vim.diagnostic.get(buf, { severity = { max = vim.diagnostic.severity.INFO } })
-    if #rest > 0 then return string.format("%%#StatusLineInfo# %s%%*", #rest) end
+    if #rest > 0 then return string.format("%%#StatusLineInfo#󰋼 %s%%*", #rest) end
     return ""
 end
 

@@ -39,32 +39,31 @@ cmd("MergeReviewSigns", function(args)
         end
 
         comp = string.gsub(out.stdout, "\n", "")
+
+        local c = {
+            "git",
+            "merge-base",
+            "--fork-point",
+            comp,
+            "HEAD",
+        }
+
+        notify(table.concat(c, " "))
+        local out = vim.system(c, { text = true }):wait()
+        notify(out.stdout)
+
+        if out.code ~= 0 then
+            notify(out.stderr, vim.log.levels.ERROR)
+            notify("Could not figure base", vim.log.levels.ERROR)
+            return
+        end
+        comp = string.gsub(out.stdout, "\n", "")
     end
 
-    local c = {
-        "git",
-        "merge-base",
-        "--fork-point",
-        comp,
-        "HEAD",
-    }
-
-    notify(table.concat(c, " "))
-    local out = vim.system(c, { text = true }):wait()
-    notify(out.stdout)
-
-    if out.code ~= 0 then
-        notify(out.stderr, vim.log.levels.ERROR)
-        notify("Could not figure base", vim.log.levels.ERROR)
-        return
-    end
-
-    local forkpoint = string.gsub(out.stdout, "\n", "")
-
-    require("gitsigns").change_base(forkpoint, true)
+    require("gitsigns").change_base(comp, true)
     require("gitsigns").toggle_linehl(true)
     require("gitsigns").toggle_word_diff(true)
-    notify("Gitsigns base set to " .. forkpoint)
+    notify("Gitsigns base set to " .. comp)
 
     c = { "git", "diff", comp, "HEAD", "--name-only" }
     notify(table.concat(c, " "))
@@ -75,6 +74,24 @@ cmd("MergeReviewSigns", function(args)
 end, { nargs = "?" })
 
 local ns = vim.api.nvim_create_namespace("mergestatus-diag")
+
+cmd("ProjectMerges", function(args)
+    ---@param out vim.SystemCompleted
+    local callback = function(out)
+        if out.code ~= 0 then return end
+        local buf = vim.api.nvim_create_buf(false, true)
+        local win = vim.api.nvim_open_win(buf, false, { split = "above", win = 0 })
+        vim.api.nvim_win_set_height(win, 10)
+        vim.wo[win].wrap = false
+        local lines = vim.split(out.stdout, "\n")
+        vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+    end
+
+    local cmdargs = { "gitlab-merge-status", "--project" }
+    vim.system(cmdargs, {
+        text = true,
+    }, vim.schedule_wrap(callback))
+end, {})
 
 cmd("MergeStatus", function(args)
     ---@param out vim.SystemCompleted
@@ -129,7 +146,7 @@ end, {
 })
 
 cmd("MergeConflicts", function(args)
-    vim.cmd([[ grep! "<<<<\|>>>>" ]])
+    vim.cmd([[ grep! "<<<<<<<\|=======\|>>>>>>>" ]])
     vim.cmd([[copen]])
     vim.cmd([[wincmd p]])
 end, {})

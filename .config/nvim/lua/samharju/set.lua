@@ -48,17 +48,13 @@ vim.opt.foldtext = "v:lua.vim.lsp.foldtext()"
 vim.opt.foldenable = true
 vim.o.foldlevel = 10
 
-local diagconf = {
-    virtual_lines_current = { signs = true, virtual_lines = { current_line = true }, virtual_text = false },
-    virtual_lines = { signs = false, virtual_lines = { current_line = false }, virtual_text = false },
-    virtual_text = {
-        signs = false,
-        virtual_lines = false,
+local conf = function(opts)
+    local o = {
         virtual_text = {
             format = function(diag)
                 -- get only text to first newline
                 local message = diag.message:match("[^\n]*")
-                if #message < 10 then return diag.source end
+                if #message < 5 then return diag.source end
 
                 return message
             end,
@@ -68,27 +64,47 @@ local diagconf = {
                 local icons = {
                     [vim.diagnostic.severity.ERROR] = "󰚌 ",
                     [vim.diagnostic.severity.WARN] = "󰯈 ",
-                    [vim.diagnostic.severity.INFO] = "󰋼 ",
-                    [vim.diagnostic.severity.HINT] = "󰩔 ",
+                    [vim.diagnostic.severity.INFO] = "󰋽 ",
+                    [vim.diagnostic.severity.HINT] = " ",
                 }
                 return icons[diag.severity]
             end,
         },
-    },
+    }
+    return vim.tbl_deep_extend("force", o, opts)
+end
+
+local diagconf = {
+    conf({
+        signs = false,
+        virtual_lines = false,
+    }),
+    conf({
+        signs = false,
+        virtual_lines = {
+            format = function(diag)
+                if diag.severity == vim.diagnostic.severity.INFO then return nil end
+                return diag.message
+            end,
+        },
+        virtual_text = false,
+    }),
+    conf({
+        signs = true,
+        virtual_lines = false,
+        virtual_text = { current_line = true },
+    }),
+    conf({ signs = false, virtual_lines = { current_line = false }, virtual_text = false }),
 }
 
-vim.diagnostic.config(diagconf.virtual_text)
+local conf_i = 1
+
+vim.diagnostic.config(diagconf[conf_i])
 
 vim.keymap.set("n", "<leader>w", function()
-    if vim.diagnostic.open_float() == nil then
-        local current = vim.diagnostic.config()
-        assert(current ~= nil)
-        if current.signs and current.virtual_lines then
-            vim.diagnostic.config(diagconf.virtual_lines)
-        elseif current.virtual_lines then
-            vim.diagnostic.config(diagconf.virtual_text)
-        else
-            vim.diagnostic.config(diagconf.virtual_lines_current)
-        end
+    if vim.diagnostic.open_float({ source = true }) == nil then
+        conf_i = conf_i + 1
+        if conf_i > #diagconf then conf_i = 1 end
+        vim.diagnostic.config(diagconf[conf_i])
     end
 end, { desc = "Open diagnostic" })
