@@ -1,27 +1,27 @@
 [submodule "plugins/samharju/synthweave.nvim"]
-	path = plugins/samharju/synthweave.nvim
+	path = submodules/plugins/samharju/synthweave.nvim
 	url = git@github.com:samharju/synthweave.nvim.git
 [submodule "plugins/samharju/tmux-synthweave-theme"]
-	path = plugins/samharju/tmux-synthweave-theme
+	path = submodules/plugins/samharju/tmux-synthweave-theme
 	url = git@github.com:samharju/tmux-synthweave-theme.git
 [submodule "plugins/samharju/yeet.nvim"]
-	path = plugins/samharju/yeet.nvim
+	path = submodules/plugins/samharju/yeet.nvim
 	url = git@github.com:samharju/yeet.nvim.git
 [submodule ".config/tmux/plugins/tpm"]
-	path = .config/tmux/plugins/tpm
+	path = term/.config/tmux/plugins/tpm
 	url = https://github.com/tmux-plugins/tpm
 [submodule ".config/ohmyzsh/plugins/zsh-autosuggestions"]
-	path = .config/ohmyzsh/plugins/zsh-autosuggestions
+	path = term/.config/ohmyzsh/plugins/zsh-autosuggestions
 	url = https://github.com/zsh-users/zsh-autosuggestions
 [submodule ".config/ohmyzsh/plugins/zsh-histdb"]
-	path = .config/ohmyzsh/plugins/zsh-histdb
+	path = term/.config/ohmyzsh/plugins/zsh-histdb
 	url = https://github.com/larkery/zsh-histdb
 [submodule "tooling/fzf"]
-	path = tooling/fzf
+	path = submodules/tooling/fzf
 	url = https://github.com/junegunn/fzf.git
 [submodule "tooling/pyenv"]
-	path = tooling/pyenv
+	path = submodules/tooling/pyenv
 	url = https://github.com/pyenv/pyenv.git
 [submodule "tooling/tmux"]
-	path = tooling/tmux
+	path = submodules/tooling/tmux
 	url = https://github.com/tmux/tmux.git
