@@ -10,7 +10,6 @@ default_border pixel 0
 hide_edge_borders smart
 gaps inner 7px
 smart_gaps off
-popup_during_fullscreen all
 
 set $ws1 "1"
 set $ws2 "2"
