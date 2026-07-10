@@ -28,3 +28,6 @@
 [submodule "term/.config/ohmyzsh/plugins/ollama"]
 	path = term/.config/ohmyzsh/plugins/ollama
 	url = https://github.com/ocodo/ollama_zsh_completion.git
+[submodule "submodules/tooling/neovim"]
+	path = submodules/tooling/neovim
+	url = https://github.com/neovim/neovim.git
