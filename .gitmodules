@@ -29,5 +29,5 @@
 	path = term/.config/ohmyzsh/plugins/ollama
 	url = https://github.com/ocodo/ollama_zsh_completion.git
 [submodule "submodules/tooling/neovim"]
-	path = submodules/tooling/neovim
+	path = neovim/tooling/neovim
 	url = https://github.com/neovim/neovim.git
