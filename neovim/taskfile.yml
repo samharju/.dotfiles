@@ -1,0 +1,139 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: "3"
+
+vars:
+  nvim_version: v0.11.4
+
+includes:
+  root: ../taskfile.yml
+
+tasks:
+  default:
+    cmds:
+      - task: nvim-install
+      - task: lsp
+      - task: linters
+
+  nvim-build-deps:
+    cmds:
+      - echo sudo apt install libevent-dev ncurses-dev build-essential bison pkg-config automake
+
+  nvim-install:
+    deps: [nvim-build-deps]
+    if: '[[ ! "$(nvim --version)" =~ "{{.nvim_version}}" ]]'
+    dir: tooling/neovim
+    cmds:
+      - git fetch --all
+      - git checkout $nvim_version
+      - make CMAKE_BUILD_TYPE=Release "CMAKE_INSTALL_PREFIX=$HOME/.local"
+      - make install
+      - nvim --version
+
+  lsp:
+    cmds:
+      - task: ansiblels
+      - task: basedpyright
+      - task: bashls
+      - task: composels
+      - task: dockerls
+      - task: gopls
+      - task: luals
+      - task: treesittercli
+      - task: shellcheck
+
+  shellcheck:
+    deps: [root:go]
+    cmds:
+      - sudo apt install shellcheck
+      - go install mvdan.cc/sh/v3/cmd/shfmt@latest
+
+  linters:
+    cmds:
+      - task: ansible-lint
+      - task: hadolint
+      - task: go-tools
+
+  formatters:
+    cmds:
+      - task: stylua
+      - task: prettier
+      - task: go-tools
+
+  go-tools:
+    cmds:
+      - go install github.com/fatih/gomodifytags@latest
+      - go install github.com/josharian/impl@latest
+      - go install golang.org/x/tools/cmd/goimports@latest
+      - go install github.com/segmentio/golines@latest
+      - go install github.com/go-delve/delve/cmd/dlv@latest
+      - if: '[[ ! $(golangci-lint version) =~ "2.12.2" ]]'
+        cmd: curl -sSfL https://golangci-lint.run/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.12.2
+
+  prettier:
+    deps: [root:nvm]
+    if: test ! command -v prettier
+    cmds:
+      - npm i -g prettier
+      - npm i -g @fsouza/prettierd
+
+  stylua:
+    if: test ! command -v stylua
+    cmds:
+      - wget https://github.com/JohnnyMorganz/StyLua/releases/download/v2.0.2/stylua-linux-x86_64.zip
+      - unzip stylua-linux-x86_64.zip -d ~/.local/bin
+      - rm stylua-linux-x86_64.zip
+
+  ansible-lint:
+    deps: [root:pipx]
+    if: test ! command -v ansible-lint
+    cmd: pipx install ansible-lint
+
+  hadolint:
+    if: test ! command -v hadolint
+    cmds:
+      - wget https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
+      - mv hadolint-Linux-x86_64 ~/.local/bin/hadolint
+      - chmod +x ~/.local/bin/hadolint
+
+  basedpyright:
+    deps: [root:pipx]
+    cmd: pipx install --force basedpyright==1.39.9
+    if: "[[ ! $(basedpyright --version) =~ 1.39.9 ]]"
+
+  bashls:
+    deps: [root:nvm]
+    cmd: npm i -g bash-language-server
+
+  gopls:
+    deps: [root:go]
+    cmd: go install golang.org/x/tools/gopls@latest
+
+  luals:
+    if: test ! command -v lua-language-server
+    cmds:
+      - wget https://github.com/LuaLS/lua-language-server/releases/download/3.13.6/lua-language-server-3.13.6-linux-x64.tar.gz
+      - mkdir -p ~/.local/share/nvim/luals
+      - tar -xf lua-language-server-3.13.6-linux-x64.tar.gz -C ~/.local/share/nvim/luals
+      - ln -s $HOME/.local/share/nvim/luals/bin/lua-language-server ~/.local/bin/lua-language-server
+      - rm lua-language-server-3.13.6-linux-x64.tar.gz
+
+  dockerls:
+    deps: [root:nvm]
+    if: test ! command -v docker-langserver
+    cmd: npm i -g dockerfile-language-server-nodejs
+
+  composels:
+    deps: [root:nvm]
+    if: test ! command -v docker-compose-langserver
+    cmd: npm i -g @microsoft/compose-language-service
+
+  treesittercli:
+    deps: [root:nvm]
+    if: test ! command -v tree-sitter
+    cmd: npm i -g tree-sitter-cli
+
+  ansiblels:
+    deps: [root:nvm]
+    if: test ! command -v ansible-language-server
+    cmd: npm i -g @ansible/ansible-language-server

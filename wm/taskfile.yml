@@ -1,0 +1,9 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: "3"
+
+tasks:
+  default:
+    desc: apt packages
+    cmds:
+      - sudo apt-get install -y i3 polybar picom feh xclip

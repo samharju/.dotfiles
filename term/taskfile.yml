@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+# wezterm
+# yazi
+
+version: "3"
+
+tasks:
+  packages:
+    deps: [wezterm-deps]
+    cmds:
+      - sudo add-apt-repository -y universe
+      - sudo apt update
+      - >
+        sudo apt-get install -y \
+          git wezterm-nightly fd-find \
+          curl zip unzip figlet libfuse2 zsh \
+          direnv sqlite3 plantuml
+      - sudo apt autoremove -y
+
+  ohmyzsh:
+    if: test ! -f ~/.oh-my-zsh/oh-my-zsh.sh
+    cmds:
+      - sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+  wezterm-deps:
+    if: test ! -f /etc/apt/sources.list.d/wezterm.list
+    cmds:
+      - curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /usr/share/keyrings/wezterm-fury.gpg
+      - echo 'deb [signed-by=/usr/share/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *' | sudo tee /etc/apt/sources.list.d/wezterm.list
+      - sudo chmod 644 /usr/share/keyrings/wezterm-fury.gpg
+
+  ripgrep:
+    if: test ! command -v rg
+    cmds:
+      - curl -LO https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep_14.1.0-1_amd64.deb
+      - sudo dpkg -i ripgrep_14.1.0-1_amd64.deb
+
+  fzf:
+    if: test ! command -v fzf
+    deps: [packages]
+    cmds:
+      - ../submodules/tooling/fzf/install
+      - ln -s $(command -v fdfind) ~/.local/bin/fd
+
+  bat:
+    vars:
+      bat_pkg: bat-musl_0.23.0_amd64.deb
+    if: test ! command -v bat
+    cmds:
+      - wget "https://github.com/sharkdp/bat/releases/download/v0.23.0/{{.bat_pkg}}"
+      - sudo dpkg -i "{{.bat_pkg}}"

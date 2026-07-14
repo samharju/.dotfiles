@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: "3"
+
+tasks:
+  tmux-build-debs:
+    cmds:
+      - sudo apt install libevent-dev ncurses-dev build-essential bison pkg-config automake
+
+  tmux:
+    dir: tooling/tmux
+    deps: [tmux-build-debs]
+    cmds:
+      - git checkout 3.5a
+      - sh autogen.sh
+      - ./configure
+      - make
+      - sudo make install
+
+  pyenv-build-deps:
+    cmds:
+      - sudo apt update
+      - sudo apt install -y build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev curl  libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+      - sudo apt autoremove -y
+
+  pyenv:
+    deps: [pyenv-build-deps]
+    if: test ! command -v pyenv
+    cmds:
+      - git submodule update --init tooling/pyenv
+
+  python3.13:
+    deps: [pyenv]
+    preconditions:
+      - command -v pyenv
+    if: test ! command -v python3.13
+    cmds:
+      - pyenv install 3.13
+      - pyenv global 3.13
