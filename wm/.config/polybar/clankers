@@ -10,7 +10,7 @@ fi
 n="$(echo "$panes" | wc -l)"
 
 checkpane() {
-    tmux capture-pane -t $1 -p | sed '/^$/d' | tail -10 | rg -qi 'Run this command\?|allowlist\?|\(y\)|\(tab\)|\(esc or n\)'
+    tmux capture-pane -t $1 -p | sed '/^$/d' | tail -10 | rg -qi '\?|\(\w\)|\(tab\)|\(esc|esc\)|question'
 }
 
 waiting=""

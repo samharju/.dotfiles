@@ -1,4 +1,4 @@
-local notedir = vim.fn.expand("~/user/documents/notes/")
+local notedir = vim.fn.expand("~/notes/")
 vim.api.nvim_create_user_command(
     "Notes",
     function()

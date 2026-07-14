@@ -37,6 +37,7 @@ tasks:
   tools:
     cmds:
       - go install github.com/jesseduffield/lazygit@latest
+      - go install github.com/go-task/task/v3/cmd/task@latest
 
   docker-gpg-ubuntu:
     if: "rg -q Ubuntu /etc/os-release"
@@ -87,4 +88,7 @@ tasks:
 
   nvm:
     if: test ! command -v nvm
-    cmd: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+    cmds:
+      - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+      - nvm install stable
+      - nvm use stable

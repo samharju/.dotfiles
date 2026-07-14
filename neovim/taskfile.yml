@@ -3,7 +3,7 @@
 version: "3"
 
 vars:
-  nvim_version: v0.11.4
+  nvim_version: v0.11.7
 
 includes:
   root: ../taskfile.yml
@@ -25,7 +25,7 @@ tasks:
     dir: tooling/neovim
     cmds:
       - git fetch --all
-      - git checkout $nvim_version
+      - git checkout {{.nvim_version}}
       - make CMAKE_BUILD_TYPE=Release "CMAKE_INSTALL_PREFIX=$HOME/.local"
       - make install
       - nvim --version

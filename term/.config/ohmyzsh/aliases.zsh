@@ -8,7 +8,6 @@ alias ll='ls -lh --group-directories-first'
 alias ls='ls --color=tty --group-directories-first'
 alias lsa='ls -lah --group-directories-first'
 
-
 # tmux shortcuts
 alias tm='tmux a'
 alias tmn='tmux new -s'
@@ -24,19 +23,6 @@ alias dea='[ -n "$VIRTUAL_ENV" ] && deactivate'
 
 alias vim="TERM=wezterm nvim"
 
-# use for single command, withdotfiles <cmd>
-alias withdotfiles='GIT_DIR=$HOME/.dotfiles GIT_WORK_TREE=$HOME'
-
-# toggle dotfile vcs globally
-alias dotfiles='export GIT_DIR=$HOME/.dotfiles GIT_WORK_TREE=$HOME'
-alias nodotfiles='unset GIT_DIR GIT_WORK_TREE'
-
-# just some shorthands
-alias cnf='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
-alias cnfs='cnf status -unormal'
-
-
-
 # env
 alias envf='env | fzf'
 
@@ -50,14 +36,12 @@ alias gloo='git log --oneline --decorate $(git merge-base $(git_main_branch) HEA
 
 alias chmox="chmod +x"
 
-
 alias rm='rm -v'
 alias G='git'
 
 alias glor='git log --all --graph --decorate=short --pretty="%C(auto)%h%C(auto)%d %Cgreen%ar %Cblue%<|(50)%an%Creset %s"'
 
 alias dockerpyv='fd Dockerfile -x grep -oP "(?<=python:)[\d\.]+"'
-
 
 alias cospagetchat='nvim -c "CospagetChat" -c "wincmd o"'
 

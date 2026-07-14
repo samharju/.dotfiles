@@ -4,21 +4,21 @@ export TERM=xterm-256color
 #-path------------------------------------------------------------------------#
 # add existing binary folders to path if not present
 binpaths=(
-    "$HOME/.luarocks/bin"
-    "/usr/local/go/bin"
-    "/usr/local/bin"
-    "$HOME/go/bin"
-    "$HOME/.local/scripts"
-    "$HOME/.local/work"
-    "$HOME/.local/bin"
-    "$HOME/bin"
-    "$HOME/.local/share/zig"
+	"$HOME/.luarocks/bin"
+	"/usr/local/go/bin"
+	"/usr/local/bin"
+	"$HOME/go/bin"
+	"$HOME/.local/scripts"
+	"$HOME/.local/work"
+	"$HOME/.local/bin"
+	"$HOME/bin"
+	"$HOME/.local/share/zig"
 )
 
 for p in $binpaths; do
-    if [[ ! "$PATH" =~ "$p" ]] && [[ -d "$p" ]]; then
-        export PATH=$p:$PATH
-    fi
+	if [[ ! "$PATH" =~ "$p" ]] && [[ -d "$p" ]]; then
+		export PATH=$p:$PATH
+	fi
 done
 
 #-XDG-------------------------------------------------------------------------#
@@ -34,12 +34,12 @@ export ZSH="$HOME/.oh-my-zsh"
 export ZSH_CUSTOM=$XDG_CONFIG_HOME/ohmyzsh
 ZSH_THEME="sami"
 plugins=(
-    git
-    zsh-autosuggestions
-    docker
-    python
-    golang
-    ollama
+	git
+	zsh-autosuggestions
+	docker
+	python
+	golang
+	ollama
 )
 source $ZSH/oh-my-zsh.sh
 
@@ -64,8 +64,8 @@ fpath+=~/.zfunc
 
 #-nvm-------------------------------------------------------------------------#
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 
 #-fzf-------------------------------------------------------------------------#
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -75,7 +75,7 @@ export FZF_COMPLETION_TRIGGER=ff
 #-pyenv-----------------------------------------------------------------------#
 export PYENV_ROOT="$HOME/tooling/pyenv"
 if ! [[ "$PATH" =~ "$PYENV_ROOT" ]]; then
-    [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+	[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 fi
 eval "$(pyenv init -)"
 
@@ -99,20 +99,22 @@ export ANSIBLE_VAULT_PASSWORD_FILE=.vaultpass
 # tokens and stuff from this guy
 [ -f ~/.secrets ] && source ~/.secrets
 
-if [ ! -f /tmp/proxy_checked ];then
-    echo Check proxy
-    if ! ping -i 0.5 -w 1 "$proxy" &> /dev/null; then
-        unset http_proxy https_proxy
-    fi
-    echo https_proxy=$https_proxy
-    touch /tmp/proxy_checked
+if [ ! -f /tmp/proxy_checked ]; then
+	echo Check proxy
+	if ! ping -i 0.5 -w 1 "$proxy" &>/dev/null; then
+		unset http_proxy https_proxy
+	fi
+	echo https_proxy=$https_proxy
+	touch /tmp/proxy_checked
 fi
 
 # dotfile sanity check
 if [[ -z "$(fd --max-depth 1 --type f --hidden --changed-within=168hour .dotfilescheck ~/)" ]]; then
-    echo Checking dotfiles
-    GIT_DIR=$HOME/.dotfiles GIT_WORK_TREE=$HOME gitpullneeded
-    touch ~/.dotfilescheck
+	echo Checking dotfiles
+	GIT_DIR=$HOME/.dotfiles GIT_WORK_TREE=$HOME gitpullneeded
+	touch ~/.dotfilescheck
 fi
 
-pidof picom > /dev/null || picom -b --config $XDG_CONFIG_HOME/picom.conf
+pidof picom >/dev/null || picom -b --config $XDG_CONFIG_HOME/picom.conf
+
+eval "$(task --completion zsh)"

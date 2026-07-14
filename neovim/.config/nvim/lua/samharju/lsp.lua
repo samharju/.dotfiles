@@ -8,4 +8,5 @@ vim.lsp.enable({
     "bashls",
     "ts_ls",
     "html",
+    "yamlls",
 })

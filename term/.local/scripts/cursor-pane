@@ -10,14 +10,16 @@ STATE = re.compile(
     flags=re.MULTILINE,
 )
 BLOCKED = re.compile(
-    r"^.*Run this command\?.*$",
+    r"^.*(command|fetch|build)\?.*$",
     flags=re.MULTILINE,
 )
 
 ACTIONS = re.compile(
-    r".*(Grepped|Globbed|Read|Edited|Changed|command|\$)(\s+|,).*", flags=re.MULTILINE
+    r".*(\$|Grepped|Globbed|Read|Edited|Changed|command|Found|Fetch)(\s+|,).*",
+    flags=re.MULTILINE,
 )
 
+L_WINDOW = 25
 
 sz = shutil.get_terminal_size()
 
@@ -45,13 +47,13 @@ class Agent:
     def update(self):
         p = run(["tmux", "capture-pane", "-t", self.id, "-p"], text=True, stdout=PIPE)
 
-        lines = [ln for ln in p.stdout.splitlines() if ln.strip()][-10:]
+        lines = [ln for ln in p.stdout.splitlines() if ln.strip()][-L_WINDOW:]
 
         status_set = False
         for line in reversed(lines):
             if not status_set:
                 if s := BLOCKED.search(line):
-                    self.status = s.group().strip().upper()
+                    self.status = s.group().strip()
                     status_set = True
                 elif s := STATE.search(line):
                     self.status = s.group().strip()
