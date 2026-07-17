@@ -111,7 +111,10 @@ fi
 # dotfile sanity check
 if [[ -z "$(fd --max-depth 1 --type f --hidden --changed-within=168hour .dotfilescheck ~/)" ]]; then
 	echo Checking dotfiles
-	GIT_DIR=$HOME/.dotfiles GIT_WORK_TREE=$HOME gitpullneeded
+	(
+		cd .dotfiles
+		gitpullneeded
+	)
 	touch ~/.dotfilescheck
 fi
 

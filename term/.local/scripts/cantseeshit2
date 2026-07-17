@@ -3,7 +3,7 @@
 import sys
 from argparse import ArgumentParser
 from pathlib import Path
-from subprocess import CalledProcessError, run
+from subprocess import run
 
 
 def _run(cmd):

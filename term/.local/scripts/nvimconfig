@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-d="$HOME/.config/nvim"
+d="$HOME/.dotfiles"
 if [ -z "$TMUX" ]; then
-    tmux new-session -s nvimconfig -c "$d" nvim
+    tmux new-session -s nvimconfig -c "$d" nvim .
 else
-    tmux new-window -n nvimconfig -c "$d" nvim
+    tmux new-window -n nvimconfig -c "$d" nvim .
 fi

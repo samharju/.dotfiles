@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
-fd --hidden --no-ignore "\.git$" \
-    "${@:2}" \
-    | sed -re 's|/.git/?$||' \
-    | fzf \
+fzf \
     --prompt ' ...' \
     --bind 'load:change-prompt:> ' \
     --query "$1" \
@@ -12,4 +9,8 @@ fd --hidden --no-ignore "\.git$" \
     --tmux \
     --info=hidden \
     --preview 'cd {}; git branch --color=always' \
-    --preview-window 'right,40%'
+    --preview-window 'right,40%' < <(
+        fd --follow --hidden --no-ignore "\.git$" \
+            "${@:2}" |
+            sed -re 's|/.git/?$||'
+    )

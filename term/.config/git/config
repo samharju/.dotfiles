@@ -40,3 +40,7 @@
 	format = ssh
 [user]
 	signingkey = /home/sharju/.ssh/gitsigningkey
+[url "https://github.com/"]
+	insteadOf = gh:
+[url "https://codeberg.org/"]
+	insteadOf = cb:
