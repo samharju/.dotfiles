@@ -40,7 +40,7 @@ cmd("MergeReviewSigns", function(args)
 
         comp = string.gsub(out.stdout, "\n", "")
 
-        local c = {
+        c = {
             "git",
             "merge-base",
             "--fork-point",
@@ -49,7 +49,7 @@ cmd("MergeReviewSigns", function(args)
         }
 
         notify(table.concat(c, " "))
-        local out = vim.system(c, { text = true }):wait()
+        out = vim.system(c, { text = true }):wait()
         notify(out.stdout)
 
         if out.code ~= 0 then
@@ -65,9 +65,9 @@ cmd("MergeReviewSigns", function(args)
     require("gitsigns").toggle_word_diff(true)
     notify("Gitsigns base set to " .. comp)
 
-    c = { "git", "diff", comp, "HEAD", "--name-only" }
+    local c = { "git", "diff", comp, "HEAD", "--name-only" }
     notify(table.concat(c, " "))
-    out = vim.system(c, { text = true }):wait()
+    local out = vim.system(c, { text = true }):wait()
     notify(out.stdout)
 
     vim.defer_fn(function() require("gitsigns").setqflist("all") end, 1000)
@@ -75,7 +75,7 @@ end, { nargs = "?" })
 
 local ns = vim.api.nvim_create_namespace("mergestatus-diag")
 
-cmd("ProjectMerges", function(args)
+cmd("ProjectMerges", function(_)
     ---@param out vim.SystemCompleted
     local callback = function(out)
         if out.code ~= 0 then return end
@@ -145,7 +145,7 @@ end, {
     complete = function() return { "--resolved", "--no-merge-comments", "--pipeline", "--debug", "--merged" } end,
 })
 
-cmd("MergeConflicts", function(args)
+cmd("MergeConflicts", function(_)
     vim.cmd([[ grep! "<<<<<<<\|=======\|>>>>>>>" ]])
     vim.cmd([[copen]])
     vim.cmd([[wincmd p]])

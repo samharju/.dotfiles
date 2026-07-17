@@ -6,7 +6,7 @@ vim.g.cospaget_debug = false
 ---@class Message
 ---@field role string
 ---@field content string
----
+
 ---@class SessionOpts
 ---@field host string
 ---@field model string

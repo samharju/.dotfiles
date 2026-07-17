@@ -3,6 +3,8 @@ local log = require("samharju.dev").log
 local M = {}
 
 local virtual_env = os.getenv("VIRTUAL_ENV")
+local virtual_env_prompt = os.getenv("VIRTUAL_ENV_PROMPT")
+if virtual_env_prompt then virtual_env_prompt = virtual_env_prompt:match("^%s*(.-)%s*$") end
 local venv_active = virtual_env ~= nil
 
 local venv_exists = vim.fn.executable("venv/bin/python") == 1
@@ -31,6 +33,8 @@ function M.resolve(tool)
     return vim.fn.executable(tool) == 1
 end
 
-function M.check_venv() return venv_active, venv_exists, version end
+function M.check_venv()
+    return { active = venv_active, exists = venv_exists, version = version, prompt = virtual_env_prompt }
+end
 
 return M

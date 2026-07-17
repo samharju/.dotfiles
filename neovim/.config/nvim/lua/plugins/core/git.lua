@@ -63,7 +63,7 @@ return {
             { "<leader>gb", ":Git blame<CR>", desc = "git blame" },
             { "<leader>gl", ":Git log --oneline --graph<CR>", desc = "git log oneline HEAD" },
             { "<leader>ga", ":Git log --oneline --all --graph<CR>", desc = "git log oneline all" },
-            { "<leader>gf", ":Git log --oneline origin/HEAD..HEAD<CR>", desc = "git log branch" },
+            { "<leader>gm", ":Git log --oneline origin/HEAD..HEAD<CR>", desc = "git log branch" },
         },
     },
     {
