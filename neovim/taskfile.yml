@@ -3,7 +3,7 @@
 version: "3"
 
 vars:
-  nvim_version: v0.11.7
+  nvim_version: nightly
 
 includes:
   root: ../taskfile.yml
