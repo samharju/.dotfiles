@@ -58,15 +58,11 @@ function M.setup()
     vim.api.nvim_create_autocmd({ "User" }, {
         pattern = "FugitiveChanged",
         group = group,
-        callback = function() require("samharju.status.git").update() end,
+        callback = function() M.update_now() end,
     })
 
-    -- vim.api.nvim_create_autocmd({ "CursorMoved" }, {
-    --     group = group,
-    --     callback = M.update_now,
-    -- })
-
-    vim.uv.timer_start(timer, 0, M.update_interval, vim.schedule_wrap(M.update))
+    assert(timer)
+    timer:start(0, M.update_interval, vim.schedule_wrap(M.update))
 end
 
 M.setup()

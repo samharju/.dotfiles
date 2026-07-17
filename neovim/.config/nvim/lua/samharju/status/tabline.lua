@@ -1,8 +1,6 @@
 local c = require("samharju.status.components")
 local M = {}
 
--- local check_edited = c.edited_buffers()
-
 function M.update()
     local current = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":.")
 
@@ -26,9 +24,6 @@ function M.update()
 
     local n = c.harpoon_bufnames(current)
     if #n > 0 then tabline_str = tabline_str .. table.concat(n, "") end
-
-    -- local bufs = check_edited()
-    -- if #bufs > 0 then tabline_str = tabline_str .. table.concat(bufs, "") end
 
     if #tabline_str == 0 then return "" end
     return string.format("%%#Tabline#%s%%#TabLineFill#", tabline_str)

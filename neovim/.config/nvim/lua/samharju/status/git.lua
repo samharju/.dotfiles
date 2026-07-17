@@ -1,67 +1,42 @@
 local M = {
-    diff_status = {
-        added = 0,
-        changed = 0,
-        removed = 0,
-        conflicts = 0,
-    },
     commit_status = {
         ahead = 0,
         behind = 0,
     },
-    per_file = true,
-    diff_status_files = {},
     branch = "",
-    last_status = "",
+    status = "",
     last_commit = "",
-    last_file_status = {},
     ticks = {},
 }
 
-local function parse_diff_str(status)
-    if status == nil then return "" end
+function M.format_diff_str(status)
+    if not status then return "" end
     local output = {}
-    if status.added > 0 then table.insert(output, string.format("%%#StatusLineAdded#+%s%%*", status.added)) end
-    if status.changed > 0 then table.insert(output, string.format("%%#StatusLineChanged#~%s%%*", status.changed)) end
-    if status.removed > 0 then table.insert(output, string.format("%%#StatusLineRemoved#-%s%%*", status.removed)) end
-    if status.conflicts > 0 then
+    if status.added and status.added > 0 then
+        table.insert(output, string.format("%%#StatusLineAdded#+%s%%*", status.added))
+    end
+    if status.changed and status.changed > 0 then
+        table.insert(output, string.format("%%#StatusLineChanged#~%s%%*", status.changed))
+    end
+    if status.removed and status.removed > 0 then
+        table.insert(output, string.format("%%#StatusLineRemoved#-%s%%*", status.removed))
+    end
+    if status.conflicts and status.conflicts > 0 then
         table.insert(output, string.format("%%#StatusLineRemoved#!%s%%*", status.conflicts))
     end
 
     return table.concat(output, " ")
 end
 
-function M.update(curbuf)
-    if M.branch == "" then M.check_branch() end
-    if M.branch == "" then return "", "" end
-
+function M.update()
     local refresh = false
-    local branchst = M.branch
+    local b = vim.b.gitsigns_head or M.branch
+
     if M.commit_status.behind > 0 then
-        branchst = branchst .. string.format("%%#StatusLineComment# %s󱞣%%s", M.commit_status.behind)
+        b = b .. string.format("%%#StatusLineComment# %s󱞣%%s", M.commit_status.behind)
     end
-
     if M.commit_status.ahead > 0 then
-        branchst = branchst .. string.format("%%#StatusLineComment# %s󱞿%%s", M.commit_status.ahead)
-    end
-
-    if curbuf ~= nil then
-        local ct = vim.api.nvim_buf_get_changedtick(curbuf)
-        if M.ticks[curbuf] ~= ct then
-            M.ticks[curbuf] = ct
-            refresh = true
-        end
-        local fname = vim.api.nvim_buf_get_name(curbuf)
-        if refresh then
-            M.refresh_diff_stats(
-                fname,
-                function() M.last_file_status[fname] = parse_diff_str(M.diff_status_files[fname]) end
-            )
-            M.refresh_upstream_status()
-            M.parse_last_commit()
-        end
-
-        return branchst, M.last_file_status[fname]
+        b = b .. string.format("%%#StatusLineComment# %s󱞿%%s", M.commit_status.ahead)
     end
 
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -75,32 +50,21 @@ function M.update(curbuf)
         end
     end
     if refresh then
-        M.refresh_diff_stats(nil, function() M.last_status = parse_diff_str(M.diff_status) end)
+        M.refresh_status()
         M.refresh_upstream_status()
-        M.parse_last_commit()
+        M.refresh_head_commit()
     end
 
-    return branchst, M.last_status
+    return b, M.status
 end
 
-function M.check_branch()
-    vim.system({ "git", "-C", vim.uv.cwd(), "rev-parse", "--abbrev-ref", "HEAD" }, { text = true }, function(out)
-        local b = out.stdout:match("([^\n]+)")
-        if b ~= nil then
-            M.branch = b
-            return
-        end
-    end)
-end
-
-function M.refresh_diff_stats(filename, callback)
+function M.refresh_status()
     local added = 0
     local changed = 0
     local removed = 0
     local conflicts = 0
 
     local cmd = { "git", "-C", vim.uv.cwd(), "--no-pager", "diff", "--unified=0" }
-    if filename ~= nil then table.insert(cmd, filename) end
 
     vim.system(cmd, { text = true }, function(out)
         for line in out.stdout:gmatch("[^\n]+") do
@@ -129,13 +93,7 @@ function M.refresh_diff_stats(filename, callback)
             end
         end
 
-        local stats = { added = added, changed = changed, removed = removed, conflicts = conflicts }
-        if filename ~= nil then
-            M.diff_status_files[filename] = stats
-        else
-            M.diff_status = stats
-        end
-        if callback ~= nil then callback() end
+        M.status = M.format_diff_str({ added = added, changed = changed, removed = removed, conflicts = conflicts })
     end)
 end
 
@@ -158,11 +116,20 @@ function M.refresh_upstream_status()
     end)
 end
 
-function M.parse_last_commit()
+function M.refresh_head_commit()
     local cmd = { "git", "-C", vim.uv.cwd(), "log", "-1", "--format=%h %s" }
     vim.system(cmd, { text = true }, function(out)
         local sha, title = out.stdout:match("^(%w+) (.*)\n")
         if sha then M.last_commit = string.format("%%#StatusLineWarn#%s%%* %s", sha, title) end
     end)
 end
+
+vim.system({ "git", "-C", vim.uv.cwd(), "rev-parse", "--abbrev-ref", "HEAD" }, { text = true }, function(out)
+    local b = out.stdout:match("([^\n]+)")
+    if b ~= nil then
+        M.branch = b
+        return
+    end
+end)
+
 return M

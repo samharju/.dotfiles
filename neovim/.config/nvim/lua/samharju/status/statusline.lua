@@ -10,7 +10,7 @@ function M.update()
     if vim.bo.filetype == "fugitive" or vim.bo.filetype == "git" then return git.last_commit end
 
     local buf = vim.api.nvim_get_current_buf()
-    local branch, diff = git.update(buf)
+    local branch, diff = git.update()
 
     local git_status = branch
     if diff ~= "" and diff ~= nil then git_status = branch .. " " .. diff end

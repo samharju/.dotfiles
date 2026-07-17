@@ -47,13 +47,13 @@ end
 function M.python_version()
     if vim.bo.filetype ~= "python" then return "" end
 
-    local active, exists, pyv = venv.check_venv()
-    if active then
-        pyv = string.format("%%#StatusLineWarn#%s%%*", pyv)
-    elseif exists then
-        pyv = string.format("%%#StatusLineError# venv%%*")
+    local v = venv.check_venv()
+    if v.active then
+        return string.format("%%#StatusLineWarn#%s:%s%%*", v.prompt, v.version)
+    elseif v.exists then
+        return string.format("%%#StatusLineError# venv%%*")
     end
-    return pyv
+    return v.version
 end
 
 local function expand(paths)
