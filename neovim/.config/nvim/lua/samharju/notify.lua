@@ -17,14 +17,14 @@ vim.keymap.set("n", "q", ":q<CR>", { buffer = notify_buf })
 local notif_win = -1
 local notif_timer = vim.uv.new_timer()
 
-cmd("Notifications", function(args)
+cmd("Notifications", function(_)
     vim.cmd("vert split")
     vim.api.nvim_set_current_buf(notify_buf)
 end, {})
 
 local function notify_win_timer()
-    vim.uv.timer_start(
-        notif_timer,
+    assert(notif_timer)
+    notif_timer:start(
         3000,
         0,
         vim.schedule_wrap(function()
@@ -64,37 +64,44 @@ local function notif(msg, level, opts)
     end
     if opts ~= nil and type(opts) ~= "table" then error("opts: expected table, got " .. type(opts)) end
 
-    if opts and opts.small then
-        create_win({
-            row = vim.o.lines - 6,
-            col = math.floor(vim.o.columns / 3),
-            width = math.floor(vim.o.columns / 3) - 2,
-            height = 1,
-        })
-    else
-        create_win()
-    end
-
     local lines = {}
     for _, line in ipairs(vim.split(msg, "\n")) do
         if line ~= "" then table.insert(lines, line) end
     end
     vim.api.nvim_buf_set_lines(notify_buf, -1, -1, false, lines)
+
+    if opts.center then
+        create_win({
+            row = vim.o.lines - 8,
+            col = math.floor(vim.o.columns / 3),
+            width = math.floor(vim.o.columns / 3) - 2,
+            height = 4,
+        })
+    else
+        create_win()
+    end
+
     local r = #vim.api.nvim_buf_get_lines(notify_buf, 0, -1, false)
-    if not opts.small and vim.api.nvim_win_get_height(notif_win) < r then
-        vim.api.nvim_win_set_height(notif_win, math.min(r, 5))
+    if opts.grow then
+        local h = vim.api.nvim_win_get_height(notif_win)
+        if h < r + 2 then vim.api.nvim_win_set_height(notif_win, math.min(r, vim.o.lines)) end
     end
     vim.api.nvim_win_set_cursor(notif_win, { r, 0 })
-    vim.uv.timer_stop(notif_timer)
+    assert(notif_timer)
+    notif_timer:stop()
     notify_win_timer()
 end
 
 local M = {}
 
-M.big = notif
-M.small = function(msg, level, opts)
+M.topright = function(msg, level, opts)
     opts = opts or {}
-    opts.small = true
+    opts.grow = true
+    notif(msg, level, opts)
+end
+M.center = function(msg, level, opts)
+    opts = opts or {}
+    opts.center = true
     notif(msg, level, opts)
 end
 

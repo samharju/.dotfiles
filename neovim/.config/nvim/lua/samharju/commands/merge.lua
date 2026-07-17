@@ -1,5 +1,5 @@
 local cmd = vim.api.nvim_create_user_command
-local notify = require("samharju.notify").big
+local notify = require("samharju.notify").topright
 
 cmd("MergeReviewDiffview", function()
     local c = { "git", "symbolic-ref", "refs/remotes/origin/HEAD" }

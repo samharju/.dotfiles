@@ -12,6 +12,13 @@ autocmd("BufEnter", {
     callback = function() vim.fn.matchadd("DiagnosticVirtualTextOk", [[.*DONE.*]], 100) end,
 })
 
+autocmd({ "VimEnter" }, {
+    group = grp,
+    callback = function(args)
+        if vim.fn.isdirectory(args.file) ~= 0 then vim.api.nvim_set_current_dir(args.file) end
+    end,
+})
+
 autocmd({ "VimEnter", "ColorScheme", "BufEnter" }, {
     group = grp,
     pattern = "*",
@@ -79,35 +86,23 @@ autocmd("BufReadPre", {
     end,
 })
 
-local function runcmd(args, opt)
-    local opts = opt or {}
-    if opts.stdout ~= false then require("samharju.notify").big(table.concat(args, " ")) end
+local function runcmd(args, opts)
+    opts = opts or {}
+    if opts.stdout ~= false then require("samharju.notify").topright(table.concat(args, " ")) end
     local c = nil
     if opts.callback then c = vim.schedule_wrap(opts.callback) end
 
-    local stdout = nil
-    local stderr = nil
-    if opts.stdout ~= false then
-        stdout = vim.schedule_wrap(function(err, data) require("samharju.notify").big(data) end)
-    end
-    if opts.stderr ~= false then
-        stderr = vim.schedule_wrap(function(err, data) require("samharju.notify").big(data) end)
-    end
-
     vim.system(args, {
         text = true,
-        stdout = stdout,
-        stderr = stderr,
+        stdout = vim.schedule_wrap(function(_, data) require("samharju.notify").topright(data) end),
+        stderr = vim.schedule_wrap(function(_, data) require("samharju.notify").topright(data) end),
     }, c)
 end
 
-autocmd({ "User" }, {
+autocmd("VimEnter", {
     group = grp,
-    pattern = "VeryLazy",
     callback = function()
         runcmd({ "git", "rev-parse", "HEAD" }, {
-            stdout = false,
-            stderr = false,
             callback = function(out)
                 if out.code ~= 0 then return end
                 runcmd(
